@@ -41,7 +41,7 @@ public class PropBankArg {
 
             String function = matcher.group(4);
             if (function != null) {
-                arg.functionTag = FunctionTag.valueOf(function);
+                arg.functionTag = FunctionTag.fromString(function);
             }
 
             String type = matcher.group(1);

@@ -133,7 +133,9 @@ public class SelResAligner implements PbVnAligner {
         if (phrase.getFunctionTag() == FunctionTag.TMP) {
             themRoles.add(TIME);
         } else if (phrase.getFunctionTag() == FunctionTag.DIR) {
-            themRoles.add(DESTINATION);
+            if (prep.map(p -> p != PrepType.FROM).orElse(true)) {
+                themRoles.add(DESTINATION);
+            }
             themRoles.add(PATH);
         }
 

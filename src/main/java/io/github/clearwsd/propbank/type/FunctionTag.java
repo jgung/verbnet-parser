@@ -1,10 +1,14 @@
 package io.github.clearwsd.propbank.type;
 
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * PropBank function tag.
  *
  * @author jgung
  */
+@Slf4j
 public enum FunctionTag {
 
     ADJ,
@@ -20,6 +24,7 @@ public enum FunctionTag {
     PAG,
     PPT,
     PRD,
+    PNC,
     PRP,
     REC,
     TMP,
@@ -28,6 +33,15 @@ public enum FunctionTag {
     MOD,
     NEG,
 
-    PNC
+    PRR,
+    DSP;
 
+    public static FunctionTag fromString(@NonNull String string) {
+        try {
+            return FunctionTag.valueOf(string.toUpperCase());
+        } catch (Exception ignored) {
+            log.warn("Missing function tag: {}", string);
+        }
+        return VSP;
+    }
 }
