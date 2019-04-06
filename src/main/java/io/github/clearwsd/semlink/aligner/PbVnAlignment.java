@@ -40,6 +40,7 @@ public class PbVnAlignment {
     private List<Roleset> rolesets;
     private ISyntaxArgDesc syntaxArgDesc;
     private Proposition<VerbNetClass, PropBankArg> proposition;
+    private Roleset roleset;
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {
         return propbankPhrases.stream()

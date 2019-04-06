@@ -5,6 +5,8 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
+import static io.github.clearwsd.util.StringUtils.capitalized;
+
 @AllArgsConstructor
 public enum ThematicRoleType {
 
@@ -47,7 +49,13 @@ public enum ThematicRoleType {
     TOPIC,
     TRAJECTORY,
     VALUE,
-    NONE;
+    NONE,
+    VERB;
+
+    @Override
+    public String toString() {
+        return capitalized(this);
+    }
 
     public static Optional<ThematicRoleType> fromString(@NonNull String themRole) {
         themRole = themRole.toUpperCase().trim()

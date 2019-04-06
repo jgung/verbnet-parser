@@ -9,6 +9,8 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import static io.github.clearwsd.util.StringUtils.capitalized;
+
 /**
  * Thematic role semantic argument.
  *
@@ -33,6 +35,6 @@ public class ThematicRoleArgument<T> extends VariableSemanticArgument<T> {
 
     @Override
     public String toString() {
-        return thematicRoleType + "(" + (variable == null ? "?" :  variable.toString()) + ")";
+        return capitalized(thematicRoleType) + "(" + (variable == null ? "?" :  variable.toString()) + ")";
     }
 }

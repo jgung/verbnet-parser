@@ -38,14 +38,14 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
     }
 
     public enum EventRelation {
-        IDENTITY,
+        EVENT,
         START,
         DURING,
         END,
         RESULT
     }
 
-    private EventRelation relation = EventRelation.IDENTITY;
+    private EventRelation relation = EventRelation.EVENT;
     private String id = "E";
 
     @Override

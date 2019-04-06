@@ -17,6 +17,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
 
+import static io.github.clearwsd.util.StringUtils.capitalized;
+
 /**
  * VerbNet semantic predicate.
  *
@@ -69,6 +71,6 @@ public class SemanticPredicate {
 
     @Override
     public String toString() {
-        return type + "[" + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
+        return capitalized(type) + "[" + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
     }
 }

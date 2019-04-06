@@ -6,6 +6,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import static io.github.clearwsd.util.StringUtils.capitalized;
+
 /**
  * {@link SemanticArgument} with a variable component.
  *
@@ -24,6 +26,6 @@ public abstract class VariableSemanticArgument<T> extends SemanticArgument {
 
     @Override
     public String toString() {
-        return type + "(" + value + (variable == null ? "" : " = " + variable.toString()) + ")";
+        return capitalized(type) + "(" + value + (variable == null ? "" : " = " + variable.toString()) + ")";
     }
 }

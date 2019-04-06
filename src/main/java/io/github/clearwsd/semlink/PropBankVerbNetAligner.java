@@ -2,6 +2,8 @@ package io.github.clearwsd.semlink;
 
 import com.google.common.collect.ImmutableList;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,7 +23,6 @@ import io.github.clearwsd.semlink.aligner.SelResAligner;
 import io.github.clearwsd.semlink.aligner.SynResAligner;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
-import io.github.clearwsd.verbnet.VerbNet;
 import io.github.clearwsd.verbnet.VerbNetClass;
 import io.github.clearwsd.verbnet.type.SyntacticFrame;
 import lombok.NonNull;
@@ -33,7 +34,6 @@ import lombok.NonNull;
  */
 public class PropBankVerbNetAligner {
 
-    private VerbNet verbNet;
     private PbVnMappings mappings;
 
     private List<PbVnAligner> aligners = ImmutableList.of(
@@ -44,15 +44,14 @@ public class PropBankVerbNetAligner {
             new FillerAligner()
     );
 
-    public PropBankVerbNetAligner(@NonNull VerbNet verbNet, @NonNull PbVnMappings mappings) {
-        this.verbNet = verbNet;
+    public PropBankVerbNetAligner(@NonNull PbVnMappings mappings) {
         this.mappings = mappings;
     }
 
-    public PbVnAlignment align(@NonNull Proposition<VerbNetClass, PropBankArg> proposition,
-                               @NonNull List<PropBankPhrase> chunk,
-                               @NonNull SyntacticFrame frame,
-                               @NonNull List<Roleset> rolesets) {
+    private PbVnAlignment align(@NonNull Proposition<VerbNetClass, PropBankArg> proposition,
+                                @NonNull List<PropBankPhrase> chunk,
+                                @NonNull SyntacticFrame frame,
+                                @NonNull List<Roleset> rolesets) {
 
         PbVnAlignment pbVnAlignment = new PbVnAlignment()
                 .alignment(Alignment.of(chunk, frame.elements()))
@@ -97,11 +96,21 @@ public class PropBankVerbNetAligner {
         return Optional.empty();
     }
 
-    public static Comparator<PbVnAlignment> alignmentComparator() {
+    private static Comparator<PbVnAlignment> alignmentComparator() {
         Comparator<PbVnAlignment> comparing = Comparator.comparing(al
                 -> al.sourcePhrases(true).size());
         comparing.thenComparing(al -> al.targetPhrases().size() - al.targetPhrases(false).size());
         return comparing;
     }
+
+    public static PropBankVerbNetAligner of(@NonNull String mappingsPath) {
+        try {
+            PbVnMappings mappings = new PbVnMappings(PbVnMapping.fromJson(new FileInputStream(mappingsPath)));
+            return new PropBankVerbNetAligner(mappings);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

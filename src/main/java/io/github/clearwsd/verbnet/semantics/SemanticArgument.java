@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
 
+import static io.github.clearwsd.util.StringUtils.capitalized;
+
 /**
  * VerbNet semantic argument.
  *
@@ -26,6 +28,6 @@ public abstract class SemanticArgument {
 
     @Override
     public String toString() {
-        return type + "(" + value + ")";
+        return capitalized(type) + "(" + value + ")";
     }
 }
