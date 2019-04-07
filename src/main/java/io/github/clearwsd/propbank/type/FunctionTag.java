@@ -33,6 +33,7 @@ public enum FunctionTag {
     MOD,
     NEG,
 
+    DIS,
     PRR,
     DSP;
 

@@ -50,7 +50,8 @@ public enum ThematicRoleType {
     TRAJECTORY,
     VALUE,
     NONE,
-    VERB;
+    VERB,
+    DIRECTION;
 
     @Override
     public String toString() {
