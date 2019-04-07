@@ -3,8 +3,10 @@ package io.github.clearwsd.parser;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -18,12 +20,15 @@ import io.github.clearwsd.tfnlp.app.DefaultChunking;
 import io.github.clearwsd.tfnlp.app.Span;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.verbnet.VerbNetClass;
+import io.github.clearwsd.verbnet.semantics.ConstantArgument;
 import io.github.clearwsd.verbnet.semantics.EventArgument;
+import io.github.clearwsd.verbnet.semantics.SemanticArgument;
 import io.github.clearwsd.verbnet.semantics.SemanticPredicate;
 import io.github.clearwsd.verbnet.semantics.ThematicRoleArgument;
 import io.github.clearwsd.verbnet.type.FramePhrase;
 import io.github.clearwsd.verbnet.type.NounPhrase;
 import io.github.clearwsd.verbnet.type.SemanticArgumentType;
+import io.github.clearwsd.verbnet.type.SemanticPredicateType;
 import io.github.clearwsd.verbnet.type.ThematicRoleType;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -47,7 +52,24 @@ public class VerbNetSemanticParser {
                 .map(SemanticPredicate::of)
                 .collect(Collectors.toList());
 
+        Map<ThematicRoleType, ThematicRoleType> equalsRoles = new HashMap<>();
         for (SemanticPredicate predicate : predicates) {
+            if (predicate.type() == SemanticPredicateType.EQUALS) {
+                List<ThematicRoleArgument<PropBankPhrase>> args = predicate.get(SemanticArgumentType.THEMROLE);
+                if (args.size() == 2) {
+                    equalsRoles.put(args.get(0).thematicRoleType(), args.get(1).thematicRoleType());
+                    equalsRoles.put(args.get(1).thematicRoleType(), args.get(0).thematicRoleType());
+                }
+            }
+        }
+
+        List<SemanticPredicate> filtered = new ArrayList<>();
+        for (SemanticPredicate predicate : predicates) {
+            if (predicate.type() == SemanticPredicateType.EQUALS) {
+                continue;
+            }
+            predicate = convertPathRel(predicate);
+
             List<EventArgument<VerbNetClass>> args = predicate.get(SemanticArgumentType.EVENT);
             for (EventArgument<VerbNetClass> arg : args) {
                 arg.variable(proposition.proposition().predicate().sense());
@@ -57,11 +79,48 @@ public class VerbNetSemanticParser {
             for (ThematicRoleArgument<PropBankPhrase> role : roles) {
                 Optional<FramePhrase> phrase = proposition.byRole(role.thematicRoleType());
                 phrase.ifPresent(framePhrase -> role.variable(proposition.alignment().getSource(framePhrase)));
+                if (!phrase.isPresent() && equalsRoles.containsKey(role.thematicRoleType())) {
+                    ThematicRoleType equivalentRole = equalsRoles.get(role.thematicRoleType());
+                    phrase = proposition.byRole(equivalentRole);
+                    phrase.ifPresent(framePhrase -> role.variable(proposition.alignment().getSource(framePhrase)));
+                }
             }
-
+            filtered.add(predicate);
         }
 
-        return predicates;
+        return filtered;
+    }
+
+    private static SemanticPredicate convertPathRel(@NonNull SemanticPredicate semanticPredicate) {
+        if (semanticPredicate.type() != SemanticPredicateType.PATH_REL) {
+            return semanticPredicate;
+        }
+        Optional<SemanticPredicateType> constant = semanticPredicate.arguments().stream()
+                .filter(a -> a instanceof ConstantArgument)
+                .map(SemanticArgument::value)
+                .map(type -> {
+                    if (type.equalsIgnoreCase("ch_on_scale")) {
+                        return SemanticPredicateType.CHANGE_ON_SCALE;
+                    } else if (type.equalsIgnoreCase("ch_of_state")) {
+                        return SemanticPredicateType.CHANGE_OF_STATE;
+                    } else if (type.equalsIgnoreCase("ch_of_poss")) {
+                        return SemanticPredicateType.CHANGE_OF_POSSESSION;
+                    } else if (type.equalsIgnoreCase("ch_of_loc")) {
+                        return SemanticPredicateType.CHANGE_OF_LOCATION;
+                    } else if (type.equalsIgnoreCase("tr_of_info")) {
+                        return SemanticPredicateType.TRANSFER_OF_INFORMATION;
+                    }
+                    return SemanticPredicateType.PATH_REL;
+                })
+                .findFirst();
+        if (!constant.isPresent()) {
+            return semanticPredicate;
+        }
+
+        List<SemanticArgument> filteredArgs = semanticPredicate.arguments().stream()
+                .filter(s -> !(s instanceof ConstantArgument))
+                .collect(Collectors.toList());
+        return new SemanticPredicate(constant.get(), filteredArgs);
     }
 
     public VerbNetSemanticParse parseSentence(@NonNull String sentence) {

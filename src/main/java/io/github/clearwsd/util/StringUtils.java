@@ -14,7 +14,11 @@ import lombok.NonNull;
 public final class StringUtils {
 
     public static String capitalized(@NonNull Enum<?> value) {
-        return Arrays.stream(value.name().split("_"))
+        return capitalized(value.name());
+    }
+
+    public static String capitalized(@NonNull String name) {
+        return Arrays.stream(name.split("_"))
                 .map(s -> s.length() == 1 ? s.toUpperCase() : s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
     }

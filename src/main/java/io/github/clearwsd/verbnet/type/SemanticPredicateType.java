@@ -161,7 +161,14 @@ public enum SemanticPredicateType {
     WITHDRAW,
     WORK,
     YIELD,
-    UNKNOWN;
+    UNKNOWN,
+    // added to simplify representation
+    CHANGE_OF_POSSESSION,
+    CHANGE_OF_STATE,
+    TRANSFER_OF_INFORMATION,
+    CHANGE_OF_LOCATION,
+    CHANGE_ON_SCALE;
+
 
     public static SemanticPredicateType fromString(@NonNull String string) {
         try {
