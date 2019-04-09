@@ -9,10 +9,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.tfnlp.app.Chunking;
-import io.github.clearwsd.tfnlp.app.ShallowParser;
-import io.github.clearwsd.tfnlp.app.ShallowParserUtils;
-import io.github.clearwsd.tfnlp.type.ITokenSequence;
+import io.github.semlink.app.Chunking;
+import io.github.semlink.app.ShallowParser;
+import io.github.semlink.app.ShallowParserUtils;
+import io.github.semlink.type.ITokenSequence;
 import io.github.clearwsd.type.DefaultNlpFocus;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;

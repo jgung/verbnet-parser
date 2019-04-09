@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import io.github.clearwsd.DefaultSensePrediction;
 import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.tfnlp.app.Span;
+import io.github.semlink.app.Span;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
 import io.github.semlink.propbank.type.PropBankArg;

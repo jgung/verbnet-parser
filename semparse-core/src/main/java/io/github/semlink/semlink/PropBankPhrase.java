@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import io.github.semlink.parser.Proposition;
 import io.github.semlink.propbank.type.PropBankArg;
-import io.github.clearwsd.tfnlp.app.Span;
+import io.github.semlink.app.Span;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
 import lombok.Getter;

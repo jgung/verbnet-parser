@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import io.github.clearwsd.tfnlp.app.ShallowParser;
-import io.github.clearwsd.tfnlp.app.TensorflowModel;
-import io.github.clearwsd.tfnlp.type.Fields;
-import io.github.clearwsd.tfnlp.type.HasFields;
-import io.github.clearwsd.tfnlp.type.IToken;
-import io.github.clearwsd.tfnlp.type.ITokenSequence;
-import io.github.clearwsd.tfnlp.type.Token;
-import io.github.clearwsd.tfnlp.type.TokenSequence;
+import io.github.semlink.app.ShallowParser;
+import io.github.semlink.app.TensorflowModel;
+import io.github.semlink.type.Fields;
+import io.github.semlink.type.HasFields;
+import io.github.semlink.type.IToken;
+import io.github.semlink.type.ITokenSequence;
+import io.github.semlink.type.Token;
+import io.github.semlink.type.TokenSequence;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
@@ -22,7 +22,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import static io.github.clearwsd.tfnlp.app.ShallowParserUtils.Tag.OUT;
+import static io.github.semlink.app.ShallowParserUtils.Tag.OUT;
 
 /**
  * Semantic role labeling utilities specific to our SRL system's input needs.

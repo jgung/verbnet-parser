@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.tfnlp.app.Chunking;
-import io.github.clearwsd.tfnlp.app.Span;
+import io.github.semlink.app.Chunking;
+import io.github.semlink.app.Span;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;

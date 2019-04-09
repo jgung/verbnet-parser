@@ -33,6 +33,7 @@
 
     <modules>
         <module>semparse-core</module>
+        <module>semparse-tf4j</module>
     </modules>
 
     <dependencies>
@@ -74,5 +75,20 @@
             <version>${woodstox.version}</version>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.semlink</groupId>
+                <artifactId>semparse-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.semlink</groupId>
+                <artifactId>semparse-tf4j</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

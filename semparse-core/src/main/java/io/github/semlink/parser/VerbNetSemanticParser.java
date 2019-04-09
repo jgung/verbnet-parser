@@ -12,8 +12,8 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.tfnlp.app.DefaultChunking;
-import io.github.clearwsd.tfnlp.app.Span;
+import io.github.semlink.app.DefaultChunking;
+import io.github.semlink.app.Span;
 import io.github.clearwsd.type.DepTree;
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;
