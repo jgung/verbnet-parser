@@ -1,15 +1,6 @@
 package io.github.clearwsd.semlink;
 
 import com.google.common.collect.ImmutableList;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
 import edu.mit.jverbnet.data.IFrame;
 import io.github.clearwsd.parser.Proposition;
 import io.github.clearwsd.propbank.type.PropBankArg;
@@ -25,6 +16,14 @@ import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.VerbNetClass;
 import io.github.clearwsd.verbnet.type.SyntacticFrame;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 
 /**
@@ -73,16 +72,22 @@ public class PropBankVerbNetAligner {
         List<PropBankPhrase> phrases = PropBankPhrase.fromProp(prop, source);
 
         List<PbVnAlignment> alignments = new ArrayList<>();
+
+        String lemma = source.get(prop.relSpan().startIndex()).feature(FeatureType.Lemma);
+        List<Roleset> rolesets = prop.predicate().sense().relatedClasses().stream()
+            .map(s -> mappings.rolesets(lemma, s.id().classId()))
+            .flatMap(List::stream)
+            .distinct()
+            .collect(Collectors.toList());
+
         // enumerate VerbNet frames
-        for (VerbNetClass cls : prop.predicate().sense().subClasses()) {
+        for (VerbNetClass cls : prop.predicate().sense().relatedClasses()) {
 
             // iterate over individual frames
             for (IFrame frame : cls.verbClass().getFrames()) {
 
-                String lemma = source.get(prop.relSpan().startIndex()).feature(FeatureType.Lemma);
                 SyntacticFrame syntacticFrame = SyntacticFrame.of(frame);
 
-                List<Roleset> rolesets = mappings.rolesets(lemma, cls.id().classId());
                 PbVnAlignment align = align(prop, phrases, syntacticFrame, rolesets);
                 alignments.add(align);
 

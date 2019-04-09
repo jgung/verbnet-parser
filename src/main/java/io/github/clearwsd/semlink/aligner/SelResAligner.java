@@ -3,11 +3,6 @@ package io.github.clearwsd.semlink.aligner;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultiset;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import io.github.clearwsd.propbank.type.ArgNumber;
 import io.github.clearwsd.propbank.type.FunctionTag;
 import io.github.clearwsd.semlink.PropBankPhrase;
@@ -16,6 +11,9 @@ import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.type.FramePhrase;
 import io.github.clearwsd.verbnet.type.PrepType;
 import io.github.clearwsd.verbnet.type.ThematicRoleType;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 
 import static io.github.clearwsd.semlink.aligner.SynResAligner.getPrep;
@@ -27,6 +25,7 @@ import static io.github.clearwsd.verbnet.type.ThematicRoleType.CO_AGENT;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.CO_PATIENT;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.CO_THEME;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.DESTINATION;
+import static io.github.clearwsd.verbnet.type.ThematicRoleType.EXTENT;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.GOAL;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.INITIAL_LOCATION;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.INITIAL_STATE;
@@ -53,11 +52,12 @@ public class SelResAligner implements PbVnAligner {
     @Override
     public void align(@NonNull PbVnAlignment alignment) {
         for (PropBankPhrase phrase : alignment.sourcePhrases()) {
+
             Multiset<ThematicRoleType> thematicRoles = getThematicRoles(phrase);
 
             List<ThematicRoleType> sorted = thematicRoles.entrySet().stream()
-                    .sorted(Ordering.natural().reverse().onResultOf(Multiset.Entry::getCount))
-                    .map(Multiset.Entry::getElement).collect(Collectors.toList());
+                .sorted(Ordering.natural().reverse().onResultOf(Multiset.Entry::getCount))
+                .map(Multiset.Entry::getElement).collect(Collectors.toList());
 
             for (ThematicRoleType type : sorted) {
                 Optional<FramePhrase> framePhrase = alignment.byRole(type);
@@ -68,10 +68,19 @@ public class SelResAligner implements PbVnAligner {
                     }
                 }
             }
+        }
 
+        // apply restrictions
+        Optional<FramePhrase> framePhrase = alignment.byRole(ASSET);
+        if (framePhrase.isPresent()) {
+            PropBankPhrase source = alignment.getSource(framePhrase.get());
+            if (null != source) {
+                if (!containsNumber(source)) {
+                    alignment.remove(source, framePhrase.get());
+                }
+            }
         }
     }
-
 
     public Multiset<ThematicRoleType> getThematicRoles(@NonNull PropBankPhrase phrase) {
         Multiset<ThematicRoleType> themRoles = TreeMultiset.create();
@@ -117,6 +126,10 @@ public class SelResAligner implements PbVnAligner {
                 themRoles.add(INSTRUMENT);
             } else if (type == PrepType.OUT_OF) {
                 themRoles.add(MATERIAL);
+            } else if (type == PrepType.BY) {
+                if (containsNumber(phrase)) {
+                    themRoles.add(EXTENT);
+                }
             }
         }
 

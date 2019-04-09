@@ -1,12 +1,13 @@
 package io.github.clearwsd.verbnet.type;
 
 import java.util.Optional;
-
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import static io.github.clearwsd.util.StringUtils.capitalized;
 
+@Slf4j
 @AllArgsConstructor
 public enum ThematicRoleType {
 
@@ -60,11 +61,16 @@ public enum ThematicRoleType {
 
     public static Optional<ThematicRoleType> fromString(@NonNull String themRole) {
         themRole = themRole.toUpperCase().trim()
-                .replaceAll("-", "_")
-                .replaceAll("\\?", "");
+            .replaceAll(" ", "_")
+            .replaceAll("-", "_")
+            .replaceAll("\\?", "");
         try {
             return Optional.of(valueOf(themRole.toUpperCase().trim()));
         } catch (Exception ignored) {
+            if (themRole.equalsIgnoreCase("CAUSE")) {
+                return Optional.of(CAUSER);
+            }
+            log.warn("Unrecognized thematic role type: {}", themRole);
         }
         return Optional.empty();
     }

@@ -177,7 +177,7 @@ public class VerbNetSemanticParser {
     }
 
     public static void main(String[] args) {
-        String mappingsPath = "data/pbvn-mappings.json";
+        String mappingsPath = "data/pbvn-mappings.json.updated.json";
         String modelDir = "data/models/unified-propbank";
         String wsdModel = "data/models/verbnet/nlp4j-verbnet-3.3.bin";
 

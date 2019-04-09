@@ -1,12 +1,11 @@
 package io.github.clearwsd.semlink.aligner;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.github.clearwsd.propbank.type.ArgNumber;
 import io.github.clearwsd.semlink.PropBankPhrase;
 import io.github.clearwsd.verbnet.type.NounPhrase;
 import io.github.clearwsd.verbnet.type.ThematicRoleType;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 
 /**
@@ -24,13 +23,17 @@ public class FillerAligner implements PbVnAligner {
                     .map(i -> ((NounPhrase) i))
                     .collect(Collectors.toList());
             if (phrase.getNumber() == ArgNumber.A0) {
-                if (alignment.frame().elements().size() > 0 && !alignment.alignedTarget(alignment.frame().elements().get(0))) {
-                    alignment.add(phrase, alignment.frame().elements().get(0));
+                for (NounPhrase unalignedPhrase : collect) {
+                    if (unalignedPhrase.thematicRoleType() == ThematicRoleType.AGENT) {
+                        alignment.add(phrase, unalignedPhrase);
+                        break;
+                    }
                 }
             }
             if (phrase.getNumber() == ArgNumber.A1) {
                 for (NounPhrase unalignedPhrase : collect) {
-                    if (unalignedPhrase.thematicRoleType() == ThematicRoleType.THEME) {
+                    if (unalignedPhrase.thematicRoleType() == ThematicRoleType.THEME
+                        || unalignedPhrase.thematicRoleType() == ThematicRoleType.PATIENT) {
                         alignment.add(phrase, unalignedPhrase);
                         break;
                     }

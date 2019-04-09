@@ -3,13 +3,13 @@ package io.github.clearwsd.semlink;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import io.github.clearwsd.propbank.type.ArgNumber;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.github.clearwsd.propbank.type.ArgNumber;
+import java.util.Set;
+import java.util.TreeSet;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
@@ -34,6 +34,7 @@ public class PbVnMapping {
     @Accessors(fluent = true)
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     public static class RolesetMapping {
+
         private String id;
         private List<RolesMapping> mappings = new ArrayList<>();
     }
@@ -42,16 +43,28 @@ public class PbVnMapping {
     @Accessors(fluent = true)
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     public static class RolesMapping {
+
         private String vncls;
-        private List<MappedRole> roles = new ArrayList<>();
+        private Set<MappedRole> roles = new TreeSet<>();
     }
 
     @Data
     @Accessors(fluent = true)
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-    public static class MappedRole {
+    public static class MappedRole implements Comparable<MappedRole> {
+
         private ArgNumber number;
         private String vntheta;
+
+        @Override
+        public int compareTo(MappedRole other) {
+            int number = this.number.compareTo(other.number);
+            if (number != 0) {
+                return number;
+            } else {
+                return this.vntheta.compareTo(other.vntheta);
+            }
+        }
     }
 
     public static List<PbVnMapping> fromJson(@NonNull InputStream inputStream) throws IOException {
