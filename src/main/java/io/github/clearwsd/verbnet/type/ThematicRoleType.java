@@ -1,5 +1,6 @@
 package io.github.clearwsd.verbnet.type;
 
+import java.util.EnumSet;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -53,6 +54,14 @@ public enum ThematicRoleType {
     NONE,
     VERB,
     DIRECTION;
+
+    public boolean isStartingPoint() {
+        return EnumSet.of(SOURCE, INITIAL_STATE, INITIAL_LOCATION).contains(this);
+    }
+
+    public boolean isEndingPoint() {
+        return EnumSet.of(GOAL, RESULT, PRODUCT, DESTINATION, FINAL_TIME, RECIPIENT, TRAJECTORY).contains(this);
+    }
 
     @Override
     public String toString() {

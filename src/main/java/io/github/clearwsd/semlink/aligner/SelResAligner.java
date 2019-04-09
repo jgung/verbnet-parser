@@ -13,7 +13,9 @@ import io.github.clearwsd.verbnet.type.PrepType;
 import io.github.clearwsd.verbnet.type.ThematicRoleType;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import static io.github.clearwsd.semlink.aligner.SynResAligner.getPrep;
@@ -25,6 +27,7 @@ import static io.github.clearwsd.verbnet.type.ThematicRoleType.CO_AGENT;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.CO_PATIENT;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.CO_THEME;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.DESTINATION;
+import static io.github.clearwsd.verbnet.type.ThematicRoleType.DIRECTION;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.EXTENT;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.GOAL;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.INITIAL_LOCATION;
@@ -41,19 +44,27 @@ import static io.github.clearwsd.verbnet.type.ThematicRoleType.SOURCE;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.STIMULUS;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.TIME;
 import static io.github.clearwsd.verbnet.type.ThematicRoleType.TOPIC;
+import static io.github.clearwsd.verbnet.type.ThematicRoleType.TRAJECTORY;
 
 /**
  * Aligner based on selectional restrictions.
  *
  * @author jgung
  */
+@AllArgsConstructor
 public class SelResAligner implements PbVnAligner {
+
+    private Function<PropBankPhrase, Multiset<ThematicRoleType>> roleMapper;
+
+    public SelResAligner() {
+        this(SelResAligner::getThematicRolesStrict);
+    }
 
     @Override
     public void align(@NonNull PbVnAlignment alignment) {
         for (PropBankPhrase phrase : alignment.sourcePhrases()) {
 
-            Multiset<ThematicRoleType> thematicRoles = getThematicRoles(phrase);
+            Multiset<ThematicRoleType> thematicRoles = getThematicRolesStrict(phrase);
 
             List<ThematicRoleType> sorted = thematicRoles.entrySet().stream()
                 .sorted(Ordering.natural().reverse().onResultOf(Multiset.Entry::getCount))
@@ -82,7 +93,33 @@ public class SelResAligner implements PbVnAligner {
         }
     }
 
-    public Multiset<ThematicRoleType> getThematicRoles(@NonNull PropBankPhrase phrase) {
+    public static Multiset<ThematicRoleType> getThematicRolesGreedy(@NonNull PropBankPhrase phrase) {
+        Multiset<ThematicRoleType> themRoles = getThematicRolesStrict(phrase);
+        Optional<PrepType> prep = getPrep(phrase);
+        if (prep.isPresent()) {
+            PrepType type = prep.get();
+            if (type.maybeDestination()) {
+                themRoles.add(DESTINATION);
+                themRoles.add(GOAL);
+            }
+            if (type == PrepType.TO) {
+                themRoles.add(PRODUCT);
+                themRoles.add(RESULT);
+                themRoles.add(PREDICATE);
+            }
+            if (type.maybeLocation()) {
+                themRoles.add(LOCATION);
+            }
+            if (type.isTrajectory() || type == PrepType.FROM) {
+                themRoles.add(DIRECTION);
+                themRoles.add(TRAJECTORY);
+            }
+        }
+        return themRoles;
+    }
+
+
+    public static Multiset<ThematicRoleType> getThematicRolesStrict(@NonNull PropBankPhrase phrase) {
         Multiset<ThematicRoleType> themRoles = TreeMultiset.create();
         Optional<PrepType> prep = getPrep(phrase);
 
@@ -97,7 +134,7 @@ public class SelResAligner implements PbVnAligner {
                 themRoles.add(RESULT);
             } else if (type == PrepType.TOWARDS) {
                 themRoles.add(DESTINATION);
-            } else if (type == PrepType.FROM) {
+            } else if (type.maybeSource()) {
                 themRoles.add(INITIAL_LOCATION);
                 themRoles.add(INITIAL_STATE);
                 themRoles.add(SOURCE);
@@ -130,6 +167,8 @@ public class SelResAligner implements PbVnAligner {
                 if (containsNumber(phrase)) {
                     themRoles.add(EXTENT);
                 }
+            } else if (type.isTrajectory()) {
+                themRoles.add(TRAJECTORY);
             }
         }
 
@@ -150,6 +189,8 @@ public class SelResAligner implements PbVnAligner {
                 themRoles.add(DESTINATION);
             }
             themRoles.add(PATH);
+            themRoles.add(TRAJECTORY);
+            themRoles.add(DIRECTION);
         }
 
         if (phrase.getNumber() == ArgNumber.A0) {
@@ -159,7 +200,7 @@ public class SelResAligner implements PbVnAligner {
         return themRoles;
     }
 
-    private boolean containsNumber(PropBankPhrase phrase) {
+    private static boolean containsNumber(PropBankPhrase phrase) {
         for (DepNode node : phrase.tokens()) {
             if ("CD".equalsIgnoreCase(node.feature(FeatureType.Pos))) {
                 return true;
@@ -168,7 +209,7 @@ public class SelResAligner implements PbVnAligner {
         return false;
     }
 
-    private boolean startsWithWhere(PropBankPhrase phrase) {
+    private static boolean startsWithWhere(PropBankPhrase phrase) {
         return getFirstLemma(phrase).equalsIgnoreCase("where");
     }
 

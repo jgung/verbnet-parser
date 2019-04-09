@@ -38,9 +38,16 @@ public class FillerAligner implements PbVnAligner {
                         break;
                     }
                 }
+            } else if (phrase.getNumber() == ArgNumber.A3) {
+                for (NounPhrase unalignedPhrase : collect) {
+                    if (unalignedPhrase.thematicRoleType().isStartingPoint()) {
+                        alignment.add(phrase, unalignedPhrase);
+                        break;
+                    }
+                }
             } else if (phrase.getNumber() == ArgNumber.A4) {
                 for (NounPhrase unalignedPhrase : collect) {
-                    if (unalignedPhrase.thematicRoleType() == ThematicRoleType.DESTINATION) {
+                    if (unalignedPhrase.thematicRoleType().isEndingPoint()) {
                         alignment.add(phrase, unalignedPhrase);
                         break;
                     }

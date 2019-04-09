@@ -40,7 +40,8 @@ public class PropBankVerbNetAligner {
             new RoleMappingAligner(),
             new SynResAligner(),
             new SelResAligner(),
-            new FillerAligner()
+            new FillerAligner(),
+            new SelResAligner(SelResAligner::getThematicRolesGreedy)
     );
 
     public PropBankVerbNetAligner(@NonNull PbVnMappings mappings) {
