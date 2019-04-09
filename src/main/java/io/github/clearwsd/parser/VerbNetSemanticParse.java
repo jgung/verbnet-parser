@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * Default {@link VerbNetSemanticParse} implementation.
+ * Aggregate of data output during semantic parsing.
  *
  * @author jgung
  */
@@ -25,6 +25,8 @@ public class VerbNetSemanticParse {
 
     @Override
     public String toString() {
-        return props.stream().map(Object::toString).collect(Collectors.joining("\n\n"));
+        return props.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining("\n\n"));
     }
 }

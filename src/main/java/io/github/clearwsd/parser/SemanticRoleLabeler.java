@@ -1,57 +1,43 @@
 package io.github.clearwsd.parser;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.tfnlp.app.Chunking;
-import io.github.clearwsd.tfnlp.app.ShallowParser;
-import io.github.clearwsd.tfnlp.app.ShallowParserUtils;
-import io.github.clearwsd.tfnlp.type.ITokenSequence;
-import io.github.clearwsd.type.DefaultNlpFocus;
-import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
-import io.github.clearwsd.type.NlpFocus;
 import lombok.NonNull;
 
 /**
- * Semantic role labeling system.
+ * Semantic role labeler, which produces semantic role labels over an input {@link DepTree dependency tree} with respect to a
+ * list of {@link SensePrediction predicates}.
  *
+ * @param <A> argument type
  * @author jgung
  */
-public class SemanticRoleLabeler<A> {
+public interface SemanticRoleLabeler<A> {
 
-    private ShallowParser shallowParser;
-    private Function<String, A> argMapper;
-    private Function<NlpFocus<DepNode, DepTree>, ITokenSequence> inputAdapter = RoleLabelerUtils::focus2Sequence;
+    /**
+     * Apply semantic role labeling to an input {@link DepTree dependency parse} with respect to a list of
+     * {@link SensePrediction predicates}. A single {@link Proposition proposition} is created for each input predicate.
+     *
+     * @param tree       input dependency parse tree
+     * @param predicates predicates/sense predictions indexed to tokens in the tree
+     * @param <T>        type of sense for predicate
+     * @return a list of propositions corresponding to role labels for each input predicate
+     */
+    <T> List<Proposition<T, A>> parse(@NonNull DepTree tree, @NonNull List<SensePrediction<T>> predicates);
 
-    public SemanticRoleLabeler(@NonNull ShallowParser shallowParser, @NonNull Function<String, A> argMapper) {
-        this.shallowParser = shallowParser;
-        this.argMapper = argMapper;
-    }
-
-    public <T> List<Proposition<T, A>> parse(@NonNull DepTree tree, @NonNull List<SensePrediction<T>> predicates) {
-
-        List<NlpFocus<DepNode, DepTree>> foci = predicates.stream()
-                .map(rel -> new DefaultNlpFocus<>(rel.index(), tree.get(rel.index()), tree))
-                .collect(Collectors.toList());
-
-        if (foci.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<ITokenSequence> seqs = foci.stream().map(inputAdapter).collect(Collectors.toList());
-        List<Chunking<A>> chunkings = shallowParser.shallowParseBatch(seqs).stream()
-                .map(chunks -> ShallowParserUtils.mapChunks(chunks, argMapper))
-                .collect(Collectors.toList());
-
-        Iterator<SensePrediction<T>> senses = predicates.iterator();
-        return chunkings.stream()
-                .map(chunking -> new Proposition<>(senses.next(), chunking))
-                .collect(Collectors.toList());
+    /**
+     * Apply semantic role labeling to an input {@link DepTree dependency parse} with respect to a single
+     * {@link SensePrediction predicate}.
+     *
+     * @param tree      input dependency parse tree
+     * @param predicate predicate/sense prediction indexed to a token in the tree
+     * @param <T>       type of sense for predicate
+     * @return a proposition corresponding to a role labeling of the input tree with respect to the input predicate
+     */
+    default <T> Proposition<T, A> parse(@NonNull DepTree tree, @NonNull SensePrediction<T> predicate) {
+        return parse(tree, Collections.singletonList(predicate)).get(0);
     }
 
 }

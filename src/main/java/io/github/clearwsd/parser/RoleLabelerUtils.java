@@ -18,15 +18,18 @@ import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.type.NlpFocus;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import static io.github.clearwsd.tfnlp.app.ShallowParserUtils.Tag.OUT;
 
 /**
- * Semantic role labeling utilities.
+ * Semantic role labeling utilities specific to our SRL system's input needs.
  *
  * @author jgung
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RoleLabelerUtils {
 
     private static final String PREDICATE_INDEX_KEY = "predicate_index";
@@ -34,6 +37,9 @@ public final class RoleLabelerUtils {
     private static final String WORD_KEY = "word";
     private static final String LABEL_KEY = "gold";
 
+    /**
+     * Convert an {@link NlpFocus} to an {@link ITokenSequence} for use in feature extraction.
+     */
     public static ITokenSequence focus2Sequence(NlpFocus<DepNode, DepTree> tree) {
         List<IToken> tokens = new ArrayList<>();
         for (DepNode node : tree.tokens()) {
@@ -45,23 +51,36 @@ public final class RoleLabelerUtils {
         return sequence;
     }
 
+    /**
+     * Populate features for a shallow semantic parser.
+     *
+     * @param tokens input sequence of tokens
+     * @return feature fields
+     */
     private static HasFields shallowSemParseFeatures(ITokenSequence tokens) {
-        List<String> words = tokens.stream().map(IToken::text).collect(Collectors.toList());
+        List<String> words = tokens.stream()
+                .map(IToken::text)
+                .collect(Collectors.toList());
         int predicateIndex = tokens.field(PREDICATE_INDEX_KEY);
 
-        Fields seq = new Fields();
-        seq.add(WORD_KEY, words);
-        seq.add(LABEL_KEY, Collections.nCopies(words.size(), OUT.prefix()));
-        seq.add(MARKER_KEY, IntStream.range(0, words.size())
+        Fields features = new Fields();
+        features.add(WORD_KEY, words);
+        features.add(LABEL_KEY, Collections.nCopies(words.size(), OUT.prefix()));
+        features.add(MARKER_KEY, IntStream.range(0, words.size())
                 .mapToObj(i -> i == predicateIndex ? String.valueOf(1) : String.valueOf(0))
                 .collect(Collectors.toList()));
-        seq.add(PREDICATE_INDEX_KEY, Collections.singletonList(String.valueOf(predicateIndex)));
-        return seq;
+        features.add(PREDICATE_INDEX_KEY, Collections.singletonList(String.valueOf(predicateIndex)));
+        return features;
     }
 
+    /**
+     * Initialize a shallow semantic parser from a Tensorflow model at a given directory.
+     *
+     * @param modelDir Tensorflow saved model directory
+     * @return shallow semantic parser
+     */
     public static ShallowParser shallowSemanticParser(@NonNull String modelDir) {
-        return new ShallowParser(TensorflowModel.fromDirectory(modelDir),
-                RoleLabelerUtils::shallowSemParseFeatures);
+        return new ShallowParser(TensorflowModel.fromDirectory(modelDir), RoleLabelerUtils::shallowSemParseFeatures);
     }
 
 }

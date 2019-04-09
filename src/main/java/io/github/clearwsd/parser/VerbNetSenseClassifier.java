@@ -11,22 +11,19 @@ import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.verbnet.VerbNet;
 import io.github.clearwsd.verbnet.VerbNetClass;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 /**
- * VerbNet classifier.
+ * VerbNet-specific {@link ParsingSensePredictor} implementation with {@link VerbNetClass} senses.
  *
  * @author jgung
  */
+@AllArgsConstructor
 public class VerbNetSenseClassifier implements ParsingSensePredictor<VerbNetClass> {
 
     private ParsingSensePredictor<IVerbClass> basePredictor;
     private VerbNet verbNet;
-
-    public VerbNetSenseClassifier(@NonNull ParsingSensePredictor<IVerbClass> basePredictor, @NonNull VerbNet verbNet) {
-        this.verbNet = verbNet;
-        this.basePredictor = basePredictor;
-    }
 
     @Override
     public List<SensePrediction<VerbNetClass>> predict(@NonNull DepTree depTree) {
@@ -60,12 +57,18 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VerbNetClas
         return new DefaultSensePrediction<>(sense.index(), sense.originalText(), sense.id(), result);
     }
 
+    /**
+     * Initialize from a given {@link io.github.clearwsd.SensePredictor} model path and {@link VerbNet} lexicon.
+     */
     public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath, @NonNull VerbNet verbNet) {
         DefaultSensePredictor<IVerbClass> predictor = DefaultSensePredictor.loadFromResource(modelPath,
                 new Nlp4jDependencyParser());
         return new VerbNetSenseClassifier(predictor, verbNet);
     }
 
+    /**
+     * Initialize from a given {@link io.github.clearwsd.SensePredictor} model path.
+     */
     public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath) {
         return fromModelPath(modelPath, new VerbNet());
     }

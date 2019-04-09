@@ -27,10 +27,10 @@ import lombok.NonNull;
 public class PropBankLightVerbMapper {
 
     private Map<String, Map<String, VerbNetClass>> mappings;
-    private SemanticRoleLabeler<PropBankArg> semanticRoleLabeler;
+    private DefaultSemanticRoleLabeler<PropBankArg> semanticRoleLabeler;
 
     public PropBankLightVerbMapper(Map<String, Map<String, VerbNetClass>> mappings,
-                                   SemanticRoleLabeler<PropBankArg> semanticRoleLabeler) {
+                                   DefaultSemanticRoleLabeler<PropBankArg> semanticRoleLabeler) {
         this.mappings = mappings;
         this.semanticRoleLabeler = semanticRoleLabeler;
     }
