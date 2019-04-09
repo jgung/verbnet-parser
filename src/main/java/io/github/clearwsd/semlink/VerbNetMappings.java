@@ -1,30 +1,11 @@
 package io.github.clearwsd.semlink;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import io.github.clearwsd.propbank.frames.Frameset;
 import io.github.clearwsd.propbank.frames.Predicate;
 import io.github.clearwsd.propbank.frames.Role;
@@ -37,6 +18,25 @@ import io.github.clearwsd.semlink.PbVnMapping.RolesetMapping;
 import io.github.clearwsd.util.TsvUtils;
 import io.github.clearwsd.verbnet.VerbNet;
 import io.github.clearwsd.verbnet.VerbNetClass;
+import io.github.clearwsd.verbnet.type.ThematicRoleType;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 import static io.github.clearwsd.propbank.frames.FramesetFactory.deserializeFrames;
@@ -61,16 +61,16 @@ public final class VerbNetMappings {
         for (Role role : roleset.roles().roles()) {
             for (VerbNetRole vnRole : role.verbNetRoles()) {
                 vnclsRoleMap.put(vnRole.verbNetClass(),
-                        new MappedRole()
-                                .number(role.number())
-                                .vntheta(vnRole.thematicRole()));
+                    new MappedRole()
+                        .number(role.number())
+                        .vntheta(vnRole.thematicRole()));
             }
         }
 
         for (Map.Entry<String, Collection<MappedRole>> entry : vnclsRoleMap.asMap().entrySet()) {
             RolesMapping rolesMapping = new RolesMapping()
-                    .vncls(entry.getKey())
-                    .roles(new ArrayList<>(entry.getValue()));
+                .vncls(entry.getKey())
+                .roles(new HashSet<>(entry.getValue()));
             rsMapping.mappings().add(rolesMapping);
         }
         return rsMapping;
@@ -83,15 +83,15 @@ public final class VerbNetMappings {
         for (Frameset frameset : frames) {
             for (Predicate predicate : frameset.predicates()) {
                 PbVnMapping mapping = mappings.computeIfAbsent(predicate.lemma(),
-                        lemma -> new PbVnMapping().lemma(lemma));
+                    lemma -> new PbVnMapping().lemma(lemma));
 
                 // if a predicate lemma is non-verbal, we need to find the corresponding verbal alias for the mapping
                 ListMultimap<RolesetAlias.AliasPos, String> posLemmaMap = LinkedListMultimap.create();
                 for (Roleset roleset : predicate.rolesets()) {
                     RolesetMapping rsMapping = getRolesetMappings(roleset);
                     if (roleset.aliases().stream()
-                            .map(RolesetAlias::pos)
-                            .noneMatch(s -> s == RolesetAlias.AliasPos.V)) {
+                        .map(RolesetAlias::pos)
+                        .noneMatch(s -> s == RolesetAlias.AliasPos.V)) {
                         // if no verbs in this roleset, no need to add to mappings
                         continue;
                     }
@@ -112,9 +112,9 @@ public final class VerbNetMappings {
         }
 
         List<PbVnMapping> collect = mappings.values().stream()
-                .filter(mapping -> !mapping.mappings().isEmpty())
-                .sorted(Comparator.comparing(PbVnMapping::lemma))
-                .collect(Collectors.toList());
+            .filter(mapping -> !mapping.mappings().isEmpty())
+            .sorted(Comparator.comparing(PbVnMapping::lemma))
+            .collect(Collectors.toList());
 
         log.debug("Read {} mappings", collect.size());
 
@@ -150,19 +150,19 @@ public final class VerbNetMappings {
                         List<VerbNetClass> partialMatches = verbNet.byBaseIdAndLemma(clsId, lemma.getKey());
                         if (partialMatches.size() > 0) {
                             results.add(String.format("%s\t%s\t%s\t%s\t%s",
-                                    clsId, vncls.getKey(), rs.id(), "Partial match", partialMatches.stream()
-                                            .map(cls -> cls.id().classId())
-                                            .distinct()
-                                            .sorted()
-                                            .collect(Collectors.joining(", "))));
+                                clsId, vncls.getKey(), rs.id(), "Partial match", partialMatches.stream()
+                                    .map(cls -> cls.id().classId())
+                                    .distinct()
+                                    .sorted()
+                                    .collect(Collectors.joining(", "))));
                         } else {
                             results.add(String.format("%s\t%s\t%s\t%s\t%s",
-                                    clsId, vncls.getKey(), rs.id(), "Missing class",
-                                    verbNet.byLemma(lemma.getKey()).stream()
-                                            .map(cls -> cls.id().classId())
-                                            .distinct()
-                                            .sorted()
-                                            .collect(Collectors.joining(", "))));
+                                clsId, vncls.getKey(), rs.id(), "Missing class",
+                                verbNet.byLemma(lemma.getKey()).stream()
+                                    .map(cls -> cls.id().classId())
+                                    .distinct()
+                                    .sorted()
+                                    .collect(Collectors.joining(", "))));
                         }
                     }
 
@@ -178,30 +178,30 @@ public final class VerbNetMappings {
                             }
                             if (!found) {
                                 results.add(String.format("%s\t%s\t%s\t%s\t%s",
-                                        mappedId, vncls.getKey(), rs.id(), "Missing lemma", ""));
+                                    mappedId, vncls.getKey(), rs.id(), "Missing lemma", ""));
                             }
                         } else {
 
                             Map<String, String> roleFixes = role2Role.getOrDefault(vid.id().classId(), Collections.emptyMap());
 
                             Set<String> mappedRoles = rs.roleMappings().values().stream()
-                                    .flatMap(Collection::stream)
-                                    .map(String::toLowerCase)
-                                    .map(r -> roleFixes.getOrDefault(r, r))
-                                    .collect(Collectors.toSet());
+                                .flatMap(Collection::stream)
+                                .map(String::toLowerCase)
+                                .map(r -> roleFixes.getOrDefault(r, r))
+                                .collect(Collectors.toSet());
 
                             Set<String> roles =
-                                    vid.parentClasses().stream().map(r -> r.verbClass().getThematicRoles().stream()
-                                            .map(role -> role.getType().getID().toLowerCase())
-                                            .collect(Collectors.toSet()))
-                                            .flatMap(Set::stream)
-                                            .collect(Collectors.toSet());
+                                vid.parentClasses().stream().map(r -> r.verbClass().getThematicRoles().stream()
+                                    .map(role -> role.getType().getID().toLowerCase())
+                                    .collect(Collectors.toSet()))
+                                    .flatMap(Set::stream)
+                                    .collect(Collectors.toSet());
 
                             String missing = String.join(", ", Sets.difference(mappedRoles, roles));
                             if (missing.length() > 0) {
                                 results.add(String.format("%s\t%s\t%s\t%s\t%s\t%s",
-                                        mappedId, vncls.getKey(), rs.id(), "Missing role mappings", String.join(", ", roles),
-                                        missing));
+                                    mappedId, vncls.getKey(), rs.id(), "Missing role mappings", String.join(", ", roles),
+                                    missing));
                             }
 
                         }
@@ -213,11 +213,89 @@ public final class VerbNetMappings {
         results.stream().sorted().forEach(System.out::println);
     }
 
+    public static void outputUpdatedMappings(String mappingsOutputPath) throws IOException {
+        Map<String, Map<String, String>> roleset2Class = TsvUtils.tsv2Map("data/pb-vn-mappings.tsv", 0, 1, 2);
+        Map<String, Map<String, String>> role2Role = TsvUtils.tsv2Map("data/role-mappings.tsv", 0, 1, 2);
+
+        List<PbVnMapping> result = PbVnMapping.fromJson(new FileInputStream(mappingsOutputPath));
+        VerbNet verbNet = new VerbNet();
+
+        List<PbVnMapping> updatedMappings = new ArrayList<>();
+
+        for (PbVnMapping mapping : result) {
+            String lemma = mapping.lemma();
+            List<RolesetMapping> newRolesetMappings = new ArrayList<>();
+            for (RolesetMapping rolesetMapping : mapping.mappings()) {
+                String rolesetId = rolesetMapping.id();
+                Map<String, RolesMapping> rolesMappings = new LinkedHashMap<>();
+                for (RolesMapping rolesMapping : rolesetMapping.mappings()) {
+                    String clsId = rolesMapping.vncls();
+
+                    Map<String, String> vnMappings = roleset2Class.getOrDefault(rolesetId, Collections.emptyMap());
+                    String correctedVncls = vnMappings.get(clsId);
+                    if (null != correctedVncls && verbNet.byId(correctedVncls).isPresent()) {
+                        clsId = correctedVncls;
+                    }
+
+                    Optional<VerbNetClass> id = verbNet.byId(clsId);
+
+                    id.ifPresent(vid -> {
+                        RolesMapping newRolesMapping = rolesMappings
+                            .computeIfAbsent(vid.id().classId(), classId -> new RolesMapping().vncls(classId));
+
+                        List<VerbNetClass> verbNetClasses = verbNet.byLemma(lemma);
+                        if (verbNetClasses.contains(vid)) {
+                            Map<String, String> roleFixes = role2Role.getOrDefault(vid.id().classId(), Collections.emptyMap());
+
+                            Set<String> roles =
+                                vid.parentClasses().stream().map(r -> r.verbClass().getThematicRoles().stream()
+                                    .map(role -> ThematicRoleType.fromString(role.getType().getID()).orElse(ThematicRoleType.NONE).toString())
+                                    .collect(Collectors.toSet()))
+                                    .flatMap(Set::stream)
+                                    .collect(Collectors.toSet());
+
+                            for (MappedRole mapped : rolesMapping.roles()) {
+                                String role = roleFixes.getOrDefault(
+                                    ThematicRoleType.fromString(mapped.vntheta().toLowerCase()).orElse(ThematicRoleType.NONE).toString(),
+                                    ThematicRoleType.fromString(mapped.vntheta().toLowerCase()).orElse(ThematicRoleType.NONE).toString());
+                                if (!roles.contains(role)) {
+                                    continue;
+                                }
+                                MappedRole updated = new MappedRole().number(mapped.number()).vntheta(role);
+                                newRolesMapping.roles().add(updated);
+                            }
+                        }
+                    });
+                }
+                if (rolesMappings.size() > 0) {
+                    RolesetMapping newRoleSetMapping = new RolesetMapping().id(rolesetId)
+                        .mappings(rolesMappings.values().stream().filter(s -> s.roles().size() > 0).collect(
+                            Collectors.toList()));
+                    if (newRoleSetMapping.mappings().size() > 0) {
+                        newRolesetMappings.add(newRoleSetMapping);
+                    }
+                }
+            }
+            if (newRolesetMappings.size() > 0) {
+                updatedMappings.add(new PbVnMapping().lemma(lemma).mappings(newRolesetMappings));
+            }
+        }
+        List<PbVnMapping> collect = updatedMappings.stream()
+            .filter(mapping -> !mapping.mappings().isEmpty())
+            .sorted(Comparator.comparing(PbVnMapping::lemma))
+            .collect(Collectors.toList());
+
+        log.debug("Read {} mappings", collect.size());
+
+        OM.writerWithDefaultPrettyPrinter().writeValue(new File(mappingsOutputPath + ".updated.json"), collect);
+    }
+
     public static void main(String[] args) throws IOException {
-        String framesPath = "src/main/resources/propbank-frames.bin";
-        String outPath = "src/main/resources/pbvn-mappings.json";
+        String framesPath = "data/propbank-frames.bin";
+        String outPath = "data/pbvn-mappings.json";
         writeMappings(framesPath, outPath);
         incompleteMappings(outPath);
+        outputUpdatedMappings(outPath);
     }
 
 }
