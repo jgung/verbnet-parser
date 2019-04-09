@@ -132,7 +132,7 @@ public class VerbNetSemanticParser {
         List<SemanticArgument> filteredArgs = semanticPredicate.arguments().stream()
                 .filter(s -> !(s instanceof ConstantArgument))
                 .collect(Collectors.toList());
-        return new SemanticPredicate(constant.get(), filteredArgs);
+        return new SemanticPredicate(constant.get(), filteredArgs, true);
     }
 
     public VerbNetSemanticParse parseSentence(@NonNull String sentence) {

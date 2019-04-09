@@ -32,6 +32,7 @@ public class SemanticPredicate {
 
     private SemanticPredicateType type;
     private List<SemanticArgument> arguments;
+    private boolean polarity;
 
     public <T> List<T> get(@NonNull SemanticArgumentType type) {
         //noinspection unchecked
@@ -46,7 +47,7 @@ public class SemanticPredicate {
                 .map(SemanticPredicate::of)
                 .collect(Collectors.toList());
 
-        return new SemanticPredicate(type, arguments);
+        return new SemanticPredicate(type, arguments, desc.getBool());
     }
 
     public static SemanticArgument of(@NonNull ISemanticArgType argType) {
@@ -71,6 +72,7 @@ public class SemanticPredicate {
 
     @Override
     public String toString() {
-        return capitalized(type) + "[" + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
+        return (!polarity ? "!" : "") + capitalized(type) + "["
+                + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
     }
 }
