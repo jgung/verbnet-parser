@@ -3,6 +3,12 @@ package io.github.clearwsd.semlink.aligner;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultiset;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.propbank.type.ArgNumber;
 import io.github.clearwsd.propbank.type.FunctionTag;
 import io.github.clearwsd.semlink.PropBankPhrase;
@@ -11,10 +17,6 @@ import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.type.FramePhrase;
 import io.github.clearwsd.verbnet.type.PrepType;
 import io.github.clearwsd.verbnet.type.ThematicRoleType;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -64,7 +66,7 @@ public class SelResAligner implements PbVnAligner {
     public void align(@NonNull PbVnAlignment alignment) {
         for (PropBankPhrase phrase : alignment.sourcePhrases()) {
 
-            Multiset<ThematicRoleType> thematicRoles = getThematicRolesStrict(phrase);
+            Multiset<ThematicRoleType> thematicRoles = roleMapper.apply(phrase);
 
             List<ThematicRoleType> sorted = thematicRoles.entrySet().stream()
                 .sorted(Ordering.natural().reverse().onResultOf(Multiset.Entry::getCount))

@@ -57,11 +57,11 @@ public enum PrepType {
     }
 
     public boolean maybeSource() {
-        return EnumSet.of(OUT_OF, FROM, OUT).contains(this);
+        return EnumSet.of(OUT_OF, FROM).contains(this);
     }
 
     public boolean maybeDestination() {
-        return EnumSet.of(TO, INTO, TOWARDS, ONTO, ON, AT).contains(this);
+        return EnumSet.of(FOR, TO, INTO, TOWARDS, ONTO, ON, AT).contains(this);
     }
 
     public static Set<PrepType> fromString(@NonNull String string) {

@@ -63,6 +63,10 @@ public enum ThematicRoleType {
         return EnumSet.of(GOAL, RESULT, PRODUCT, DESTINATION, FINAL_TIME, RECIPIENT, TRAJECTORY).contains(this);
     }
 
+    public boolean isAgentive() {
+        return EnumSet.of(AGENT, CAUSER).contains(this);
+    }
+
     @Override
     public String toString() {
         return capitalized(this);
