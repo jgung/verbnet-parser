@@ -243,7 +243,7 @@ public final class VerbNetMappings {
                         RolesMapping newRolesMapping = rolesMappings
                             .computeIfAbsent(vid.id().classId(), classId -> new RolesMapping().vncls(classId));
 
-                        List<VerbNetClass> verbNetClasses = verbNet.byLemma(lemma);
+                        List<VerbNetClass> verbNetClasses = verbNet.parentClasses(verbNet.byLemma(lemma));
                         if (verbNetClasses.contains(vid)) {
                             Map<String, String> roleFixes = role2Role.getOrDefault(vid.id().classId(), Collections.emptyMap());
 
@@ -293,8 +293,8 @@ public final class VerbNetMappings {
     public static void main(String[] args) throws IOException {
         String framesPath = "data/propbank-frames.bin";
         String outPath = "data/pbvn-mappings.json";
-        writeMappings(framesPath, outPath);
-        incompleteMappings(outPath);
+//        writeMappings(framesPath, outPath);
+//        incompleteMappings(outPath);
         outputUpdatedMappings(outPath);
     }
 

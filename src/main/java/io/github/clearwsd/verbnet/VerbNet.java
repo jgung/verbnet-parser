@@ -23,6 +23,7 @@ import edu.mit.jverbnet.data.IVerbClass;
 import edu.mit.jverbnet.index.IVerbIndex;
 import edu.mit.jverbnet.index.VerbIndex;
 import io.github.clearwsd.verbnet.VerbNetClass.VerbNetId;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -102,6 +103,10 @@ public class VerbNet {
     public List<VerbNetClass> byLemma(@NonNull String lemma) {
         String baseForm = getBaseForm(lemma);
         return lemma2Class.get(baseForm);
+    }
+
+    public List<VerbNetClass> parentClasses(@NonNull List<VerbNetClass> classes) {
+        return classes.stream().map(VerbNetClass::parentClasses).flatMap(List::stream).distinct().collect(Collectors.toList());
     }
 
     public List<VerbNetClass> byBaseIdAndLemma(String id, String lemma) {
