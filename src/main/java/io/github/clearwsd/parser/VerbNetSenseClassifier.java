@@ -60,11 +60,14 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VerbNetClas
         return new DefaultSensePrediction<>(sense.index(), sense.originalText(), sense.id(), result);
     }
 
-    public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath) {
+    public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath, @NonNull VerbNet verbNet) {
         DefaultSensePredictor<IVerbClass> predictor = DefaultSensePredictor.loadFromResource(modelPath,
                 new Nlp4jDependencyParser());
-        VerbNet verbNet = new VerbNet();
         return new VerbNetSenseClassifier(predictor, verbNet);
+    }
+
+    public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath) {
+        return fromModelPath(modelPath, new VerbNet());
     }
 
 }

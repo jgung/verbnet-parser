@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.propbank.type.ArgNumber;
 import io.github.clearwsd.propbank.type.PropBankArg;
 import io.github.clearwsd.semlink.PropBankPhrase;
@@ -19,6 +20,7 @@ import io.github.clearwsd.semlink.aligner.PbVnAlignment;
 import io.github.clearwsd.tfnlp.app.DefaultChunking;
 import io.github.clearwsd.tfnlp.app.Span;
 import io.github.clearwsd.type.DepTree;
+import io.github.clearwsd.verbnet.VerbNet;
 import io.github.clearwsd.verbnet.VerbNetClass;
 import io.github.clearwsd.verbnet.semantics.ConstantArgument;
 import io.github.clearwsd.verbnet.semantics.EventArgument;
@@ -46,6 +48,16 @@ public class VerbNetSemanticParser {
     private SemanticRoleLabeler<PropBankArg> roleLabeler;
     private VerbNetSenseClassifier classifier;
     private PropBankVerbNetAligner aligner;
+    private PropBankLightVerbMapper lightVerbMapper;
+
+    public VerbNetSemanticParser(@NonNull SemanticRoleLabeler<PropBankArg> roleLabeler,
+                                 @NonNull VerbNetSenseClassifier classifier,
+                                 @NonNull PropBankVerbNetAligner aligner) {
+        this.roleLabeler = roleLabeler;
+        this.classifier = classifier;
+        this.aligner = aligner;
+        this.lightVerbMapper = new PropBankLightVerbMapper(new HashMap<>(), roleLabeler);
+    }
 
     public List<SemanticPredicate> parsePredicates(@NonNull PbVnAlignment proposition) {
         List<SemanticPredicate> predicates = proposition.frame().frame().getSemantics().getPredicates().stream()
@@ -130,7 +142,13 @@ public class VerbNetSemanticParser {
                 .tokens(tokens)
                 .tree(parsed);
 
-        for (Proposition<VerbNetClass, PropBankArg> prop : roleLabeler.parse(parsed, classifier.predict(parsed))) {
+        List<SensePrediction<VerbNetClass>> senses = classifier.predict(parsed);
+        List<Proposition<VerbNetClass, PropBankArg>> props = roleLabeler.parse(parsed, senses).stream()
+                .map(prop -> lightVerbMapper.mapProp(parsed, prop).orElse(prop))
+                .collect(Collectors.toList());
+
+
+        for (Proposition<VerbNetClass, PropBankArg> prop : props) {
             if (prop.predicate().sense() == null) {
                 continue;
             }
@@ -180,11 +198,15 @@ public class VerbNetSemanticParser {
         String mappingsPath = "data/pbvn-mappings.json.updated.json";
         String modelDir = "data/models/unified-propbank";
         String wsdModel = "data/models/verbnet/nlp4j-verbnet-3.3.bin";
+        String lightVerbMappings = "src/main/resources/lvm.tsv";
 
         SemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
-        VerbNetSenseClassifier classifier = VerbNetSenseClassifier.fromModelPath(wsdModel);
+        VerbNet verbNet = new VerbNet();
+        VerbNetSenseClassifier classifier = VerbNetSenseClassifier.fromModelPath(wsdModel, verbNet);
         PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath);
-        VerbNetSemanticParser parser = new VerbNetSemanticParser(roleLabeler, classifier, aligner);
+        VerbNetSemanticParser parser = new VerbNetSemanticParser(roleLabeler, classifier, aligner,
+                new PropBankLightVerbMapper(PropBankLightVerbMapper.fromMappingsPath(lightVerbMappings, verbNet),
+                        roleLabeler));
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
