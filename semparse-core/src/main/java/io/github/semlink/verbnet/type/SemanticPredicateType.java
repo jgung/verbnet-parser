@@ -187,7 +187,7 @@ public enum SemanticPredicateType {
 
     public static SemanticPredicateType fromString(@NonNull String string) {
         try {
-            return valueOf(string.toUpperCase().trim());
+            return valueOf(string.toUpperCase().replaceAll("-", "_").trim());
         } catch (Exception ignored) {
         }
         return SemanticPredicateType.UNKNOWN;

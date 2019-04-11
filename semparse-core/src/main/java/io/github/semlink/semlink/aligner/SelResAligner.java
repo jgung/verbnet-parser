@@ -63,7 +63,7 @@ public class SelResAligner implements PbVnAligner {
 
     @Override
     public void align(@NonNull PbVnAlignment alignment) {
-        for (PropBankPhrase phrase : alignment.sourcePhrases()) {
+        for (PropBankPhrase phrase : alignment.sourcePhrases(false)) {
 
             Multiset<ThematicRoleType> thematicRoles = roleMapper.apply(phrase);
 
