@@ -12,9 +12,9 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import io.github.clearwsd.SensePrediction;
+import io.github.clearwsd.type.DepTree;
 import io.github.semlink.app.DefaultChunking;
 import io.github.semlink.app.Span;
-import io.github.clearwsd.type.DepTree;
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.PropBankPhrase;
@@ -22,9 +22,7 @@ import io.github.semlink.semlink.PropBankVerbNetAligner;
 import io.github.semlink.semlink.aligner.PbVnAlignment;
 import io.github.semlink.verbnet.VerbNet;
 import io.github.semlink.verbnet.VerbNetClass;
-import io.github.semlink.verbnet.semantics.ConstantArgument;
 import io.github.semlink.verbnet.semantics.EventArgument;
-import io.github.semlink.verbnet.semantics.SemanticArgument;
 import io.github.semlink.verbnet.semantics.SemanticPredicate;
 import io.github.semlink.verbnet.semantics.ThematicRoleArgument;
 import io.github.semlink.verbnet.type.FramePhrase;
@@ -83,8 +81,6 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
             if (predicate.type() == SemanticPredicateType.EQUALS) {
                 continue;
             }
-            predicate = convertPathRel(predicate);
-
             List<EventArgument<VerbNetClass>> args = predicate.get(SemanticArgumentType.EVENT);
             for (EventArgument<VerbNetClass> arg : args) {
                 arg.variable(proposition.proposition().predicate().sense());
@@ -104,38 +100,6 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         }
 
         return filtered;
-    }
-
-    private static SemanticPredicate convertPathRel(@NonNull SemanticPredicate semanticPredicate) {
-        if (semanticPredicate.type() != SemanticPredicateType.PATH_REL) {
-            return semanticPredicate;
-        }
-        Optional<SemanticPredicateType> constant = semanticPredicate.arguments().stream()
-                .filter(a -> a instanceof ConstantArgument)
-                .map(SemanticArgument::value)
-                .map(type -> {
-                    if (type.equalsIgnoreCase("ch_on_scale")) {
-                        return SemanticPredicateType.CHANGE_ON_SCALE;
-                    } else if (type.equalsIgnoreCase("ch_of_state")) {
-                        return SemanticPredicateType.CHANGE_OF_STATE;
-                    } else if (type.equalsIgnoreCase("ch_of_poss")) {
-                        return SemanticPredicateType.CHANGE_OF_POSSESSION;
-                    } else if (type.equalsIgnoreCase("ch_of_loc")) {
-                        return SemanticPredicateType.CHANGE_OF_LOCATION;
-                    } else if (type.equalsIgnoreCase("tr_of_info")) {
-                        return SemanticPredicateType.TRANSFER_OF_INFORMATION;
-                    }
-                    return SemanticPredicateType.PATH_REL;
-                })
-                .findFirst();
-        if (!constant.isPresent()) {
-            return semanticPredicate;
-        }
-
-        List<SemanticArgument> filteredArgs = semanticPredicate.arguments().stream()
-                .filter(s -> !(s instanceof ConstantArgument))
-                .collect(Collectors.toList());
-        return new SemanticPredicate(constant.get(), filteredArgs, true);
     }
 
     public VerbNetSemanticParse parseSentence(@NonNull String sentence) {
@@ -201,7 +165,7 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
     public static void main(String[] args) {
         String mappingsPath = "data/pbvn-mappings.json.updated.json";
         String modelDir = "data/models/unified-propbank";
-        String wsdModel = "data/models/verbnet/nlp4j-verbnet-3.3.bin";
+        String wsdModel = "data/models/verbnet/nlp4j-verbnet-3.3.1.bin";
         String lightVerbMappings = "semparse-core/src/main/resources/lvm.tsv";
 
         DefaultSemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);

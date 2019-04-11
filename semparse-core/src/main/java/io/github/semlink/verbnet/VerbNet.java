@@ -17,14 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import edu.mit.jverbnet.data.IMember;
 import edu.mit.jverbnet.data.IVerbClass;
 import edu.mit.jverbnet.index.IVerbIndex;
 import edu.mit.jverbnet.index.VerbIndex;
-
-import java.util.stream.Collectors;
-
 import io.github.clearwsd.verbnet.VerbNetSenseInventory;
 import lombok.Getter;
 import lombok.NonNull;
@@ -87,7 +85,7 @@ public class VerbNet {
      * Initialize sense inventory with default VerbNet from classpath resources.
      */
     public VerbNet() {
-        this(VerbNetSenseInventory.class.getClassLoader().getResource("vn3.3.xml"));
+        this(VerbNetSenseInventory.class.getClassLoader().getResource("vn3.3.1.xml"));
     }
 
     private Map<String, Collection<VerbNetClass>> baseId2Class() {

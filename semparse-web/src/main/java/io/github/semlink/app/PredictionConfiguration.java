@@ -27,8 +27,8 @@ public class PredictionConfiguration {
 
     @Value("${verbnet.demo.pbvn-mappings-path:pbvn-mappings.json}")
     private String mappingsPath = "pbvn-mappings.json";
-    @Value("${verbnet.demo.wsd-mode-path:models/verbnet/nlp4j-verbnet-3.3.bin}")
-    private String wsdModel = "models/verbnet/nlp4j-verbnet-3.3.bin";
+    @Value("${verbnet.demo.wsd-mode-path:models/verbnet/nlp4j-verbnet-3.3.1.bin}")
+    private String wsdModel = "models/verbnet/nlp4j-verbnet-3.3.1.bin";
     @Value("${verbnet.demo.srl-model-path:models/unified-propbank}")
     private String srlModelDir = "models/unified-propbank/";
     @Value("${verbnet.demo.lvm-path:lvm.tsv}")

@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class LengthExtractor extends KeyExtractor<Feature> {
 
-    public static final String LENGTH_KEY = "len";
+    private static final String LENGTH_KEY = "len";
 
     public LengthExtractor(String key) {
         super(LENGTH_KEY, key);
