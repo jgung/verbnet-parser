@@ -65,12 +65,6 @@ public class SemanticPredicateModel {
                     this.value = "?";
                 }
                 this.type = ((ThematicRoleArgument) argument).thematicRoleType().toString();
-            } else if (argument instanceof EventArgument) {
-                Object variable = ((EventArgument) argument).variable();
-                if (variable instanceof VerbNetClass) {
-                    this.value = ((VerbNetClass) variable).verbClass().getID();
-                }
-                this.type = StringUtils.capitalized(((EventArgument) argument).relation());
             } else {
                 this.value = argument.value();
             }
