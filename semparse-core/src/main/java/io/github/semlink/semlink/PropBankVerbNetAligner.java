@@ -75,7 +75,7 @@ public class PropBankVerbNetAligner {
 
         String lemma = source.get(prop.relSpan().startIndex()).feature(FeatureType.Lemma);
         List<PbVnMappings.Roleset> rolesets = prop.predicate().sense().related().stream()
-            .map(s -> mappings.rolesets(lemma, s.verbNetId().classId()))
+            .map(s -> mappings.rolesets(lemma, s.verbNetId().rootId()))
             .flatMap(List::stream)
             .distinct()
             .collect(Collectors.toList());

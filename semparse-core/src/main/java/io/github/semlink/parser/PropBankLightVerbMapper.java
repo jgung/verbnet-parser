@@ -56,7 +56,7 @@ public class PropBankLightVerbMapper {
         }
         return Optional.of(new DefaultSensePrediction<>(prr.startIndex(), prr.get(tree).stream()
             .map(node -> (String) node.feature(FeatureType.Text))
-            .collect(Collectors.joining(" ")), mapping.verbNetId().classId(), mapping));
+            .collect(Collectors.joining(" ")), mapping.verbNetId().rootId(), mapping));
     }
 
     public static Map<String, Map<String, VnClass>> fromMappingsPath(@NonNull String mappingsPath,
