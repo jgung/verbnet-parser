@@ -1,14 +1,12 @@
 package io.github.semlink.propbank.frames;
 
+import io.github.semlink.util.LowerCaseEnumAdapter;
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import io.github.semlink.util.LowerCaseEnumAdapter;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -81,30 +79,35 @@ public class Inflection implements Serializable {
     }
 
     private static final class PersonAdapter extends LowerCaseEnumAdapter<Person> {
+
         PersonAdapter() {
             super(Person.class, Person.NS);
         }
     }
 
     private static final class TenseAdapter extends LowerCaseEnumAdapter<Tense> {
+
         TenseAdapter() {
             super(Tense.class, Tense.NS);
         }
     }
 
     private static final class AspectAdapter extends LowerCaseEnumAdapter<Aspect> {
+
         AspectAdapter() {
             super(Aspect.class, Aspect.NS);
         }
     }
 
     private static final class VoiceAdapter extends LowerCaseEnumAdapter<Voice> {
+
         VoiceAdapter() {
             super(Voice.class, Voice.NS);
         }
     }
 
     private static final class FormAdapter extends LowerCaseEnumAdapter<Form> {
+
         FormAdapter() {
             super(Form.class, Form.NS);
         }

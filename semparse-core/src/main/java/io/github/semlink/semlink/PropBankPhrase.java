@@ -1,14 +1,13 @@
 package io.github.semlink.semlink;
 
+import io.github.clearwsd.type.DepNode;
+import io.github.clearwsd.type.DepTree;
+import io.github.semlink.app.Span;
+import io.github.semlink.parser.Proposition;
+import io.github.semlink.propbank.type.PropBankArg;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import io.github.semlink.parser.Proposition;
-import io.github.semlink.propbank.type.PropBankArg;
-import io.github.semlink.app.Span;
-import io.github.clearwsd.type.DepNode;
-import io.github.clearwsd.type.DepTree;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;

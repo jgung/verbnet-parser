@@ -1,13 +1,11 @@
 package io.github.semlink.verbnet.semantics;
 
-import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.util.StringUtils;
+import io.github.semlink.verbnet.type.SemanticArgumentType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
-
-import static io.github.semlink.util.StringUtils.capitalized;
 
 /**
  * VerbNet semantic argument.

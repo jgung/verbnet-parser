@@ -1,7 +1,10 @@
 package io.github.semlink.verbnet.type;
 
-import edu.mit.jverbnet.data.syntax.ISyntaxArgDesc;
-import edu.mit.jverbnet.data.syntax.SyntaxArgType;
+import io.github.clearwsd.verbnet.syntax.VnLex;
+import io.github.clearwsd.verbnet.syntax.VnNounPhrase;
+import io.github.clearwsd.verbnet.syntax.VnPrep;
+import io.github.clearwsd.verbnet.syntax.VnSyntax;
+import io.github.clearwsd.verbnet.syntax.VnSyntaxType;
 import io.github.semlink.semlink.AlignPhrase;
 import lombok.Getter;
 import lombok.NonNull;
@@ -21,15 +24,15 @@ public class FramePhrase extends AlignPhrase {
         this.type = type;
     }
 
-    public static FramePhrase of(@NonNull ISyntaxArgDesc desc) {
-        if (desc.getType() == SyntaxArgType.NP) {
-            return NounPhrase.of(desc);
-        } else if (desc.getType() == SyntaxArgType.PREP) {
-            return Preposition.of(desc);
-        } else if (desc.getType() == SyntaxArgType.LEX) {
-            return LexicalElement.of(desc);
+    public static FramePhrase of(@NonNull VnSyntax desc) {
+        if (desc.type() == VnSyntaxType.NP) {
+            return NounPhrase.of((VnNounPhrase) desc);
+        } else if (desc.type() == VnSyntaxType.PREP) {
+            return Preposition.of((VnPrep) desc);
+        } else if (desc.type() == VnSyntaxType.LEX) {
+            return LexicalElement.of((VnLex) desc);
         }
-        return new FramePhrase(VerbNetSyntaxType.valueOf(desc.getType().name()));
+        return new FramePhrase(VerbNetSyntaxType.valueOf(desc.type().name()));
     }
 
     @Override

@@ -1,11 +1,10 @@
 package io.github.semlink.verbnet.type;
 
 import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
-
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public enum PrepType {
 
     ABOUT,
@@ -45,7 +44,8 @@ public enum PrepType {
     UNDER,
     UNTIL,
     UPON,
-    WITH;
+    WITH,
+    UNKNOWN;
 
     public boolean isTrajectory() {
         return EnumSet.of(BETWEEN, IN_BETWEEN, THROUGH, OVER, UNDER, ABOVE, BELOW, BACK, BESIDE).contains(this);
@@ -64,15 +64,12 @@ public enum PrepType {
         return EnumSet.of(FOR, TO, INTO, TOWARDS, ONTO, ON, AT).contains(this);
     }
 
-    public static Set<PrepType> fromString(@NonNull String string) {
-        String[] fields = string.trim().toUpperCase().replaceAll("\\?", "").split("\\||\\s+");
-        Set<PrepType> values = new HashSet<>();
-        for (String val : fields) {
-            try {
-                values.add(PrepType.valueOf(val.trim()));
-            } catch (Exception ignored) {
-            }
+    public static PrepType fromString(@NonNull String string) {
+        try {
+            return PrepType.valueOf(string.trim().toUpperCase());
+        } catch (Exception ignored) {
+            log.info("Unrecognized preposition type: {}", string);
+            return UNKNOWN;
         }
-        return values;
     }
 }

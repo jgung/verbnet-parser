@@ -1,9 +1,6 @@
 package io.github.semlink.propbank.frames;
 
 import com.google.common.base.Stopwatch;
-
-import org.xml.sax.InputSource;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,13 +12,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
-
 import lombok.extern.slf4j.Slf4j;
+import org.xml.sax.InputSource;
 
 
 /**
@@ -45,15 +41,15 @@ public class FramesetFactory {
     public static List<Frameset> readFramesets(Path directory, String extension) {
         try {
             List<Frameset> inventories = Files.walk(directory, Integer.MAX_VALUE)
-                    .filter(f -> f.toString().endsWith(extension))
-                    .map(path -> {
-                        try {
-                            return readFrameset(Files.newInputStream(path));
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error reading frame file at " + path.toString(), e);
-                        }
-                    })
-                    .collect(Collectors.toList());
+                .filter(f -> f.toString().endsWith(extension))
+                .map(path -> {
+                    try {
+                        return readFrameset(Files.newInputStream(path));
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error reading frame file at " + path.toString(), e);
+                    }
+                })
+                .collect(Collectors.toList());
             log.debug("Read {} frame files at {}", inventories.size(), directory.toString());
             return inventories;
         } catch (Exception e) {
@@ -83,7 +79,7 @@ public class FramesetFactory {
             parserFactory.setFeature(LOAD_EXTERNAL_DTD, false);
             SAXSource source = new SAXSource(parserFactory.newSAXParser().getXMLReader(), new InputSource(inputStream));
             return (Frameset) JAXBContext.newInstance(Frameset.class, Example.ExampleRelation.class, Example.ExampleRelation.class)
-                    .createUnmarshaller().unmarshal(source);
+                .createUnmarshaller().unmarshal(source);
         } catch (Exception e) {
             throw new RuntimeException("Error reading frame file", e);
         }
@@ -114,7 +110,7 @@ public class FramesetFactory {
 
         // serialize frames
         try (FileOutputStream fos = new FileOutputStream(outPath);
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(frames);
         }
         try (FileInputStream fis = new FileInputStream(outPath)) {

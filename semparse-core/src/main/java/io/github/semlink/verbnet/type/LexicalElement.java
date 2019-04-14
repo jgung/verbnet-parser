@@ -1,8 +1,7 @@
 package io.github.semlink.verbnet.type;
 
+import io.github.clearwsd.verbnet.syntax.VnLex;
 import java.util.Optional;
-
-import edu.mit.jverbnet.data.syntax.ISyntaxArgDesc;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
@@ -19,9 +18,9 @@ public class LexicalElement extends FramePhrase {
         this.value = type;
     }
 
-    public static LexicalElement of(@NonNull ISyntaxArgDesc desc) {
+    public static LexicalElement of(@NonNull VnLex desc) {
         LexicalElement element = new LexicalElement(LexType.NONE);
-        LexType.fromString(desc.getValue()).ifPresent(val -> element.value = val);
+        LexType.fromString(desc.value()).ifPresent(val -> element.value = val);
         return element;
     }
 
@@ -49,9 +48,9 @@ public class LexicalElement extends FramePhrase {
         public static Optional<LexType> fromString(@NonNull String string) {
             try {
                 string = string.toUpperCase()
-                        .replaceAll("[]+\\[']", " ")
-                        .trim()
-                        .replaceAll(" +", "_");
+                    .replaceAll("[]+\\[']", " ")
+                    .trim()
+                    .replaceAll(" +", "_");
 
                 return Optional.of(LexType.valueOf(string));
             } catch (Exception ignored) {

@@ -2,16 +2,14 @@ package io.github.semlink.verbnet.type;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
-
+import io.github.clearwsd.verbnet.VnFrame;
+import io.github.clearwsd.verbnet.syntax.VnSyntax;
+import io.github.clearwsd.verbnet.syntax.VnSyntaxType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import edu.mit.jverbnet.data.IFrame;
-import edu.mit.jverbnet.data.syntax.ISyntaxArgDesc;
-import edu.mit.jverbnet.data.syntax.SyntaxArgType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,15 +24,13 @@ public class SyntacticFrame {
     private List<FramePhrase> elements = new ArrayList<>();
     private Map<ThematicRoleType, FramePhrase> roles = new HashMap<>();
     private ListMultimap<VerbNetSyntaxType, FramePhrase> typeMap = LinkedListMultimap.create();
-    private IFrame frame;
+    private VnFrame frame;
 
-    public static SyntacticFrame of(@NonNull IFrame frame) {
+    public static SyntacticFrame of(@NonNull VnFrame frame) {
         SyntacticFrame result = new SyntacticFrame();
         result.frame = frame;
 
-        result.addElements(frame.getSyntax().getPreVerbDescriptors());
-        result.elements.add(new FramePhrase(VerbNetSyntaxType.VERB));
-        result.addElements(frame.getSyntax().getPostVerbDescriptors());
+        result.addElements(frame.syntax());
 
         int index = 0;
         for (FramePhrase phrase : result.elements) {
@@ -53,13 +49,13 @@ public class SyntacticFrame {
         return typeMap.get(type);
     }
 
-    private void addElements(List<ISyntaxArgDesc> descList) {
+    private void addElements(List<VnSyntax> descList) {
         Optional<Preposition> preposition = Optional.empty();
-        for (ISyntaxArgDesc syntaxElement : descList) {
+        for (VnSyntax syntaxElement : descList) {
             FramePhrase element = FramePhrase.of(syntaxElement);
 
             preposition.ifPresent(prep -> {
-                if (syntaxElement.getType() == SyntaxArgType.NP) {
+                if (syntaxElement.type() == VnSyntaxType.NP) {
                     ((NounPhrase) element).preposition(prep);
                 } else {
                     elements.add(prep);

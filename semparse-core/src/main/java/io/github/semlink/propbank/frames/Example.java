@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -15,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -60,16 +58,16 @@ public class Example implements Serializable {
 
     public List<ExampleArgument> arguments() {
         return children.stream()
-                .filter(node -> node instanceof ExampleArgument)
-                .map(node -> (ExampleArgument) node)
-                .collect(Collectors.toList());
+            .filter(node -> node instanceof ExampleArgument)
+            .map(node -> (ExampleArgument) node)
+            .collect(Collectors.toList());
     }
 
     public Optional<ExampleRelation> relation() {
         return children.stream()
-                .filter(node -> node instanceof ExampleRelation)
-                .findFirst()
-                .map(node -> (ExampleRelation) node);
+            .filter(node -> node instanceof ExampleRelation)
+            .findFirst()
+            .map(node -> (ExampleRelation) node);
     }
 
     /**

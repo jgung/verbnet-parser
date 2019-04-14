@@ -18,7 +18,9 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class AlignPhrase {
 
-    /** Unique index within sequence. */
+    /**
+     * Unique index within sequence.
+     */
     private int index;
 
 }

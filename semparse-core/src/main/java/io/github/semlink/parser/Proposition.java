@@ -1,11 +1,10 @@
 package io.github.semlink.parser;
 
-import java.util.List;
-import java.util.function.Function;
-
 import io.github.clearwsd.SensePrediction;
 import io.github.semlink.app.Chunking;
 import io.github.semlink.app.Span;
+import java.util.List;
+import java.util.function.Function;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;

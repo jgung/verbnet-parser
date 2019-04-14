@@ -36,7 +36,7 @@ public class PropModel {
 
     public PropModel(VerbNetProp prop) {
         if (prop.propbankProp().predicate().sense() != null) {
-            this.sense = prop.propbankProp().predicate().sense().verbClass().getID();
+            this.sense = prop.propbankProp().predicate().sense().verbNetId().toString();
         } else {
             this.sense = prop.propbankProp().predicate().id();
         }

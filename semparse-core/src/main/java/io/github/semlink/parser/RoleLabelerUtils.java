@@ -1,11 +1,9 @@
 package io.github.semlink.parser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
+import io.github.clearwsd.type.DepNode;
+import io.github.clearwsd.type.DepTree;
+import io.github.clearwsd.type.FeatureType;
+import io.github.clearwsd.type.NlpFocus;
 import io.github.semlink.app.ShallowParser;
 import io.github.semlink.app.TensorflowModel;
 import io.github.semlink.type.Fields;
@@ -14,10 +12,11 @@ import io.github.semlink.type.IToken;
 import io.github.semlink.type.ITokenSequence;
 import io.github.semlink.type.Token;
 import io.github.semlink.type.TokenSequence;
-import io.github.clearwsd.type.DepNode;
-import io.github.clearwsd.type.DepTree;
-import io.github.clearwsd.type.FeatureType;
-import io.github.clearwsd.type.NlpFocus;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -59,16 +58,16 @@ public final class RoleLabelerUtils {
      */
     private static HasFields shallowSemParseFeatures(ITokenSequence tokens) {
         List<String> words = tokens.stream()
-                .map(IToken::text)
-                .collect(Collectors.toList());
+            .map(IToken::text)
+            .collect(Collectors.toList());
         int predicateIndex = tokens.field(PREDICATE_INDEX_KEY);
 
         Fields features = new Fields();
         features.add(WORD_KEY, words);
         features.add(LABEL_KEY, Collections.nCopies(words.size(), OUT.prefix()));
         features.add(MARKER_KEY, IntStream.range(0, words.size())
-                .mapToObj(i -> i == predicateIndex ? String.valueOf(1) : String.valueOf(0))
-                .collect(Collectors.toList()));
+            .mapToObj(i -> i == predicateIndex ? String.valueOf(1) : String.valueOf(0))
+            .collect(Collectors.toList()));
         features.add(PREDICATE_INDEX_KEY, Collections.singletonList(String.valueOf(predicateIndex)));
         return features;
     }

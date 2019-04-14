@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 import io.github.clearwsd.type.FeatureType;
 import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.util.StringUtils;
-import io.github.semlink.verbnet.VerbNetClass;
-import io.github.semlink.verbnet.semantics.EventArgument;
 import io.github.semlink.verbnet.semantics.SemanticArgument;
 import io.github.semlink.verbnet.semantics.SemanticPredicate;
 import io.github.semlink.verbnet.semantics.ThematicRoleArgument;

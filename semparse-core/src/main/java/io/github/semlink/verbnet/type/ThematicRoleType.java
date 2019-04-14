@@ -1,14 +1,11 @@
 package io.github.semlink.verbnet.type;
 
+import io.github.semlink.util.StringUtils;
 import java.util.EnumSet;
 import java.util.Optional;
-
-import io.github.semlink.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.github.semlink.util.StringUtils.capitalized;
 
 @Slf4j
 @AllArgsConstructor

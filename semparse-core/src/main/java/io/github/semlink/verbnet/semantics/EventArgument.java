@@ -1,11 +1,9 @@
 package io.github.semlink.verbnet.semantics;
 
 import com.google.common.base.Strings;
-
+import io.github.semlink.verbnet.type.SemanticArgumentType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import io.github.semlink.verbnet.type.SemanticArgumentType;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
@@ -21,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Accessors(fluent = true)
 public class EventArgument<T> extends VariableSemanticArgument<T> {
 
-    public static final Pattern EVENT_PATTERN = Pattern.compile("(during|end|start|result)?(\\(E\\d?\\)|E\\d?)");
+    public static final Pattern EVENT_PATTERN = Pattern.compile("(during|end|start|result)?(\\(E\\d?\\)|E\\d?)",
+        Pattern.CASE_INSENSITIVE);
 
     public EventArgument(@NonNull String value) {
         super(SemanticArgumentType.EVENT, value);

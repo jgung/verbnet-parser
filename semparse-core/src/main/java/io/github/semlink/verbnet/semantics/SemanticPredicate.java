@@ -1,17 +1,13 @@
 package io.github.semlink.verbnet.semantics;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import edu.mit.jverbnet.data.ThematicRoleType;
-import edu.mit.jverbnet.data.semantics.ArgTypeConstant;
-import edu.mit.jverbnet.data.semantics.ArgTypeEvent;
-import edu.mit.jverbnet.data.semantics.ArgTypeVerbSpecific;
-import edu.mit.jverbnet.data.semantics.IPredicateDesc;
-import edu.mit.jverbnet.data.semantics.ISemanticArgType;
+import io.github.clearwsd.verbnet.semantics.VnPredicatePolarity;
+import io.github.clearwsd.verbnet.semantics.VnSemanticArgument;
+import io.github.clearwsd.verbnet.semantics.VnSemanticPredicate;
 import io.github.semlink.util.StringUtils;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.verbnet.type.SemanticPredicateType;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,42 +32,38 @@ public class SemanticPredicate {
     public <T> List<T> get(@NonNull SemanticArgumentType type) {
         //noinspection unchecked
         return (List<T>) arguments.stream()
-                .filter(i -> i.type() == type)
-                .collect(Collectors.toList());
+            .filter(i -> i.type() == type)
+            .collect(Collectors.toList());
     }
 
-    public static SemanticPredicate of(@NonNull IPredicateDesc desc) {
-        SemanticPredicateType type = SemanticPredicateType.fromString(desc.getValue().getID());
-        List<SemanticArgument> arguments = desc.getArgumentTypes().stream()
-                .map(SemanticPredicate::of)
-                .collect(Collectors.toList());
+    public static SemanticPredicate of(@NonNull VnSemanticPredicate desc) {
+        SemanticPredicateType type = SemanticPredicateType.fromString(desc.type());
+        List<SemanticArgument> arguments = desc.semanticArguments().stream()
+            .map(SemanticPredicate::of)
+            .collect(Collectors.toList());
 
-        return new SemanticPredicate(type, arguments, desc.getBool());
+        return new SemanticPredicate(type, arguments, desc.polarity() == VnPredicatePolarity.TRUE);
     }
 
-    public static SemanticArgument of(@NonNull ISemanticArgType argType) {
-        SemanticArgumentType type = SemanticArgumentType.fromString(argType.getArgType().getID());
+    public static SemanticArgument of(@NonNull VnSemanticArgument argType) {
+        SemanticArgumentType type = SemanticArgumentType.fromString(argType.type());
 
         switch (type) {
             case CONSTANT:
-                ArgTypeConstant constant = (ArgTypeConstant) argType;
-                return new ConstantArgument(constant.getID());
+                return new ConstantArgument(argType.value());
             case EVENT:
-                ArgTypeEvent event = (ArgTypeEvent) argType;
-                return new EventArgument(event.name());
+                return new EventArgument(argType.value());
             case THEMROLE:
-                ThematicRoleType roleType = (ThematicRoleType) argType;
-                return new ThematicRoleArgument<>(roleType.getID());
+                return new ThematicRoleArgument<>(argType.value());
             default:
             case VERBSPECIFIC:
-                ArgTypeVerbSpecific vsp = (ArgTypeVerbSpecific) argType;
-                return new VerbSpecificArgument<>(vsp.getID());
+                return new VerbSpecificArgument<>(argType.value());
         }
     }
 
     @Override
     public String toString() {
         return (!polarity ? "!" : "") + StringUtils.capitalized(type) + "["
-                + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
+            + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
     }
 }

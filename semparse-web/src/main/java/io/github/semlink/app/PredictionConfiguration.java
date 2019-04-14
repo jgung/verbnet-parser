@@ -1,5 +1,7 @@
 package io.github.semlink.app;
 
+import io.github.clearwsd.verbnet.DefaultVnIndex;
+import io.github.clearwsd.verbnet.VnIndex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +13,6 @@ import io.github.semlink.parser.VerbNetSemanticParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.PropBankVerbNetAligner;
-import io.github.semlink.verbnet.VerbNet;
 
 import static io.github.semlink.app.util.JarExtractionUtil.resolveDirectory;
 import static io.github.semlink.app.util.JarExtractionUtil.resolveFile;
@@ -35,19 +36,19 @@ public class PredictionConfiguration {
     private String lvmPath = "lvm.tsv";
 
     @Bean
-    public VerbNet verbNet() {
-        return new VerbNet();
+    public VnIndex verbNet() {
+        return new DefaultVnIndex();
     }
 
     @Bean
-    public VerbNetSenseClassifier verbNetSenseClassifier(@Autowired VerbNet verbNet) {
+    public VerbNetSenseClassifier verbNetSenseClassifier(@Autowired VnIndex verbNet) {
         String wsdModel = resolveFile(this.wsdModel);
         return VerbNetSenseClassifier.fromModelPath(wsdModel, verbNet);
     }
 
     @Bean
     public VerbNetSemanticParser verbNetSemanticParser(@Autowired VerbNetSenseClassifier verbNetSenseClassifier,
-                                                       @Autowired VerbNet verbNet) {
+                                                       @Autowired VnIndex verbNet) {
         String mappingsPath = resolveFile(this.mappingsPath);
         String modelDir = resolveDirectory(this.srlModelDir);
         String lvmPath = resolveFile(this.lvmPath);

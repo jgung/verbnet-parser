@@ -1,12 +1,11 @@
 package io.github.semlink.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import io.github.clearwsd.verbnet.VnClass;
 import io.github.semlink.propbank.type.PropBankArg;
-import io.github.semlink.verbnet.VerbNetClass;
 import io.github.semlink.verbnet.semantics.SemanticPredicate;
 import io.github.semlink.verbnet.type.ThematicRoleType;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -24,8 +23,8 @@ public class VerbNetProp {
     private int tokenIndex;
     private List<String> tokens;
     private List<SemanticPredicate> predicates = new ArrayList<>();
-    private Proposition<VerbNetClass, PropBankArg> propbankProp;
-    private Proposition<VerbNetClass, ThematicRoleType> verbnetProp;
+    private Proposition<VnClass, PropBankArg> propbankProp;
+    private Proposition<VnClass, ThematicRoleType> verbnetProp;
 
     @Override
     public String toString() {

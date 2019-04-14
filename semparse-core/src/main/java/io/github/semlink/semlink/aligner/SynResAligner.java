@@ -1,13 +1,12 @@
 package io.github.semlink.semlink.aligner;
 
-import java.util.Optional;
-
-import io.github.semlink.semlink.PropBankPhrase;
 import io.github.clearwsd.type.FeatureType;
+import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.NounPhrase;
 import io.github.semlink.verbnet.type.PrepType;
 import io.github.semlink.verbnet.type.Preposition;
+import java.util.Optional;
 import lombok.NonNull;
 
 /**

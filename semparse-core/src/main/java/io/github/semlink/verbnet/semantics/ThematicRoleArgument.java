@@ -1,16 +1,13 @@
 package io.github.semlink.verbnet.semantics;
 
-import java.util.Optional;
-
+import io.github.semlink.util.StringUtils;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import io.github.semlink.util.StringUtils;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.github.semlink.util.StringUtils.capitalized;
 
 /**
  * Thematic role semantic argument.
@@ -36,6 +33,6 @@ public class ThematicRoleArgument<T> extends VariableSemanticArgument<T> {
 
     @Override
     public String toString() {
-        return StringUtils.capitalized(thematicRoleType) + "(" + (variable == null ? "?" :  variable.toString()) + ")";
+        return StringUtils.capitalized(thematicRoleType) + "(" + (variable == null ? "?" : variable.toString()) + ")";
     }
 }

@@ -1,21 +1,20 @@
 package io.github.semlink.semlink.aligner;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import edu.mit.jverbnet.data.syntax.ISyntaxArgDesc;
+import io.github.clearwsd.verbnet.VnClass;
+import io.github.clearwsd.verbnet.VnFrame;
 import io.github.semlink.parser.Proposition;
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.Alignment;
+import io.github.semlink.semlink.PbVnMappings;
 import io.github.semlink.semlink.PropBankPhrase;
-import io.github.semlink.verbnet.VerbNetClass;
 import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.SyntacticFrame;
 import io.github.semlink.verbnet.type.ThematicRoleType;
 import io.github.semlink.verbnet.type.VerbNetSyntaxType;
-import io.github.semlink.semlink.PbVnMappings;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -37,14 +36,14 @@ public class PbVnAlignment {
     private List<PropBankPhrase> propbankPhrases;
     private SyntacticFrame frame;
     private List<PbVnMappings.Roleset> rolesets;
-    private ISyntaxArgDesc syntaxArgDesc;
-    private Proposition<VerbNetClass, PropBankArg> proposition;
+    private VnFrame syntaxArgDesc;
+    private Proposition<VnClass, PropBankArg> proposition;
     private PbVnMappings.Roleset roleset;
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {
         return propbankPhrases.stream()
-                .filter(s -> s.getNumber() == number)
-                .collect(Collectors.toList());
+            .filter(s -> s.getNumber() == number)
+            .collect(Collectors.toList());
     }
 
     public <T extends FramePhrase> List<T> bySyntacticType(@NonNull VerbNetSyntaxType type) {

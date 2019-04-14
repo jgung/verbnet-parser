@@ -1,9 +1,9 @@
 package io.github.semlink.verbnet.type;
 
-import java.util.Optional;
-
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public enum NounPhraseSynRelType {
 
     AC_ING,
@@ -40,14 +40,16 @@ public enum NounPhraseSynRelType {
     WH_ING,
     WHAT_EXTRACT,
     WHAT_INF,
-    WHETH_INF;
+    WHETH_INF,
+    UNKNOWN;
 
-    public static Optional<NounPhraseSynRelType> fromString(@NonNull String string) {
+    public static NounPhraseSynRelType fromString(@NonNull String string) {
         try {
-            return Optional.of(valueOf(string.toUpperCase().trim()));
+            return valueOf(string.toUpperCase().trim());
         } catch (Exception ignored) {
+            log.warn("Unrecognized NP syntactic restriction: {}", string);
+            return UNKNOWN;
         }
-        return Optional.empty();
     }
 
 }

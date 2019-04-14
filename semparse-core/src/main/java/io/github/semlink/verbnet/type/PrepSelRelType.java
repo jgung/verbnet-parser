@@ -1,10 +1,10 @@
 package io.github.semlink.verbnet.type;
 
-import java.util.Optional;
-
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @AllArgsConstructor
 public enum PrepSelRelType {
 
@@ -14,13 +14,15 @@ public enum PrepSelRelType {
     SRC,
     LOC,
     DIR,
-    SPATIAL;
+    SPATIAL,
+    UNKNOWN;
 
-    public static Optional<PrepSelRelType> fromString(@NonNull String string) {
+    public static PrepSelRelType fromString(@NonNull String string) {
         try {
-            return Optional.of(valueOf(string.toUpperCase().trim()));
+            return valueOf(string.toUpperCase().trim());
         } catch (Exception ignored) {
         }
-        return Optional.empty();
+        log.warn("Unrecognized preposition selectional restriction: {}", string);
+        return UNKNOWN;
     }
 }

@@ -1,9 +1,11 @@
 package io.github.semlink.propbank.frames;
 
+import io.github.semlink.propbank.type.ArgNumber;
+import io.github.semlink.propbank.type.FunctionTag;
+import io.github.semlink.util.LowerCaseEnumAdapter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -12,10 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import io.github.semlink.propbank.type.ArgNumber;
-import io.github.semlink.propbank.type.FunctionTag;
-import io.github.semlink.util.LowerCaseEnumAdapter;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -65,6 +63,7 @@ public class Role implements Serializable {
     }
 
     private static final class FunctionTagAdapter extends LowerCaseEnumAdapter<FunctionTag> {
+
         FunctionTagAdapter() {
             super(FunctionTag.class, null);
         }

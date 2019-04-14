@@ -1,10 +1,11 @@
 package io.github.semlink.verbnet.type;
 
+import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
+import io.github.clearwsd.verbnet.syntax.VnNounPhrase;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import edu.mit.jverbnet.data.syntax.ISyntaxArgDesc;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -31,22 +32,19 @@ public class NounPhrase extends FramePhrase {
         return Optional.ofNullable(preposition);
     }
 
-    public static NounPhrase of(@NonNull ISyntaxArgDesc argDesc) {
+    public static NounPhrase of(@NonNull VnNounPhrase np) {
         NounPhrase nounPhrase = new NounPhrase();
 
-        ThematicRoleType.fromString(argDesc.getValue())
-                .ifPresent(nounPhrase::thematicRoleType);
+        ThematicRoleType.fromString(np.thematicRole())
+            .ifPresent(nounPhrase::thematicRoleType);
 
-        argDesc.getSelRestrictions()
-                .getTypeRestrictions()
-                .forEach((key, value) -> NounPhraseSynRelType.fromString(key.getID()).ifPresent(restr -> {
-                    if (value) {
-                        nounPhrase.include().add(restr);
-                    } else {
-                        nounPhrase.exclude().add(restr);
-                    }
-                }));
-
+        List<DefaultVnRestrictions<NounPhraseSynRelType>> restrictions = DefaultVnRestrictions
+            .map(np.syntacticRestrictions(), NounPhraseSynRelType::fromString);
+        if (restrictions.size() > 0) {
+            // TODO: just use selectional restrictions directly from VnNounPhrase
+            nounPhrase.exclude(restrictions.get(0).exclude());
+            nounPhrase.include(restrictions.get(0).include());
+        }
         return nounPhrase;
     }
 
