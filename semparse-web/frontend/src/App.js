@@ -44,6 +44,8 @@ const examples = [
     'Where did John take the train after leaving the office?',
     'To whom did John lend his guitar last week?',
     'Alice went to the corner shop to buy some eggs, milk and bread for breakfast',
+    'Mary discovered the impending layoffs from taking a look at her boss\'s computer',
+    'In 2018, crude futures rose 74 cents, or 1.4 percent, to $53.95 from $53.21',
 ];
 
 function randomExample() {
