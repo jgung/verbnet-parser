@@ -30,14 +30,14 @@ import lombok.extern.slf4j.Slf4j;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class SemanticPredicateModel {
 
-    private int eventNumber;
+    private String eventName;
     private String predicate;
     private String type;
     private List<SemanticArgumentModel> args = new ArrayList<>();
     private boolean polarity = true;
 
     public SemanticPredicateModel(SemanticPredicate predicate) {
-        this.eventNumber = getEventNumber(predicate);
+        this.eventName = getEventName(predicate);
         this.predicate = predicate.toString();
         this.type = StringUtils.capitalized(predicate.type());
         this.args = predicate.arguments().stream()
@@ -81,22 +81,17 @@ public class SemanticPredicateModel {
         }
     }
 
-    public static int getEventNumber(SemanticPredicate predicate) {
+    public static String getEventName(SemanticPredicate predicate) {
         return predicate.arguments().stream()
             .filter(e -> e instanceof EventArgument)
-            .map(e -> ((EventArgument) e).id().replaceFirst("E", ""))
+            .map(e -> ((EventArgument) e).id())
             .map(i -> {
                 if ("E".equals(i)) {
-                    return 1;
+                    return "E1";
                 }
-                try {
-                    return Integer.parseInt(i);
-                } catch (Exception e) {
-                    log.warn("Unexpected event string: {}", i);
-                    return 1;
-                }
+                return i;
             })
-            .min(Integer::compareTo).orElse(1);
+            .min(String::compareTo).orElse("E1");
     }
 
 }

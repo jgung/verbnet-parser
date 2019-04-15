@@ -1,5 +1,7 @@
 package io.github.semlink.app.api.model;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -30,9 +32,7 @@ import lombok.experimental.Accessors;
 public class PropModel {
 
     private String sense;
-    private List<SemanticPredicateModel> start = new ArrayList<>();
-    private List<SemanticPredicateModel> during = new ArrayList<>();
-    private List<SemanticPredicateModel> end = new ArrayList<>();
+    private List<EventModel> events = new ArrayList<>();
     private List<SpanModel> propBankSpans = new ArrayList<>();
     private List<SpanModel> verbNetSpans = new ArrayList<>();
 
@@ -45,16 +45,12 @@ public class PropModel {
         List<SemanticPredicateModel> predicates = prop.predicates().stream()
             .map(SemanticPredicateModel::new)
             .collect(Collectors.toList());
-        Integer lastEvent = predicates.stream().map(SemanticPredicateModel::eventNumber).max(Integer::compareTo).orElse(1);
+        ListMultimap<String, SemanticPredicateModel> predsByEvent = LinkedListMultimap.create();
         for (SemanticPredicateModel pred: predicates) {
-            if (pred.eventNumber() == 1) {
-                start.add(pred);
-            } else if (pred.eventNumber() == lastEvent) {
-                end.add(pred);
-            } else {
-                during.add(pred);
-            }
+            predsByEvent.put(pred.eventName(), pred);
         }
+        predsByEvent.keySet().stream().sorted(String::compareTo)
+            .forEach(key -> events.add(new EventModel().name(key).predicates(predsByEvent.get(key))));
 
         this.propBankSpans = getSpans(prop.propbankProp().arguments(), prop.tokens(), prop.propbankProp().predicate().index());
 

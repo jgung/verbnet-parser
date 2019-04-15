@@ -88,19 +88,22 @@ class Proposition extends Component {
 
     render() {
         const {showPropBank, showVerbNet, showSemantics, prop} = this.props;
-        const {sense, start, during, end, propBankSpans, verbNetSpans} = prop;
+        const {sense, events, propBankSpans, verbNetSpans} = prop;
         const pbSpans = propBankSpans.map(span => <Span sense={sense} key={span.start} span={span} color='black'/>);
         const vnSpans = verbNetSpans.map(span => <Span sense={sense} key={span.end} span={span} color='black'/>);
 
-        const beforePreds = start.map((pred, index) => <Predicate key={pred.predicate + index} pred={pred}/>);
-        const duringPreds = during.map((pred, index) => <Predicate key={pred.predicate + index} pred={pred}/>);
-        const afterPreds = end.map((pred, index) => <Predicate key={pred.predicate + index} pred={pred}/>);
-
-        const panes = [
-            { menuItem: 'Start', render: () => <Card.Group>{beforePreds}</Card.Group> },
-            { menuItem: 'During', render: () => <Card.Group>{duringPreds}</Card.Group> },
-            { menuItem: 'End', render: () => <Card.Group>{afterPreds}</Card.Group> },
-        ];
+        const panes = events.map(event => {
+          return {
+            menuItem: event.name, render: () => (
+              <Card.Group>
+                {
+                  event.predicates.map((pred, index) =>
+                      <Predicate key={pred.predicate + index} pred={pred}/>)
+                }
+              </Card.Group>
+            )
+          }
+        });
 
         return (
             <div>
