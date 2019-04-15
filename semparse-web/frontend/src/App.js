@@ -222,6 +222,14 @@ class PredictionResult extends Component {
                 <Message style={{flexDirection: 'row'}}>
                     {sentence}
                 </Message>
+                {
+                    <Tab
+                        menu={{secondary: true, pointing: true}}
+                        activeIndex={propIndex}
+                        onTabChange={this.handleTabChange}
+                        panes={propositions}
+                    />
+                }
                 <Accordion fluid>
                     <Accordion.Title active={this.state.showOptions} index={0} onClick={this.toggleOptions}>
                         <Icon name="dropdown"/>
@@ -235,14 +243,6 @@ class PredictionResult extends Component {
                         </Button.Group>
                     </Accordion.Content>
                 </Accordion>
-                {
-                    <Tab
-                        menu={{secondary: true, pointing: true}}
-                        activeIndex={propIndex}
-                        onTabChange={this.handleTabChange}
-                        panes={propositions}
-                    />
-                }
             </Segment>
         );
     };

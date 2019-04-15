@@ -6,10 +6,12 @@ import io.github.clearwsd.ParsingSensePredictor;
 import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.parser.Nlp4jDependencyParser;
 import io.github.clearwsd.type.DepTree;
+import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnIndex;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -28,13 +30,12 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VnClass> {
     @Override
     public List<SensePrediction<VnClass>> predict(@NonNull DepTree depTree) {
         List<SensePrediction<VnClass>> senses = basePredictor.predict(depTree);
-        return senses.stream().map(this::convert).collect(Collectors.toList());
+        return senses.stream().map(sense -> convert(sense, depTree)).collect(Collectors.toList());
     }
 
     @Override
-    public List<SensePrediction<VnClass>> predict(List<String> list) {
-        List<SensePrediction<VnClass>> predict = basePredictor.predict(list);
-        return predict.stream().map(this::convert).collect(Collectors.toList());
+    public List<SensePrediction<VnClass>> predict(List<String> tokens) {
+        return predict(basePredictor.parse(tokens));
     }
 
     @Override
@@ -52,8 +53,15 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VnClass> {
         return basePredictor.tokenize(sentence);
     }
 
-    private SensePrediction<VnClass> convert(@NonNull SensePrediction<VnClass> sense) {
-        VnClass result = sense.sense() == null ? null : verbNet.getById(sense.id());
+    private SensePrediction<VnClass> convert(@NonNull SensePrediction<VnClass> sense, DepTree tree) {
+        VnClass result = null;
+        if (sense.sense() != null) {
+            Set<VnClass> senses = verbNet
+                .getByBaseIdAndLemma(sense.id(), tree.get(sense.index()).feature(FeatureType.Lemma));
+            if (!senses.isEmpty()) {
+                result = senses.stream().findFirst().get();
+            }
+        }
         return new DefaultSensePrediction<>(sense.index(), sense.originalText(), sense.id(), result);
     }
 

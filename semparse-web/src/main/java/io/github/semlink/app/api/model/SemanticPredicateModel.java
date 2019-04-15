@@ -8,6 +8,7 @@ import io.github.semlink.verbnet.semantics.EventArgument;
 import io.github.semlink.verbnet.semantics.SemanticArgument;
 import io.github.semlink.verbnet.semantics.SemanticPredicate;
 import io.github.semlink.verbnet.semantics.ThematicRoleArgument;
+import io.github.semlink.verbnet.semantics.VerbSpecificArgument;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class SemanticPredicateModel {
                         .map(s -> (String) s.feature(FeatureType.Text))
                         .collect(Collectors.joining(" "));
                 } else {
-                    this.value = "?";
+                    this.value = "";
                 }
                 this.type = ((ThematicRoleArgument) argument).thematicRoleType().toString();
             } else if (argument instanceof EventArgument) {
@@ -75,6 +76,14 @@ public class SemanticPredicateModel {
                     this.value = "E1";
                 }
                 this.type = StringUtils.capitalized(((EventArgument) argument).relation());
+            } else if (argument instanceof VerbSpecificArgument) {
+                Object variable = ((VerbSpecificArgument) argument).variable();
+                if (null != variable) {
+                    this.type = argument.value();
+                    this.value = variable.toString();
+                } else {
+                    this.value = argument.value();
+                }
             } else {
                 this.value = argument.value();
             }
