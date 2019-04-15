@@ -124,7 +124,7 @@ class Proposition extends Component {
                     (showPropBank || showVerbNet) && <Divider hidden/>
                 }
                 {
-                    showSemantics && <Tab  menu={{ fluid: true, vertical: true }} menuPosition='left' panes={panes}/>
+                    showSemantics && <Tab  menu={{ fluid: true }} panes={panes}/>
                 }
             </div>
         );
@@ -546,21 +546,21 @@ class App extends Component {
                         </Header>
                         <List size='large'>
                             <List.Item>
-                                <List.Header as='a'>WordNet</List.Header>
+                                <List.Header as='a' href='https://wordnet.princeton.edu/'>WordNet</List.Header>
                                 <List.Description>
                                     A lexicon that describes semantic relationships (such as synonymy and hyperonymy) between
                                     individual words.
                                 </List.Description>
                             </List.Item>
                             <List.Item>
-                                <List.Header as='a'>PropBank</List.Header>
+                                <List.Header as='a' href='https://propbank.github.io/'>PropBank</List.Header>
                                 <List.Description>
                                     A corpus of one million words of English text, annotated with argument role labels for verbs;
                                     and a lexicon defining those argument roles on a per-verb basis.
                                 </List.Description>
                             </List.Item>
                             <List.Item>
-                                <List.Header as='a'>FrameNet</List.Header>
+                                <List.Header as='a' href='https://framenet.icsi.berkeley.edu/fndrupal/'>FrameNet</List.Header>
                                 <List.Description>
                                     A lexicon based on frame semantics.
                                 </List.Description>
