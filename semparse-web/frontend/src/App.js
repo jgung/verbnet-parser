@@ -60,7 +60,7 @@ const Span = ({sense, span, color = 'blue'}) => {
 
 const Argument = ({arg}) => {
     const {type, value} = arg;
-    return <List.Item><Label basic color='black' size='large' content={type} detail={value}/></List.Item>;
+    return <List.Item header={type} content={value}/>;
 };
 
 const Predicate = ({pred}) => {
@@ -80,38 +80,53 @@ const Predicate = ({pred}) => {
     );
 };
 
-const Proposition = ({showPropBank, showVerbNet, showSemantics, prop}) => {
-    const {sense, predicates, propBankSpans, verbNetSpans} = prop;
-    const pbSpans = propBankSpans.map(span => <Span sense={sense} key={span.start} span={span} color='black'/>);
-    const vnSpans = verbNetSpans.map(span => <Span sense={sense} key={span.end} span={span} color='black'/>);
-    const preds = predicates.map((pred, index) => <Predicate key={pred.predicate + index} pred={pred}/>);
+class Proposition extends Component {
 
-    return (
-        <div>
-            {
-                showPropBank && <List>
-                    {pbSpans}
-                </List>
-            }
-            {
-                showPropBank && <Divider hidden/>
-            }
-            {
-                showVerbNet && <List>
-                    {vnSpans}
-                </List>
-            }
-            {
-                (showPropBank || showVerbNet) && <Divider hidden/>
-            }
-            {
-                showSemantics && <Card.Group>
-                    {preds}
-                </Card.Group>
-            }
-        </div>
-    );
-};
+    state = {
+        tabIndex: 0
+    };
+
+    render() {
+        const {showPropBank, showVerbNet, showSemantics, prop} = this.props;
+        const {sense, start, during, end, propBankSpans, verbNetSpans} = prop;
+        const pbSpans = propBankSpans.map(span => <Span sense={sense} key={span.start} span={span} color='black'/>);
+        const vnSpans = verbNetSpans.map(span => <Span sense={sense} key={span.end} span={span} color='black'/>);
+
+        const beforePreds = start.map((pred, index) => <Predicate key={pred.predicate + index} pred={pred}/>);
+        const duringPreds = during.map((pred, index) => <Predicate key={pred.predicate + index} pred={pred}/>);
+        const afterPreds = end.map((pred, index) => <Predicate key={pred.predicate + index} pred={pred}/>);
+
+        const panes = [
+            { menuItem: 'Start', render: () => <Card.Group>{beforePreds}</Card.Group> },
+            { menuItem: 'During', render: () => <Card.Group>{duringPreds}</Card.Group> },
+            { menuItem: 'End', render: () => <Card.Group>{afterPreds}</Card.Group> },
+        ];
+
+        return (
+            <div>
+                {
+                    showPropBank && <List>
+                        {pbSpans}
+                    </List>
+                }
+                {
+                    showPropBank && <Divider hidden/>
+                }
+                {
+                    showVerbNet && <List>
+                        {vnSpans}
+                    </List>
+                }
+                {
+                    (showPropBank || showVerbNet) && <Divider hidden/>
+                }
+                {
+                    showSemantics && <Tab  menu={{ fluid: true, vertical: true }} menuPosition='left' panes={panes}/>
+                }
+            </div>
+        );
+    }
+}
 
 class PredictionResult extends Component {
 

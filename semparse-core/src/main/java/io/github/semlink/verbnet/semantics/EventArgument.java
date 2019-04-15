@@ -30,7 +30,7 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
             if (!Strings.isNullOrEmpty(rel)) {
                 relation = EventRelation.valueOf(matcher.group(1).toUpperCase());
             }
-            id = matcher.group(2);
+            id = matcher.group(2).toUpperCase();
         } else {
             log.warn("Failed to parse event argument: {}", value);
         }
@@ -45,7 +45,7 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
     }
 
     private EventRelation relation = EventRelation.EVENT;
-    private String id = "E";
+    private String id = "E1";
 
     @Override
     public String toString() {

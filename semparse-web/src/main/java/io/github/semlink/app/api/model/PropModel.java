@@ -30,7 +30,9 @@ import lombok.experimental.Accessors;
 public class PropModel {
 
     private String sense;
-    private List<SemanticPredicateModel> predicates = new ArrayList<>();
+    private List<SemanticPredicateModel> start = new ArrayList<>();
+    private List<SemanticPredicateModel> during = new ArrayList<>();
+    private List<SemanticPredicateModel> end = new ArrayList<>();
     private List<SpanModel> propBankSpans = new ArrayList<>();
     private List<SpanModel> verbNetSpans = new ArrayList<>();
 
@@ -40,7 +42,20 @@ public class PropModel {
         } else {
             this.sense = prop.propbankProp().predicate().id();
         }
-        this.predicates = prop.predicates().stream().map(SemanticPredicateModel::new).collect(Collectors.toList());
+        List<SemanticPredicateModel> predicates = prop.predicates().stream()
+            .map(SemanticPredicateModel::new)
+            .collect(Collectors.toList());
+        Integer lastEvent = predicates.stream().map(SemanticPredicateModel::eventNumber).max(Integer::compareTo).orElse(1);
+        for (SemanticPredicateModel pred: predicates) {
+            if (pred.eventNumber() == 1) {
+                start.add(pred);
+            } else if (pred.eventNumber() == lastEvent) {
+                end.add(pred);
+            } else {
+                during.add(pred);
+            }
+        }
+
         this.propBankSpans = getSpans(prop.propbankProp().arguments(), prop.tokens(), prop.propbankProp().predicate().index());
 
         if (prop.verbnetProp() != null) {
