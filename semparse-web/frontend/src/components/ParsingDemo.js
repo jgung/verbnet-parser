@@ -9,6 +9,7 @@ import {
   Message,
   Segment,
 } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import Propositions from './Propositions';
 
 const MAX_LENGTH = 512;
@@ -187,6 +188,7 @@ class ParsingDemo extends Component {
     }
 
     render() {
+      const { mobile } = this.props;
       const {
         loading, success, failure, errorMessage,
       } = this.state;
@@ -204,15 +206,15 @@ class ParsingDemo extends Component {
         <div>
           <Form loading={loading} onSubmit={this.submitUtterance}>
             <Form.Input
-              size="huge"
-              placeholder="Type your own sentence, or see a random example..."
+              size={mobile ? 'small' : 'huge'}
+              placeholder="Enter a sentence, or see a random example..."
               action={(
                 <Button
                   disabled={loading}
                   primary
-                  size="huge"
+                  size={mobile ? 'small' : 'huge'}
                   onClick={this.submitUtterance}
-                  content="Try it out!"
+                  content={mobile ? 'Try it out!' : 'Try it out!'}
                 />
                         )}
               onChange={this.updateUtterance}
@@ -225,5 +227,13 @@ class ParsingDemo extends Component {
       );
     }
 }
+
+ParsingDemo.propTypes = {
+  mobile: PropTypes.bool,
+};
+
+ParsingDemo.defaultProps = {
+  mobile: false,
+};
 
 export default ParsingDemo;

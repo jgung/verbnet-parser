@@ -17,7 +17,7 @@ const HomepageHeading = ({ mobile }) => (
         marginTop: mobile ? '1.5em' : '3em',
       }}
     />
-    <ParsingDemo />
+    <ParsingDemo mobile={mobile} />
   </Container>
 );
 
