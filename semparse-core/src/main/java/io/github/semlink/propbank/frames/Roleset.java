@@ -47,6 +47,8 @@ public class Roleset implements Serializable {
     private Roles roles;
 
     @XmlElement(name = "example")
-    private List<Example> examples;
+    private List<Example> examples = new ArrayList<>();
+
+    private transient Predicate predicate;
 
 }

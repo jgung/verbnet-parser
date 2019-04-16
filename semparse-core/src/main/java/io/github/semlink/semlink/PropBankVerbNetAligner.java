@@ -1,11 +1,22 @@
 package io.github.semlink.semlink;
 
 import com.google.common.collect.ImmutableList;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnFrame;
 import io.github.semlink.parser.Proposition;
+import io.github.semlink.propbank.DefaultPbIndex;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.aligner.FillerAligner;
 import io.github.semlink.semlink.aligner.PbVnAligner;
@@ -15,14 +26,6 @@ import io.github.semlink.semlink.aligner.RoleMappingAligner;
 import io.github.semlink.semlink.aligner.SelResAligner;
 import io.github.semlink.semlink.aligner.SynResAligner;
 import io.github.semlink.verbnet.type.SyntacticFrame;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 
 /**
@@ -45,12 +48,13 @@ public class PropBankVerbNetAligner {
 
     public PropBankVerbNetAligner(@NonNull PbVnMappings mappings) {
         this.mappings = mappings;
+
     }
 
     private PbVnAlignment align(@NonNull Proposition<VnClass, PropBankArg> proposition,
         @NonNull List<PropBankPhrase> chunk,
         @NonNull SyntacticFrame frame,
-        @NonNull List<PbVnMappings.Roleset> rolesets) {
+        @NonNull List<PbVnMappings.MappedRoleset> rolesets) {
 
         PbVnAlignment pbVnAlignment = new PbVnAlignment()
             .alignment(Alignment.of(chunk, frame.elements()))
@@ -74,7 +78,7 @@ public class PropBankVerbNetAligner {
         List<PbVnAlignment> alignments = new ArrayList<>();
 
         String lemma = source.get(prop.relSpan().startIndex()).feature(FeatureType.Lemma);
-        List<PbVnMappings.Roleset> rolesets = prop.predicate().sense().related().stream()
+        List<PbVnMappings.MappedRoleset> rolesets = prop.predicate().sense().related().stream()
             .map(s -> mappings.rolesets(lemma, s.verbNetId().rootId()))
             .flatMap(List::stream)
             .distinct()
@@ -108,9 +112,10 @@ public class PropBankVerbNetAligner {
         return comparing;
     }
 
-    public static PropBankVerbNetAligner of(@NonNull String mappingsPath) {
+    public static PropBankVerbNetAligner of(@NonNull String mappingsPath, @NonNull String pbIndexPath) {
         try {
-            PbVnMappings mappings = new PbVnMappings(PbVnMapping.fromJson(new FileInputStream(mappingsPath)));
+            PbVnMappings mappings = new PbVnMappings(PbVnMapping.fromJson(new FileInputStream(mappingsPath)),
+                    DefaultPbIndex.fromBinary(pbIndexPath));
             return new PropBankVerbNetAligner(mappings);
         } catch (IOException e) {
             throw new RuntimeException(e);

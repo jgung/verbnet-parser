@@ -1,22 +1,13 @@
 package io.github.semlink.semlink;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import io.github.clearwsd.verbnet.DefaultVnIndex;
-import io.github.clearwsd.verbnet.VnClass;
-import io.github.clearwsd.verbnet.VnIndex;
-import io.github.semlink.propbank.frames.Frameset;
-import io.github.semlink.propbank.frames.Predicate;
-import io.github.semlink.propbank.frames.Role;
-import io.github.semlink.propbank.frames.Roleset;
-import io.github.semlink.propbank.frames.RolesetAlias;
-import io.github.semlink.propbank.frames.VerbNetRole;
-import io.github.semlink.util.TsvUtils;
-import io.github.semlink.verbnet.type.ThematicRoleType;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +25,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import io.github.clearwsd.verbnet.DefaultVnIndex;
+import io.github.clearwsd.verbnet.VnClass;
+import io.github.clearwsd.verbnet.VnIndex;
+import io.github.semlink.propbank.DefaultPbIndex;
+import io.github.semlink.propbank.frames.Frameset;
+import io.github.semlink.propbank.frames.Predicate;
+import io.github.semlink.propbank.frames.Role;
+import io.github.semlink.propbank.frames.Roleset;
+import io.github.semlink.propbank.frames.RolesetAlias;
+import io.github.semlink.propbank.frames.VerbNetRole;
+import io.github.semlink.util.TsvUtils;
+import io.github.semlink.verbnet.type.ThematicRoleType;
 import lombok.extern.slf4j.Slf4j;
 
 import static io.github.semlink.propbank.frames.FramesetFactory.deserializeFrames;
@@ -125,14 +129,15 @@ public final class VerbNetMappings {
         List<PbVnMapping> result = PbVnMapping.fromJson(new FileInputStream(mappingsOutputPath));
         VnIndex verbNet = new DefaultVnIndex();
 
-        PbVnMappings mappings = new PbVnMappings(result);
+        PbVnMappings mappings = new PbVnMappings(result, DefaultPbIndex.fromBinary(
+                "src/main/resources/propbank/unified-frames.bin"));
 
         List<String> results = new ArrayList<>();
-        for (Map.Entry<String, Map<String, List<PbVnMappings.Roleset>>> lemma : mappings.lemmaClassRolesetMap().entrySet()) {
+        for (Map.Entry<String, Map<String, List<PbVnMappings.MappedRoleset>>> lemma : mappings.lemmaClassRolesetMap().entrySet()) {
 
-            for (Map.Entry<String, List<PbVnMappings.Roleset>> vncls : lemma.getValue().entrySet()) {
+            for (Map.Entry<String, List<PbVnMappings.MappedRoleset>> vncls : lemma.getValue().entrySet()) {
 
-                for (PbVnMappings.Roleset rs : vncls.getValue()) {
+                for (PbVnMappings.MappedRoleset rs : vncls.getValue()) {
 
                     Map<String, String> vnMappings = roleset2Class.getOrDefault(rs.id(), Collections.emptyMap());
                     String corrected = vnMappings.get(vncls.getKey());

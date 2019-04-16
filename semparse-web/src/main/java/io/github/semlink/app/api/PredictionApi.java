@@ -5,7 +5,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import io.github.clearwsd.verbnet.VnIndex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.app.api.model.SentenceModel;
 import io.github.semlink.parser.VerbNetSemanticParse;
 import io.github.semlink.parser.VerbNetSemanticParser;
@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class PredictionApi {
 
-    private final VerbNetSemanticParser parser;
     private final VerbNetSenseClassifier verbNetSenseClassifier;
     private final VnIndex verbNet;
 
@@ -36,7 +35,6 @@ public class PredictionApi {
 
     @Autowired
     public PredictionApi(VerbNetSemanticParser parser, VerbNetSenseClassifier verbNetSenseClassifier, VnIndex verbNet) {
-        this.parser = parser;
         this.verbNetSenseClassifier = verbNetSenseClassifier;
         this.verbNet = verbNet;
         parseCache = CacheBuilder.newBuilder()

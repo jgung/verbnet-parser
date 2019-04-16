@@ -1,12 +1,12 @@
 package io.github.semlink.app;
 
-import io.github.clearwsd.verbnet.DefaultVnIndex;
-import io.github.clearwsd.verbnet.VnIndex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.github.clearwsd.verbnet.DefaultVnIndex;
+import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.parser.DefaultSemanticRoleLabeler;
 import io.github.semlink.parser.PropBankLightVerbMapper;
 import io.github.semlink.parser.VerbNetSemanticParser;
@@ -34,6 +34,8 @@ public class PredictionConfiguration {
     private String srlModelDir = "models/unified-propbank/";
     @Value("${verbnet.demo.lvm-path:lvm.tsv}")
     private String lvmPath = "lvm.tsv";
+    @Value("${verbnet.demo.pb-path:propbank/unified-frames.bin}")
+    private String pbPath = "propbank/unified-frames.bin";
 
     @Bean
     public VnIndex verbNet() {
@@ -52,10 +54,11 @@ public class PredictionConfiguration {
         String mappingsPath = resolveFile(this.mappingsPath);
         String modelDir = resolveDirectory(this.srlModelDir);
         String lvmPath = resolveFile(this.lvmPath);
+        String pbPath = resolveFile(this.pbPath);
 
         DefaultSemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
 
-        PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath);
+        PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath, pbPath);
 
         PropBankLightVerbMapper mapper = new PropBankLightVerbMapper(PropBankLightVerbMapper.fromMappingsPath(lvmPath, verbNet),
             roleLabeler);

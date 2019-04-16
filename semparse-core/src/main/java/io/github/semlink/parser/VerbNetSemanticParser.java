@@ -1,6 +1,17 @@
 package io.github.semlink.parser;
 
 import com.google.common.base.Preconditions;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
@@ -24,15 +35,6 @@ import io.github.semlink.verbnet.type.NounPhrase;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.verbnet.type.SemanticPredicateType;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.Delegate;
@@ -186,11 +188,12 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         String modelDir = "data/models/unified-propbank";
         String wsdModel = "data/models/verbnet/nlp4j-verbnet-3.3.bin";
         String lightVerbMappings = "semparse-core/src/main/resources/lvm.tsv";
+        String propbank = "data/unified-frames.bin";
 
         DefaultSemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
         VnIndex verbNet = new DefaultVnIndex();
         VerbNetSenseClassifier classifier = VerbNetSenseClassifier.fromModelPath(wsdModel, verbNet);
-        PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath);
+        PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath, propbank);
         VerbNetSemanticParser parser = new VerbNetSemanticParser(classifier, roleLabeler, aligner,
             new PropBankLightVerbMapper(PropBankLightVerbMapper.fromMappingsPath(lightVerbMappings, verbNet),
                 roleLabeler));

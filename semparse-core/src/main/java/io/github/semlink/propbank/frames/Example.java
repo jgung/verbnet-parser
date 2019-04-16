@@ -56,6 +56,8 @@ public class Example implements Serializable {
     @XmlElementRef
     private List<ExampleNode> children = new ArrayList<>();
 
+    private transient Roleset roleset;
+
     public List<ExampleArgument> arguments() {
         return children.stream()
             .filter(node -> node instanceof ExampleArgument)

@@ -32,4 +32,6 @@ public class Predicate implements Serializable {
     @XmlElement(name = "roleset", required = true)
     protected List<Roleset> rolesets = new ArrayList<>();
 
+    private transient Frameset frameset;
+
 }

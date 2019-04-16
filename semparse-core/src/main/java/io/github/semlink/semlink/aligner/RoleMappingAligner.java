@@ -1,13 +1,14 @@
 package io.github.semlink.semlink.aligner;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.semlink.PbVnMappings;
 import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import lombok.NonNull;
 
 /**
@@ -22,7 +23,7 @@ public class RoleMappingAligner implements PbVnAligner {
 
         Map<PropBankPhrase, FramePhrase> best = new HashMap<>();
 
-        for (PbVnMappings.Roleset roleset : alignment.rolesets()) {
+        for (PbVnMappings.MappedRoleset roleset : alignment.rolesets()) {
 
             Map<PropBankPhrase, FramePhrase> current = new HashMap<>();
             for (PropBankPhrase source : alignment.sourcePhrases()) {

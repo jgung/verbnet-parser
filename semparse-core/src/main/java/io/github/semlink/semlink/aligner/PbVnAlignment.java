@@ -1,5 +1,9 @@
 package io.github.semlink.semlink.aligner;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnFrame;
 import io.github.semlink.parser.Proposition;
@@ -12,9 +16,6 @@ import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.SyntacticFrame;
 import io.github.semlink.verbnet.type.ThematicRoleType;
 import io.github.semlink.verbnet.type.VerbNetSyntaxType;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -35,10 +36,10 @@ public class PbVnAlignment {
     private Alignment<PropBankPhrase, FramePhrase> alignment;
     private List<PropBankPhrase> propbankPhrases;
     private SyntacticFrame frame;
-    private List<PbVnMappings.Roleset> rolesets;
+    private List<PbVnMappings.MappedRoleset> rolesets;
     private VnFrame syntaxArgDesc;
     private Proposition<VnClass, PropBankArg> proposition;
-    private PbVnMappings.Roleset roleset;
+    private PbVnMappings.MappedRoleset roleset;
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {
         return propbankPhrases.stream()
