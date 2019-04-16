@@ -120,7 +120,8 @@ class ParsingDemo extends Component {
     };
 
     updateUtterance = (e) => {
-      this.setState(prevState => ({ ...prevState, utterance: e.target.value }));
+      const { value } = e.target;
+      this.setState(prevState => ({ ...prevState, utterance: value }));
     };
 
     renderResult() {
