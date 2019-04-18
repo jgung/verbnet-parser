@@ -34,7 +34,7 @@ function truncate(fullStr, strLen, separator) {
 }
 
 const Span = ({
-  sense, span, color = 'blue', showVerbNet, showPropBank,
+  sense, span, showVerbNet, showPropBank,
 }) => {
   const {
     vn, pb, description, text, isPredicate,
@@ -42,11 +42,26 @@ const Span = ({
   return (
     <List.Item>
       <Label.Group>
+        <Label
+          color="black"
+          basic
+          size="large"
+          content={truncate(text)}
+        />
         {
-            showVerbNet && vn
+            isPredicate && (
+            <Label
+              color="blue"
+              size="large"
+              content={sense}
+            />
+            )
+          }
+        {
+            showVerbNet && vn && !isPredicate
               && (
               <Label
-                color="black"
+                color="blue"
                 basic
                 size="large"
                 content={vn}
@@ -54,23 +69,17 @@ const Span = ({
               )
           }
         {
-              showPropBank && pb
+              showPropBank && pb && !isPredicate
               && (
               <Label
-                color={isPredicate ? 'blue' : color}
-                basic={!isPredicate}
+                color="purple"
+                basic
                 size="large"
-                content={isPredicate ? sense : pb}
+                content={pb}
                 detail={description || undefined}
               />
               )
           }
-        <Label
-          color="grey"
-          basic
-          size="large"
-          content={truncate(text)}
-        />
       </Label.Group>
     </List.Item>
   );
@@ -79,7 +88,6 @@ const Span = ({
 Span.propTypes = {
   sense: PropTypes.string.isRequired,
   span: spanType.isRequired,
-  color: PropTypes.string.isRequired,
   showVerbNet: PropTypes.bool.isRequired,
   showPropBank: PropTypes.bool.isRequired,
 };
