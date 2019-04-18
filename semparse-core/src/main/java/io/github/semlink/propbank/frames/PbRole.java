@@ -1,5 +1,7 @@
 package io.github.semlink.propbank.frames;
 
+import com.google.common.base.Strings;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.FunctionTag;
 import io.github.semlink.util.LowerCaseEnumAdapter;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 
@@ -26,10 +29,11 @@ import lombok.experimental.Accessors;
  * @author jgung
  */
 @Data
+@EqualsAndHashCode(exclude = "roleset")
 @Accessors(fluent = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "role")
-public class Role implements Serializable {
+public class PbRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,6 +75,11 @@ public class Role implements Serializable {
         FunctionTagAdapter() {
             super(FunctionTag.class, null);
         }
+    }
+
+    @Override
+    public String toString() {
+        return Strings.isNullOrEmpty(description) ? number + "-" + functionTag : description;
     }
 
 }

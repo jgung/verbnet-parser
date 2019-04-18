@@ -32,7 +32,7 @@ import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.propbank.DefaultPbIndex;
 import io.github.semlink.propbank.frames.Frameset;
 import io.github.semlink.propbank.frames.Predicate;
-import io.github.semlink.propbank.frames.Role;
+import io.github.semlink.propbank.frames.PbRole;
 import io.github.semlink.propbank.frames.Roleset;
 import io.github.semlink.propbank.frames.RolesetAlias;
 import io.github.semlink.propbank.frames.VerbNetRole;
@@ -59,7 +59,7 @@ public final class VerbNetMappings {
         PbVnMapping.RolesetMapping rsMapping = new PbVnMapping.RolesetMapping().id(roleset.id());
 
         Multimap<String, PbVnMapping.MappedRole> vnclsRoleMap = LinkedHashMultimap.create();
-        for (Role role : roleset.roles().roles()) {
+        for (PbRole role : roleset.roles().roles()) {
             for (VerbNetRole vnRole : role.verbNetRoles()) {
                 vnclsRoleMap.put(vnRole.verbNetClass(),
                     new PbVnMapping.MappedRole()

@@ -3,6 +3,8 @@ package io.github.semlink.propbank.frames;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -11,7 +13,12 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import io.github.semlink.propbank.type.ArgNumber;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 
@@ -21,6 +28,8 @@ import lombok.experimental.Accessors;
  * @author jgung
  */
 @Data
+@ToString(of = "id")
+@EqualsAndHashCode(of = "id")
 @Accessors(fluent = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "roleset")
@@ -50,5 +59,9 @@ public class Roleset implements Serializable {
     private List<Example> examples = new ArrayList<>();
 
     private transient Predicate predicate;
+
+    public Optional<PbRole> getRole(@NonNull ArgNumber argNumber) {
+        return roles.roles().stream().filter(role -> role.number() == argNumber).findFirst();
+    }
 
 }

@@ -10,7 +10,7 @@ import io.github.semlink.parser.Proposition;
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.Alignment;
-import io.github.semlink.semlink.PbVnMappings;
+import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
 import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.SyntacticFrame;
@@ -36,10 +36,10 @@ public class PbVnAlignment {
     private Alignment<PropBankPhrase, FramePhrase> alignment;
     private List<PropBankPhrase> propbankPhrases;
     private SyntacticFrame frame;
-    private List<PbVnMappings.MappedRoleset> rolesets;
+    private List<MappedRoleset> rolesets;
     private VnFrame syntaxArgDesc;
     private Proposition<VnClass, PropBankArg> proposition;
-    private PbVnMappings.MappedRoleset roleset;
+    private MappedRoleset roleset;
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {
         return propbankPhrases.stream()

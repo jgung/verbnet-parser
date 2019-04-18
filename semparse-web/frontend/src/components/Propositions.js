@@ -8,21 +8,27 @@ import RoleLabels from './RoleLabels';
 import Semantics from './Semantics';
 
 const Proposition = ({
-  sense, propBankRoles, verbNetRoles, events,
+  sense, spans, events, showVerbNet, showPropBank,
 }) => (
   <div>
-    { propBankRoles && <RoleLabels roles={propBankRoles} sense={sense} /> }
-    { propBankRoles && <Divider hidden /> }
-    { verbNetRoles && <RoleLabels roles={verbNetRoles} sense={sense} /> }
-    { (propBankRoles || verbNetRoles) && <Divider hidden /> }
+    { spans && (
+    <RoleLabels
+      showVerbNet={showVerbNet}
+      showPropBank={showPropBank}
+      roles={spans}
+      sense={sense}
+    />
+    ) }
+    { spans && <Divider hidden /> }
     { events && <Semantics events={events} /> }
   </div>
 );
 
 const propositionTypes = {
   sense: PropTypes.string.isRequired,
-  propBankRoles: PropTypes.arrayOf(PropTypes.object).isRequired,
-  verbNetRoles: PropTypes.arrayOf(PropTypes.object).isRequired,
+  showVerbNet: PropTypes.bool.isRequired,
+  showPropBank: PropTypes.bool.isRequired,
+  spans: PropTypes.arrayOf(PropTypes.object).isRequired,
   events: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
@@ -33,15 +39,16 @@ const Propositions = ({
 }) => {
   const propPanes = propositions.map((prop) => {
     const {
-      sense, propBankSpans, verbNetSpans, events,
+      sense, spans, events,
     } = prop;
     return {
       menuItem: sense,
       render: () => (
         <Tab.Pane key={sense} attached={false}>
           <Proposition
-            propBankRoles={showPropBank && propBankSpans}
-            verbNetRoles={showVerbNet && verbNetSpans}
+            showPropBank={showPropBank}
+            showVerbNet={showVerbNet}
+            spans={spans}
             events={showSemantics && events}
             sense={sense}
           />

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.github.semlink.propbank.type.ArgNumber;
-import io.github.semlink.semlink.PbVnMappings;
+import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
 import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.ThematicRoleType;
@@ -23,7 +23,8 @@ public class RoleMappingAligner implements PbVnAligner {
 
         Map<PropBankPhrase, FramePhrase> best = new HashMap<>();
 
-        for (PbVnMappings.MappedRoleset roleset : alignment.rolesets()) {
+        MappedRoleset mapped = null;
+        for (MappedRoleset roleset : alignment.rolesets()) {
 
             Map<PropBankPhrase, FramePhrase> current = new HashMap<>();
             for (PropBankPhrase source : alignment.sourcePhrases()) {
@@ -46,9 +47,11 @@ public class RoleMappingAligner implements PbVnAligner {
             }
             if (current.size() > best.size()) {
                 best = current;
+                mapped = roleset;
             }
         }
 
+        alignment.roleset(mapped);
         for (Map.Entry<PropBankPhrase, FramePhrase> aligned : best.entrySet()) {
             alignment.add(aligned.getKey(), aligned.getValue());
         }

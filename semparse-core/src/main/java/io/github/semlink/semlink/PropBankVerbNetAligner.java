@@ -18,6 +18,7 @@ import io.github.clearwsd.verbnet.VnFrame;
 import io.github.semlink.parser.Proposition;
 import io.github.semlink.propbank.DefaultPbIndex;
 import io.github.semlink.propbank.type.PropBankArg;
+import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
 import io.github.semlink.semlink.aligner.FillerAligner;
 import io.github.semlink.semlink.aligner.PbVnAligner;
 import io.github.semlink.semlink.aligner.PbVnAlignment;
@@ -54,7 +55,7 @@ public class PropBankVerbNetAligner {
     private PbVnAlignment align(@NonNull Proposition<VnClass, PropBankArg> proposition,
         @NonNull List<PropBankPhrase> chunk,
         @NonNull SyntacticFrame frame,
-        @NonNull List<PbVnMappings.MappedRoleset> rolesets) {
+        @NonNull List<MappedRoleset> rolesets) {
 
         PbVnAlignment pbVnAlignment = new PbVnAlignment()
             .alignment(Alignment.of(chunk, frame.elements()))
@@ -78,7 +79,7 @@ public class PropBankVerbNetAligner {
         List<PbVnAlignment> alignments = new ArrayList<>();
 
         String lemma = source.get(prop.relSpan().startIndex()).feature(FeatureType.Lemma);
-        List<PbVnMappings.MappedRoleset> rolesets = prop.predicate().sense().related().stream()
+        List<MappedRoleset> rolesets = prop.predicate().sense().related().stream()
             .map(s -> mappings.rolesets(lemma, s.verbNetId().rootId()))
             .flatMap(List::stream)
             .distinct()

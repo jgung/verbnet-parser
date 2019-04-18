@@ -114,7 +114,7 @@ public class FramesetFactory {
             for (Roleset roleset : predicate.rolesets()) {
                 roleset.predicate(predicate);
                 roleset.roles().roleset(roleset);
-                for (Role role : roleset.roles()) {
+                for (PbRole role : roleset.roles().roles()) {
                     role.roleset(roleset);
                 }
                 for (RolesetAlias alias : roleset.aliases()) {
