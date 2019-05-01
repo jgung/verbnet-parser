@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.app.api.model.SentenceModel;
+import io.github.semlink.parser.DefaultSentenceNormalizer;
 import io.github.semlink.parser.VerbNetSemanticParse;
 import io.github.semlink.parser.VerbNetSemanticParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
@@ -48,6 +49,8 @@ public class PredictionApi {
         List<String> sentences = verbNetSenseClassifier.segment(utterance);
 
         utterance = sentences.size() > 0 ? sentences.get(0) : utterance;
+        utterance = new DefaultSentenceNormalizer().normalize(utterance);
+
         VerbNetSemanticParse verbNetSemanticParses = parseCache.getUnchecked(utterance);
         log.info("Processed utterance \"{}\" in {}", utterance, sw.stop());
 

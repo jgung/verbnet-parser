@@ -2,6 +2,7 @@ package io.github.semlink.util;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -18,8 +19,13 @@ public final class StringUtils {
 
     public static String capitalized(@NonNull String name) {
         return Arrays.stream(name.split("_"))
-            .map(s -> s.length() == 1 ? s.toUpperCase() : s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
-            .collect(Collectors.joining(" "));
+                .map(s -> s.length() == 1 ? s.toUpperCase() : s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
+    }
+
+    public static String capitalize(@NonNull String string) {
+        return string.length() == 1 ? string.toUpperCase()
+                : string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
 }
