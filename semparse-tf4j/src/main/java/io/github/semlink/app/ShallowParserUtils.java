@@ -78,7 +78,7 @@ public final class ShallowParserUtils {
             lastLabel = currLabel;
         }
 
-        if (start >= 0) {
+        if (start >= 0 && !Tag.OUT.prefix.equals(lastLabel)) {
             spans.add(new Span<>(lastLabel, start, labels.size() - 1));
         }
 
