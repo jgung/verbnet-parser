@@ -42,7 +42,7 @@ class ParsingDemo extends Component {
 
       activeIndex: 0,
       showOptions: false,
-      showPropBank: false,
+      showPropBank: true,
       showVerbNet: true,
       showSemantics: true,
     };
