@@ -30,19 +30,19 @@
             <email>gungjm@gmail.com</email>
             <name>James Gung</name>
             <organization>clearwsd</organization>
-            <organizationUrl>https://github.com/clearwsd/clearwsd</organizationUrl>
+            <organizationUrl>https://github.com/semlink</organizationUrl>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/jgung/tf-nlp.git</connection>
-        <developerConnection>scm:git:https://github.com/jgung/tf-nlp.git</developerConnection>
-        <url>https://github.com/jgung/tf-nlp</url>
+        <connection>scm:git:https://github.com/jgung/verbnet-parser.git</connection>
+        <developerConnection>scm:git:https://github.com/jgung/verbnet-parser.git</developerConnection>
+        <url>https://github.com/jgung/verbnet-parser</url>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/jgung/tf-nlp/issues</url>
+        <url>https://github.com/jgung/verbnet-parser/issues</url>
     </issueManagement>
 
     <properties>
