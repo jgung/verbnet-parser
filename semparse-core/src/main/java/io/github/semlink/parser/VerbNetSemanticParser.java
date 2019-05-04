@@ -18,6 +18,7 @@ package io.github.semlink.parser;
 
 import com.google.common.base.Preconditions;
 
+import io.github.clearwsd.type.DepNode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -143,25 +144,28 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         return filtered;
     }
 
-    public VerbNetSemanticParse parseSentence(@NonNull DepTree parsed) {
+    public VerbNetSemanticParse parseSentence(@NonNull DepTree parsed, List<SensePrediction<VnClass>> senses) {
         List<String> tokens = parsed.stream().map(node -> (String) node.feature(FeatureType.Text)).collect(Collectors.toList());
         final VerbNetSemanticParse parse = new VerbNetSemanticParse()
-                .tokens(tokens)
-                .tree(parsed);
+            .tokens(tokens)
+            .tree(parsed);
 
-        List<SensePrediction<VnClass>> senses = classifier.predict(parsed);
-        List<Proposition<VnClass, PropBankArg>> props = roleLabeler.parse(parsed, senses).stream()
-                .map(prop -> lightVerbMapper.mapProp(parsed, prop).orElse(prop))
-                .collect(Collectors.toList());
+        List<Integer> predicateIndices = senses.stream()
+            .map(SensePrediction::index)
+            .collect(Collectors.toList());
+        List<Proposition<SensePrediction<VnClass>, PropBankArg>> props =
+            SemanticRoleLabeler.convert(roleLabeler.parse(parsed, predicateIndices), senses).stream()
+            .map(prop -> lightVerbMapper.mapProp(parsed, prop.relSpan().get(parsed).get(0)).orElse(prop))
+            .collect(Collectors.toList());
 
-        for (Proposition<VnClass, PropBankArg> prop : props) {
+        for (Proposition<SensePrediction<VnClass>, PropBankArg> prop : props) {
             if (prop.predicate().sense() == null) {
                 continue;
             }
 
             VerbNetProp vnProp = new VerbNetProp()
-                    .proposition(SemlinkRole.convert(prop))
-                    .tokens(tokens);
+                .proposition(SemlinkRole.convert(prop))
+                .tokens(tokens);
 
             aligner.align(prop, parsed).ifPresent(pbVnAlignment -> {
                 // get thematic role alignment
@@ -185,9 +189,9 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
                         span.label().thematicRoleType(ThematicRoleType.VERB);
                     } else {
                         Optional<NounPhrase> nounPhrase = pbVnAlignment.alignedPhrases(phrase).stream()
-                                .filter(np -> np instanceof NounPhrase)
-                                .map(np -> (NounPhrase) np)
-                                .findFirst();
+                            .filter(np -> np instanceof NounPhrase)
+                            .map(np -> (NounPhrase) np)
+                            .findFirst();
                         nounPhrase.ifPresent(np -> span.label().thematicRoleType(np.thematicRoleType()));
                     }
 
@@ -200,6 +204,11 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         }
 
         return parse;
+    }
+
+    public VerbNetSemanticParse parseSentence(@NonNull DepTree parsed) {
+        List<SensePrediction<VnClass>> senses = classifier.predict(parsed);
+        return parseSentence(parsed, senses);
     }
 
     public VerbNetSemanticParse parseSentence(@NonNull String sentence) {

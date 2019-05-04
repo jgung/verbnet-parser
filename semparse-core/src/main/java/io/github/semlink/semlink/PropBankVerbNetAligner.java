@@ -18,6 +18,7 @@ package io.github.semlink.semlink;
 
 import com.google.common.collect.ImmutableList;
 
+import io.github.clearwsd.SensePrediction;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class PropBankVerbNetAligner {
 
     }
 
-    private PbVnAlignment align(@NonNull Proposition<VnClass, PropBankArg> proposition,
+    private PbVnAlignment align(@NonNull Proposition<SensePrediction<VnClass>, PropBankArg> proposition,
         @NonNull List<PropBankPhrase> chunk,
         @NonNull SyntacticFrame frame,
         @NonNull List<MappedRoleset> rolesets) {
@@ -87,7 +88,7 @@ public class PropBankVerbNetAligner {
         return pbVnAlignment;
     }
 
-    public Optional<PbVnAlignment> align(@NonNull Proposition<VnClass, PropBankArg> prop,
+    public Optional<PbVnAlignment> align(@NonNull Proposition<SensePrediction<VnClass>, PropBankArg> prop,
         @NonNull DepTree source) {
 
         List<PropBankPhrase> phrases = PropBankPhrase.fromProp(prop, source);

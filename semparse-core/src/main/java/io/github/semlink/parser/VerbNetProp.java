@@ -16,6 +16,7 @@
 
 package io.github.semlink.parser;
 
+import io.github.clearwsd.SensePrediction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class VerbNetProp {
     private int tokenIndex;
     private List<String> tokens;
     private List<SemanticPredicate> predicates = new ArrayList<>();
-    private Proposition<VnClass, SemlinkRole> proposition;
+    private Proposition<SensePrediction<VnClass>, SemlinkRole> proposition;
 
     @Override
     public String toString() {

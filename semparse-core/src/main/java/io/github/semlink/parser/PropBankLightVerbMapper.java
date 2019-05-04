@@ -16,6 +16,7 @@
 
 package io.github.semlink.parser;
 
+import io.github.clearwsd.SensePrediction;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -56,12 +57,10 @@ public class PropBankLightVerbMapper {
      * Maps the sense to a corresponding VerbNet class, e.g look-30.3.
      *
      * @param tree dependency tree necessary to get lemmas for light verb mappings
-     * @param prop potential light verb proposition
+     * @param rel  rel node within dependency tree
      * @return optional mapped nominal proposition
      */
-    public Optional<Proposition<VnClass, PropBankArg>> mapProp(@NonNull DepTree tree,
-                                                               @NonNull Proposition<VnClass, PropBankArg> prop) {
-        DepNode rel = prop.relSpan().get(tree).get(0);
+    public Optional<Proposition<SensePrediction<VnClass>, PropBankArg>> mapProp(@NonNull DepTree tree, @NonNull DepNode rel) {
         String verb = rel.feature(FeatureType.Lemma);
         Map<String, VnClass> lvMappings = mappings.get(verb);
         if (null == lvMappings) {
@@ -72,10 +71,10 @@ public class PropBankLightVerbMapper {
                 if (lemma.getKey().equals(child.feature(FeatureType.Lemma))) {
                     DefaultSensePrediction<VnClass> sense = new DefaultSensePrediction<>(child.index(),
                             child.feature(FeatureType.Text), lemma.getValue().verbNetId().rootId(), lemma.getValue());
-                    Proposition<VnClass, PropBankArg> lightProp = semanticRoleLabeler.parse(
-                            tree, Collections.singletonList(sense)).get(0);
+                    Proposition<DepNode, PropBankArg> lightProp = semanticRoleLabeler.parse(
+                            tree, Collections.singletonList(sense.index())).get(0);
                     if (lightProp.arguments().spans().size() > 1) {
-                        return Optional.of(lightProp);
+                        return Optional.of(new Proposition<>(lightProp.relIndex(), sense, lightProp.arguments()));
                     }
                     return Optional.empty();
                 }

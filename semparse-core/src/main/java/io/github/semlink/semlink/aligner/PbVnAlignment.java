@@ -16,6 +16,7 @@
 
 package io.github.semlink.semlink.aligner;
 
+import io.github.clearwsd.SensePrediction;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class PbVnAlignment {
     private SyntacticFrame frame;
     private List<MappedRoleset> rolesets;
     private VnFrame syntaxArgDesc;
-    private Proposition<VnClass, PropBankArg> proposition;
+    private Proposition<SensePrediction<VnClass>, PropBankArg> proposition;
     private MappedRoleset roleset;
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {

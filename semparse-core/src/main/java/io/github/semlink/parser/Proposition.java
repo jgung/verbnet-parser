@@ -16,7 +16,6 @@
 
 package io.github.semlink.parser;
 
-import io.github.clearwsd.SensePrediction;
 import io.github.semlink.app.Chunking;
 import io.github.semlink.app.Span;
 import java.util.List;
@@ -38,20 +37,22 @@ import lombok.experimental.Accessors;
 public class Proposition<R, A> {
 
     @Getter
-    private final SensePrediction<R> predicate;
+    private final int relIndex;
+    @Getter
+    private final R predicate;
     @Getter
     private final Chunking<A> arguments;
 
     public Span<A> relSpan() {
-        return arguments.span(predicate.index());
+        return arguments.span(relIndex);
     }
 
-    public String toString(@NonNull List<String> tokens, @NonNull Function<SensePrediction<R>, String> senseFormatter) {
+    public String toString(@NonNull List<String> tokens, @NonNull Function<R, String> senseFormatter) {
         return senseFormatter.apply(predicate) + "\n" + arguments.toString(tokens);
     }
 
     public String toString(@NonNull List<String> tokens) {
-        return toString(tokens, s -> s.originalText() + " " + s.id());
+        return toString(tokens, Object::toString);
     }
 
 }

@@ -73,7 +73,7 @@ public class SemlinkRole {
         List<Span<SemlinkRole>> roleSpans = proposition.arguments().spans().stream()
                 .map(span -> Span.convert(span, of(span.label())))
                 .collect(Collectors.toList());
-        return new Proposition<>(proposition.predicate(), new DefaultChunking<>(roleSpans));
+        return new Proposition<>(proposition.relIndex(), proposition.predicate(), new DefaultChunking<>(roleSpans));
     }
 
     @Override
