@@ -23,8 +23,8 @@ import org.springframework.context.annotation.Configuration;
 
 import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnIndex;
-import io.github.semlink.parser.DefaultSemanticRoleLabeler;
 import io.github.semlink.parser.PropBankLightVerbMapper;
+import io.github.semlink.parser.SemanticRoleLabeler;
 import io.github.semlink.parser.VerbNetSemanticParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
 import io.github.semlink.propbank.type.PropBankArg;
@@ -72,7 +72,7 @@ public class PredictionConfiguration {
         String lvmPath = resolveFile(this.lvmPath);
         String pbPath = resolveFile(this.pbPath);
 
-        DefaultSemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
+        SemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
 
         PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath, pbPath);
 

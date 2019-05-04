@@ -42,14 +42,23 @@ import lombok.extern.slf4j.Slf4j;
 public class PropBankLightVerbMapper {
 
     private Map<String, Map<String, VnClass>> mappings;
-    private DefaultSemanticRoleLabeler<PropBankArg> semanticRoleLabeler;
+    private SemanticRoleLabeler<PropBankArg> semanticRoleLabeler;
 
     public PropBankLightVerbMapper(Map<String, Map<String, VnClass>> mappings,
-                                   DefaultSemanticRoleLabeler<PropBankArg> semanticRoleLabeler) {
+                                   SemanticRoleLabeler<PropBankArg> semanticRoleLabeler) {
         this.mappings = mappings;
         this.semanticRoleLabeler = semanticRoleLabeler;
     }
 
+    /**
+     * Check if the given proposition corresponds to a light verb, and map to the corresponding nominal propositional structure
+     * if so. For example, "[John] rel[took] [a look at his phone]" may map to "[John] took a rel[look] [at his phone]".
+     * Maps the sense to a corresponding VerbNet class, e.g look-30.3.
+     *
+     * @param tree dependency tree necessary to get lemmas for light verb mappings
+     * @param prop potential light verb proposition
+     * @return optional mapped nominal proposition
+     */
     public Optional<Proposition<VnClass, PropBankArg>> mapProp(@NonNull DepTree tree,
                                                                @NonNull Proposition<VnClass, PropBankArg> prop) {
         DepNode rel = prop.relSpan().get(tree).get(0);
@@ -75,6 +84,11 @@ public class PropBankLightVerbMapper {
         return Optional.empty();
     }
 
+    /**
+     * Load light verb mappings in the format: verb TAB noun TAB class, e.g. "give	bath	41.1.1".
+     *
+     * @return map from verb lemma, to a map from noun lemmas to VerbNet classes
+     */
     public static Map<String, Map<String, VnClass>> fromMappingsPath(@NonNull String mappingsPath,
                                                                      @NonNull VnIndex verbNet) {
         try {

@@ -69,12 +69,12 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
 
     private VerbNetSenseClassifier classifier;
     @Delegate
-    private DefaultSemanticRoleLabeler<PropBankArg> roleLabeler;
+    private SemanticRoleLabeler<PropBankArg> roleLabeler;
 
     private PropBankVerbNetAligner aligner;
     private PropBankLightVerbMapper lightVerbMapper;
 
-    public VerbNetSemanticParser(@NonNull DefaultSemanticRoleLabeler<PropBankArg> roleLabeler,
+    public VerbNetSemanticParser(@NonNull SemanticRoleLabeler<PropBankArg> roleLabeler,
                                  @NonNull VerbNetSenseClassifier classifier,
                                  @NonNull PropBankVerbNetAligner aligner) {
         this.roleLabeler = roleLabeler;
@@ -143,9 +143,8 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         return filtered;
     }
 
-    public VerbNetSemanticParse parseSentence(@NonNull String sentence) {
-        final List<String> tokens = classifier.tokenize(sentence);
-        final DepTree parsed = classifier.parse(tokens);
+    public VerbNetSemanticParse parseSentence(@NonNull DepTree parsed) {
+        List<String> tokens = parsed.stream().map(node -> (String) node.feature(FeatureType.Text)).collect(Collectors.toList());
         final VerbNetSemanticParse parse = new VerbNetSemanticParse()
                 .tokens(tokens)
                 .tree(parsed);
@@ -203,11 +202,16 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         return parse;
     }
 
+    public VerbNetSemanticParse parseSentence(@NonNull String sentence) {
+        final DepTree parsed = classifier.parse(classifier.tokenize(sentence));
+        return parseSentence(parsed);
+    }
+
     public List<VerbNetSemanticParse> parseDocument(@NonNull String document) {
         return classifier.segment(document).stream().map(this::parseSentence).collect(Collectors.toList());
     }
 
-    public static DefaultSemanticRoleLabeler<PropBankArg> roleLabeler(@NonNull String modelPath) {
+    public static SemanticRoleLabeler<PropBankArg> roleLabeler(@NonNull String modelPath) {
         return new DefaultSemanticRoleLabeler<>(RoleLabelerUtils.shallowSemanticParser(modelPath), PropBankArg::fromLabel);
     }
 
@@ -218,7 +222,7 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         String lightVerbMappings = "semparse-core/src/main/resources/lvm.tsv";
         String propbank = "data/unified-frames.bin";
 
-        DefaultSemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
+        SemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
         VnIndex verbNet = new DefaultVnIndex();
         VerbNetSenseClassifier classifier = VerbNetSenseClassifier.fromModelPath(wsdModel, verbNet);
         PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath, propbank);
