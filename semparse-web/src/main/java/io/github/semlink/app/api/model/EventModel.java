@@ -17,9 +17,12 @@
 package io.github.semlink.app.api.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import io.github.semlink.verbnet.semantics.Event;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -38,5 +41,11 @@ public class EventModel {
     private String name;
 
     private List<SemanticPredicateModel> predicates;
+
+    public EventModel(@NonNull Event event) {
+        this.name = event.event.id();
+        this.predicates = event.predicates().stream().map(SemanticPredicateModel::new).collect(Collectors.toList());
+        predicates.forEach(p -> p.eventName(name));
+    }
 
 }

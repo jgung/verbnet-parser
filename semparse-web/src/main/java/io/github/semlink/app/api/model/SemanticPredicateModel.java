@@ -54,7 +54,6 @@ public class SemanticPredicateModel {
     private boolean polarity = true;
 
     public SemanticPredicateModel(SemanticPredicate predicate) {
-        this.eventName = getEventName(predicate);
         this.predicate = predicate.toString();
         this.type = StringUtils.capitalized(predicate.type());
         this.args = predicate.arguments().stream()
@@ -88,9 +87,6 @@ public class SemanticPredicateModel {
                 this.type = ((ThematicRoleArgument) argument).thematicRoleType().toString();
             } else if (argument instanceof EventArgument) {
                 this.value = ((EventArgument) argument).id();
-                if (this.value.equals("E")) {
-                    this.value = "E1";
-                }
                 this.type = StringUtils.capitalized(((EventArgument) argument).relation());
             } else if (argument instanceof VerbSpecificArgument) {
                 Object variable = ((VerbSpecificArgument) argument).variable();
@@ -104,19 +100,6 @@ public class SemanticPredicateModel {
                 this.value = argument.value();
             }
         }
-    }
-
-    public static String getEventName(SemanticPredicate predicate) {
-        return predicate.arguments().stream()
-            .filter(e -> e instanceof EventArgument)
-            .map(e -> ((EventArgument) e).id())
-            .map(i -> {
-                if ("E".equals(i)) {
-                    return "E1";
-                }
-                return i;
-            })
-            .min(String::compareTo).orElse("E1");
     }
 
 }

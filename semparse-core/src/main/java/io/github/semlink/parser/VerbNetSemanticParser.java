@@ -140,7 +140,7 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         return filtered;
     }
 
-    public VerbNetSemanticParse parseSentence(@NonNull DepTree parsed, List<SensePrediction<VnClass>> senses) {
+    public VerbNetSemanticParse parseSentence(@NonNull DepTree parsed, @NonNull List<SensePrediction<VnClass>> senses) {
         List<String> tokens = parsed.stream().map(node -> (String) node.feature(FeatureType.Text)).collect(Collectors.toList());
         final VerbNetSemanticParse parse = new VerbNetSemanticParse()
             .tokens(tokens)
@@ -161,7 +161,7 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
                 continue;
             }
 
-            VerbNetProp vnProp = new VerbNetProp()
+            DefaultVerbNetProp vnProp = new DefaultVerbNetProp()
                 .proposition(SemlinkRole.convert(prop))
                 .tokens(tokens);
 

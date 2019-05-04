@@ -20,6 +20,7 @@ import com.google.common.base.Strings;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Accessors(fluent = true)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class EventArgument<T> extends VariableSemanticArgument<T> {
 
     public static final Pattern EVENT_PATTERN = Pattern.compile("(during|end|start|result)?(\\(E\\d?\\)|E\\d?)",
@@ -47,6 +49,9 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
                 relation = EventRelation.valueOf(matcher.group(1).toUpperCase());
             }
             id = matcher.group(2).toUpperCase();
+            if (id.equals("E")) {
+                id = "E1";
+            }
         } else {
             log.warn("Failed to parse event argument: {}", value);
         }

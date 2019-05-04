@@ -70,6 +70,10 @@ public class PropBankArg {
         throw new IllegalArgumentException("Unexpected label: " + label);
     }
 
+    public boolean isModifier() {
+        return number.isModifier();
+    }
+
     @Override
     public String toString() {
         String result = number.name();

@@ -36,7 +36,7 @@ public class VerbNetSemanticParse {
 
     private DepTree tree;
     private List<String> tokens;
-    private List<VerbNetProp> props = new ArrayList<>();
+    private List<DefaultVerbNetProp> props = new ArrayList<>();
 
     @Override
     public String toString() {

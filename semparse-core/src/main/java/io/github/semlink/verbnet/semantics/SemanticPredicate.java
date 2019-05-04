@@ -22,6 +22,7 @@ import io.github.clearwsd.verbnet.semantics.VnSemanticPredicate;
 import io.github.semlink.util.StringUtils;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.verbnet.type.SemanticPredicateType;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -41,9 +42,17 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public class SemanticPredicate {
 
+    public static final String DEFAULT_EVENT = "E0";
+
     private SemanticPredicateType type;
     private List<SemanticArgument> arguments;
     private boolean polarity;
+
+    public EventArgument event() {
+        return arguments.stream()
+            .filter(arg -> arg.type == SemanticArgumentType.EVENT)
+            .map(arg -> (EventArgument) arg).min(Comparator.comparing(EventArgument::id)).orElse(new EventArgument(DEFAULT_EVENT));
+    }
 
     public <T> List<T> get(@NonNull SemanticArgumentType type) {
         //noinspection unchecked

@@ -16,40 +16,56 @@
 
 package io.github.semlink.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.github.clearwsd.verbnet.VnClass;
-import io.github.semlink.semlink.SemlinkRole;
-import io.github.semlink.verbnet.semantics.SemanticPredicate;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import io.github.semlink.app.Span;
+import io.github.semlink.propbank.type.FunctionTag;
+import io.github.semlink.propbank.type.PropBankArg;
+import io.github.semlink.verbnet.semantics.Event;
+import io.github.semlink.verbnet.type.ThematicRoleType;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import lombok.NonNull;
 
 /**
- * VerbNet proposition.
+ * VerbNet proposition with associated semantic predicates and PropBank modifier arguments.
  *
- * @author jgung
+ * @author jamesgung
  */
-@Setter
-@Getter
-@Accessors(fluent = true)
-public class VerbNetProp {
+public interface VerbNetProp {
 
-    private int tokenIndex;
-    private List<String> tokens;
-    private List<SemanticPredicate> predicates = new ArrayList<>();
-    private Proposition<VnClass, SemlinkRole> proposition;
+    /**
+     * Return the {@link VnClass} for this proposition.
+     */
+    VnClass vncls();
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" ----------- Thematic Roles -------- \n");
-        sb.append(proposition.toString(tokens)).append("\n");
-        if (!predicates.isEmpty()) {
-            sb.append(" ----------- Semantic Analysis ----- \n");
-            predicates.forEach(p -> sb.append(p).append("\n"));
-        }
-        return sb.toString();
+    /**
+     * Ordered list of {@link Event events} for this proposition, each with associated semantic representations.
+     */
+    List<Event> events();
+
+    /**
+     * Return thematic roles organized by type.
+     */
+    Map<ThematicRoleType, List<Span<ThematicRoleType>>> rolesByType();
+
+    /**
+     * Return PropBank modifiers (ArgMs) that are not mapped to a thematic role.
+     */
+    Map<FunctionTag, List<Span<PropBankArg>>> modifiersByType();
+
+    /**
+     * Return all thematic roles for a given type.
+     */
+    default List<Span<ThematicRoleType>> rolesByType(@NonNull ThematicRoleType type) {
+        return rolesByType().getOrDefault(type, Collections.emptyList());
     }
+
+    /**
+     * Return all PropBank modifiers for a given modifier type.
+     */
+    default List<Span<PropBankArg>> modifiersByType(@NonNull FunctionTag type) {
+        return modifiersByType().getOrDefault(type, Collections.emptyList());
+    }
+
 }
