@@ -35,7 +35,7 @@ public class FillerAligner implements PbVnAligner {
     public void align(@NonNull PbVnAlignment alignment) {
 
         // TODO: this seems like a hack
-        boolean noAgentiveA0 = alignment.proposition().predicate().sense().related().stream()
+        boolean noAgentiveA0 = alignment.proposition().predicate().related().stream()
             .allMatch(s -> s.roles().stream()
                 .map(r -> ThematicRoleType.fromString(r.type()).orElse(ThematicRoleType.NONE))
                 .noneMatch(ThematicRoleType::isAgentive));
@@ -47,7 +47,7 @@ public class FillerAligner implements PbVnAligner {
                 .collect(Collectors.toList());
             if (phrase.getNumber() == ArgNumber.A0) {
                 // TODO: seems like a hack
-                if (alignment.proposition().predicate().id().startsWith("51") && noAgentiveA0) {
+                if (alignment.proposition().predicate().verbNetId().classId().startsWith("51") && noAgentiveA0) {
                     for (NounPhrase unalignedPhrase : unaligned) {
                         if (unalignedPhrase.thematicRoleType() == ThematicRoleType.THEME) {
                             alignment.add(phrase, unalignedPhrase);

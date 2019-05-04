@@ -16,14 +16,12 @@
 
 package io.github.semlink.parser;
 
-import io.github.clearwsd.SensePrediction;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import io.github.clearwsd.DefaultSensePrediction;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
@@ -60,7 +58,7 @@ public class PropBankLightVerbMapper {
      * @param rel  rel node within dependency tree
      * @return optional mapped nominal proposition
      */
-    public Optional<Proposition<SensePrediction<VnClass>, PropBankArg>> mapProp(@NonNull DepTree tree, @NonNull DepNode rel) {
+    public Optional<Proposition<VnClass, PropBankArg>> mapProp(@NonNull DepTree tree, @NonNull DepNode rel) {
         String verb = rel.feature(FeatureType.Lemma);
         Map<String, VnClass> lvMappings = mappings.get(verb);
         if (null == lvMappings) {
@@ -69,12 +67,10 @@ public class PropBankLightVerbMapper {
         for (Map.Entry<String, VnClass> lemma : lvMappings.entrySet()) {
             for (DepNode child : rel.children()) {
                 if (lemma.getKey().equals(child.feature(FeatureType.Lemma))) {
-                    DefaultSensePrediction<VnClass> sense = new DefaultSensePrediction<>(child.index(),
-                            child.feature(FeatureType.Text), lemma.getValue().verbNetId().rootId(), lemma.getValue());
                     Proposition<DepNode, PropBankArg> lightProp = semanticRoleLabeler.parse(
-                            tree, Collections.singletonList(sense.index())).get(0);
+                            tree, Collections.singletonList(child.index())).get(0);
                     if (lightProp.arguments().spans().size() > 1) {
-                        return Optional.of(new Proposition<>(lightProp.relIndex(), sense, lightProp.arguments()));
+                        return Optional.of(new Proposition<>(child.index(), lemma.getValue(), lightProp.arguments()));
                     }
                     return Optional.empty();
                 }

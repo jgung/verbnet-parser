@@ -50,11 +50,7 @@ public class PropModel {
     private List<SemlinkRoleModel> spans = new ArrayList<>();
 
     public PropModel(VerbNetProp prop) {
-        if (prop.proposition().predicate().sense() != null) {
-            this.sense = prop.proposition().predicate().sense().verbNetId().toString();
-        } else {
-            this.sense = prop.proposition().predicate().id();
-        }
+        this.sense = prop.proposition().predicate().verbNetId().toString();
         List<SemanticPredicateModel> predicates = prop.predicates().stream()
                 .map(SemanticPredicateModel::new)
                 .collect(Collectors.toList());
@@ -65,7 +61,7 @@ public class PropModel {
         predsByEvent.keySet().stream().sorted(String::compareTo)
                 .forEach(key -> events.add(new EventModel().name(key).predicates(predsByEvent.get(key))));
 
-        this.spans = getSpans(prop.proposition().arguments(), prop.tokens(), prop.proposition().predicate().index());
+        this.spans = getSpans(prop.proposition().arguments(), prop.tokens(), prop.proposition().relIndex());
     }
 
     private static List<SemlinkRoleModel> getSpans(Chunking<SemlinkRole> chunking, List<String> tokens, int predIndex) {

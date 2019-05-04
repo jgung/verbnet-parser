@@ -51,7 +51,7 @@ public class SentenceModel {
             return new SemlinkRoleModel().start(relSpan.startIndex())
                     .end(relSpan.endIndex())
                     .text(String.join(" ", relSpan.get(semanticParse.tokens())))
-                    .label(p.proposition().predicate().id())
+                    .label(p.proposition().predicate().verbNetId().classId())
                     .isPredicate(true);
         }).collect(Collectors.toList());
         int index = 0;

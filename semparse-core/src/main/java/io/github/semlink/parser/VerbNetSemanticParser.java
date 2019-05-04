@@ -18,7 +18,6 @@ package io.github.semlink.parser;
 
 import com.google.common.base.Preconditions;
 
-import io.github.clearwsd.type.DepNode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -107,7 +106,7 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
             }
             List<EventArgument<VnClass>> args = predicate.get(SemanticArgumentType.EVENT);
             for (EventArgument<VnClass> arg : args) {
-                arg.variable(alignment.proposition().predicate().sense());
+                arg.variable(alignment.proposition().predicate());
             }
 
             List<ThematicRoleArgument<PropBankPhrase>> roles = predicate.get(SemanticArgumentType.THEMROLE);
@@ -122,12 +121,9 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
             }
             filtered.add(predicate);
 
-            VnClass sense = alignment.proposition().predicate().sense();
-            if (null == sense) {
-                continue;
-            }
+            VnClass sense = alignment.proposition().predicate();
             // assign verb-specific features ----------------------------------------------------------------
-            String lemma = parsed.get(alignment.proposition().predicate().index()).feature(FeatureType.Lemma);
+            String lemma = parsed.get(alignment.proposition().relIndex()).feature(FeatureType.Lemma);
             List<String> features = sense.members().stream()
                     .filter(member -> member.name().equals(lemma))
                     .map(VnMember::features)
@@ -153,13 +149,15 @@ public class VerbNetSemanticParser implements SemanticRoleLabeler<PropBankArg> {
         List<Integer> predicateIndices = senses.stream()
             .map(SensePrediction::index)
             .collect(Collectors.toList());
-        List<Proposition<SensePrediction<VnClass>, PropBankArg>> props =
-            SemanticRoleLabeler.convert(roleLabeler.parse(parsed, predicateIndices), senses).stream()
+        List<Proposition<VnClass, PropBankArg>> props =
+            SemanticRoleLabeler.convert(roleLabeler.parse(parsed, predicateIndices), senses.stream()
+                .map(SensePrediction::sense)
+                .collect(Collectors.toList())).stream()
             .map(prop -> lightVerbMapper.mapProp(parsed, prop.relSpan().get(parsed).get(0)).orElse(prop))
             .collect(Collectors.toList());
 
-        for (Proposition<SensePrediction<VnClass>, PropBankArg> prop : props) {
-            if (prop.predicate().sense() == null) {
+        for (Proposition<VnClass, PropBankArg> prop : props) {
+            if (prop.predicate() == null) {
                 continue;
             }
 

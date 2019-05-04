@@ -18,7 +18,6 @@ package io.github.semlink.semlink;
 
 import com.google.common.collect.ImmutableList;
 
-import io.github.clearwsd.SensePrediction;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class PropBankVerbNetAligner {
 
     }
 
-    private PbVnAlignment align(@NonNull Proposition<SensePrediction<VnClass>, PropBankArg> proposition,
+    private PbVnAlignment align(@NonNull Proposition<VnClass, PropBankArg> proposition,
         @NonNull List<PropBankPhrase> chunk,
         @NonNull SyntacticFrame frame,
         @NonNull List<MappedRoleset> rolesets) {
@@ -88,7 +87,7 @@ public class PropBankVerbNetAligner {
         return pbVnAlignment;
     }
 
-    public Optional<PbVnAlignment> align(@NonNull Proposition<SensePrediction<VnClass>, PropBankArg> prop,
+    public Optional<PbVnAlignment> align(@NonNull Proposition<VnClass, PropBankArg> prop,
         @NonNull DepTree source) {
 
         List<PropBankPhrase> phrases = PropBankPhrase.fromProp(prop, source);
@@ -96,14 +95,14 @@ public class PropBankVerbNetAligner {
         List<PbVnAlignment> alignments = new ArrayList<>();
 
         String lemma = source.get(prop.relSpan().startIndex()).feature(FeatureType.Lemma);
-        List<MappedRoleset> rolesets = prop.predicate().sense().related().stream()
+        List<MappedRoleset> rolesets = prop.predicate().related().stream()
             .map(s -> mappings.rolesets(lemma, s.verbNetId().classId()))
             .flatMap(List::stream)
             .distinct()
             .collect(Collectors.toList());
 
         // enumerate VerbNet frames
-        for (VnClass cls : prop.predicate().sense().related()) {
+        for (VnClass cls : prop.predicate().related()) {
 
             // iterate over individual frames
             for (VnFrame frame : cls.frames()) {
