@@ -2,6 +2,7 @@ give	bath	41.1.1
 give	bow	40.3.3
 give	caress	20-1
 give	curtsey	40.3.3
+give	hug	36.2
 give	kiss	20-1
 give	laugh	40.2
 give	lick	20-1
@@ -24,9 +25,8 @@ give	tickle	20-1
 give	touch	20-1
 give	tug	20-1
 give	tweak	20-1
-have	breakfast	39.5
-have	shower	41.1.1
 have	bath	41.1.1
+have	breakfast	39.5
 have	catnap	40.4
 have	chuckle	40.2
 have	dinner	39.5
@@ -34,9 +34,11 @@ have	doze	40.4
 have	laugh	40.2
 have	lunch	39.5
 have	nap	40.4-1
+have	shower	41.1.1
 have	snooze	40.4
 make	comment	37.11-1-1
 make	decision	36.1.2-1
+make	offer	13.3
 make	plan	62
 make	remark	37.11-1
 make	reservation	13.5.1
@@ -51,6 +53,7 @@ take	listen	30.3
 take	look	30.3
 take	nap	40.4-1
 take	peek	30.3
+take	seat	50
 take	shower	41.1.1
 take	sniff	30.3
 take	snooze	40.4
