@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.semlink.parser;
+package io.github.semlink.semlink;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnMember;
-import io.github.semlink.semlink.Alignment;
-import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.verbnet.semantics.EventArgument;
 import io.github.semlink.verbnet.semantics.SemanticPredicate;
 import io.github.semlink.verbnet.semantics.ThematicRoleArgument;

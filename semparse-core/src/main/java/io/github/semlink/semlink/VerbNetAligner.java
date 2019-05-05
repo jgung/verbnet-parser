@@ -16,6 +16,7 @@
 
 package io.github.semlink.semlink;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import java.io.FileInputStream;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,8 +33,14 @@ import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnFrame;
+import io.github.semlink.app.Span;
+import io.github.semlink.parser.DefaultVerbNetProp;
 import io.github.semlink.parser.Proposition;
+import io.github.semlink.parser.VerbNetSemanticParse;
 import io.github.semlink.propbank.DefaultPbIndex;
+import io.github.semlink.propbank.frames.PbRole;
+import io.github.semlink.propbank.frames.Roleset;
+import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
 import io.github.semlink.semlink.aligner.FillerAligner;
@@ -42,7 +50,9 @@ import io.github.semlink.semlink.aligner.RelAligner;
 import io.github.semlink.semlink.aligner.RoleMappingAligner;
 import io.github.semlink.semlink.aligner.SelResAligner;
 import io.github.semlink.semlink.aligner.SynResAligner;
+import io.github.semlink.verbnet.type.NounPhrase;
 import io.github.semlink.verbnet.type.SyntacticFrame;
+import io.github.semlink.verbnet.type.ThematicRoleType;
 import lombok.NonNull;
 
 /**
@@ -50,7 +60,7 @@ import lombok.NonNull;
  *
  * @author jgung
  */
-public class PropBankVerbNetAligner {
+public class VerbNetAligner {
 
     private PbVnMappings mappings;
 
@@ -63,15 +73,75 @@ public class PropBankVerbNetAligner {
             new SelResAligner(SelResAligner::getThematicRolesGreedy)
     );
 
-    public PropBankVerbNetAligner(@NonNull PbVnMappings mappings) {
+    private VnPredicateExtractor predicateExtractor = new VnPredicateExtractor();
+
+    public VerbNetAligner(@NonNull PbVnMappings mappings) {
         this.mappings = mappings;
 
     }
 
-    private PbVnAlignment align(@NonNull Proposition<VnClass, PropBankArg> proposition,
-                                @NonNull List<PropBankPhrase> chunk,
-                                @NonNull SyntacticFrame frame,
-                                @NonNull List<MappedRoleset> rolesets) {
+    public VerbNetSemanticParse align(@NonNull DepTree parsed,
+                                      @NonNull List<Proposition<VnClass, PropBankArg>> props) {
+        List<String> tokens = parsed.stream().map(node -> (String) node.feature(FeatureType.Text)).collect(Collectors.toList());
+
+        VerbNetSemanticParse parse = new VerbNetSemanticParse()
+                .tokens(tokens)
+                .tree(parsed);
+        for (Proposition<VnClass, PropBankArg> prop : props) {
+            if (prop.predicate() == null) {
+                continue;
+            }
+            parse.props().add(alignProp(prop, parsed, tokens));
+        }
+
+        return parse;
+    }
+
+    private DefaultVerbNetProp alignProp(Proposition<VnClass, PropBankArg> prop, DepTree parsed, List<String> tokens) {
+        DefaultVerbNetProp vnProp = new DefaultVerbNetProp()
+                .proposition(SemlinkRole.convert(prop))
+                .tokens(tokens);
+
+        align(prop, parsed).ifPresent(aligned -> {
+            // get thematic role alignment
+            Preconditions.checkState(aligned.sourcePhrases().size() == prop.arguments().spans().size());
+
+            Iterator<PropBankPhrase> propBankPhrases = aligned.sourcePhrases().iterator();
+            for (Span<SemlinkRole> span : vnProp.proposition().arguments().spans()) {
+                PropBankPhrase phrase = propBankPhrases.next();
+
+                // get direct roleset mappings
+                if (null != aligned.roleset()) {
+                    Roleset mapped = aligned.roleset().roleset();
+                    if (null != mapped) {
+                        Optional<PbRole> role = mapped.getRole(span.label().propBankArg().getNumber());
+                        role.ifPresent(pbRole -> span.label().pbRole(pbRole));
+                    }
+                }
+
+                if (phrase.getNumber() == ArgNumber.V) {
+                    span.label().thematicRoleType(ThematicRoleType.VERB);
+                } else {
+                    Optional<NounPhrase> nounPhrase = aligned.alignedPhrases(phrase).stream()
+                            .filter(np -> np instanceof NounPhrase)
+                            .map(np -> (NounPhrase) np)
+                            .findFirst();
+                    nounPhrase.ifPresent(np -> span.label().thematicRoleType(np.thematicRoleType()));
+                }
+
+            }
+            String lemma = parsed.get(prop.relIndex()).feature(FeatureType.Lemma);
+            // get semantic predicates
+            vnProp.predicates(predicateExtractor.parsePredicates(aligned.alignment(), aligned.frame(),
+                    prop.predicate(), lemma));
+        });
+        return vnProp;
+    }
+
+    private PbVnAlignment align(Proposition<VnClass, PropBankArg> proposition,
+                                List<PropBankPhrase> chunk,
+                                SyntacticFrame frame,
+                                List<MappedRoleset> rolesets) {
 
         PbVnAlignment pbVnAlignment = new PbVnAlignment()
                 .alignment(Alignment.of(chunk, frame.elements()))
@@ -87,8 +157,7 @@ public class PropBankVerbNetAligner {
         return pbVnAlignment;
     }
 
-    public Optional<PbVnAlignment> align(@NonNull Proposition<VnClass, PropBankArg> prop,
-                                         @NonNull DepTree source) {
+    private Optional<PbVnAlignment> align(Proposition<VnClass, PropBankArg> prop, DepTree source) {
 
         List<PropBankPhrase> phrases = PropBankPhrase.fromProp(prop, source);
 
@@ -129,11 +198,11 @@ public class PropBankVerbNetAligner {
         return comparing;
     }
 
-    public static PropBankVerbNetAligner of(@NonNull String mappingsPath, @NonNull String pbIndexPath) {
+    public static VerbNetAligner of(@NonNull String mappingsPath, @NonNull String pbIndexPath) {
         try {
             PbVnMappings mappings = new PbVnMappings(PbVnMapping.fromJson(new FileInputStream(mappingsPath)),
                     DefaultPbIndex.fromBinary(pbIndexPath));
-            return new PropBankVerbNetAligner(mappings);
+            return new VerbNetAligner(mappings);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

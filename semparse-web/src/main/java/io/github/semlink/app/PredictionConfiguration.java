@@ -25,14 +25,14 @@ import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.parser.LightVerbMapper;
 import io.github.semlink.parser.SemanticRoleLabeler;
-import io.github.semlink.parser.VerbNetSemanticParser;
+import io.github.semlink.parser.VerbNetParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
 import io.github.semlink.propbank.type.PropBankArg;
-import io.github.semlink.semlink.PropBankVerbNetAligner;
+import io.github.semlink.semlink.VerbNetAligner;
 
 import static io.github.semlink.app.util.JarExtractionUtil.resolveDirectory;
 import static io.github.semlink.app.util.JarExtractionUtil.resolveFile;
-import static io.github.semlink.parser.VerbNetSemanticParser.roleLabeler;
+import static io.github.semlink.parser.VerbNetParser.roleLabeler;
 
 /**
  * Prediction configuration file.
@@ -65,8 +65,8 @@ public class PredictionConfiguration {
     }
 
     @Bean
-    public VerbNetSemanticParser verbNetSemanticParser(@Autowired VerbNetSenseClassifier verbNetSenseClassifier,
-                                                       @Autowired VnIndex verbNet) {
+    public VerbNetParser verbNetSemanticParser(@Autowired VerbNetSenseClassifier verbNetSenseClassifier,
+                                               @Autowired VnIndex verbNet) {
         String mappingsPath = resolveFile(this.mappingsPath);
         String modelDir = resolveDirectory(this.srlModelDir);
         String lvmPath = resolveFile(this.lvmPath);
@@ -74,11 +74,11 @@ public class PredictionConfiguration {
 
         SemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
 
-        PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath, pbPath);
+        VerbNetAligner aligner = VerbNetAligner.of(mappingsPath, pbPath);
 
         LightVerbMapper mapper = LightVerbMapper.fromMappingsPath(lvmPath, verbNet);
 
-        return new VerbNetSemanticParser(verbNetSenseClassifier, roleLabeler, aligner, mapper);
+        return new VerbNetParser(verbNetSenseClassifier, roleLabeler, aligner, mapper);
     }
 
 }

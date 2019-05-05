@@ -32,7 +32,7 @@ import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.app.api.model.SentenceModel;
 import io.github.semlink.parser.DefaultSentenceNormalizer;
 import io.github.semlink.parser.VerbNetSemanticParse;
-import io.github.semlink.parser.VerbNetSemanticParser;
+import io.github.semlink.parser.VerbNetParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +51,7 @@ public class PredictionApi {
     private LoadingCache<String, VerbNetSemanticParse> parseCache;
 
     @Autowired
-    public PredictionApi(VerbNetSemanticParser parser, VerbNetSenseClassifier verbNetSenseClassifier, VnIndex verbNet) {
+    public PredictionApi(VerbNetParser parser, VerbNetSenseClassifier verbNetSenseClassifier, VnIndex verbNet) {
         this.verbNetSenseClassifier = verbNetSenseClassifier;
         this.verbNet = verbNet;
         parseCache = CacheBuilder.newBuilder()
