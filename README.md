@@ -8,6 +8,7 @@ See a demo of the VerbNet parser in action [here](http://verbnet-semantic-parser
 
 ### Requirements
 * [Java 8](http://www.oracle.com/technetwork/java/javase/overview/index.html) and [Apache Maven](https://maven.apache.org/)
+* [ClearWSD](https://github.com/clearwsd/clearwsd)
 
 ## semparse-core
 Provides a VerbNet parser that uses [VerbNet](http://verbs.colorado.edu/~mpalmer/projects/verbnet.html) class predictions and 
