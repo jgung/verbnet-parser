@@ -29,11 +29,11 @@ ResponsiveContainer.propTypes = {
 };
 
 class App extends Component {
-    renderHeader = header => <Header as="h3" style={{ fontSize: '2em' }} content={header} />;
+    renderHeader = header => <Header key={header} as="h3" style={{ fontSize: '2em' }} content={header} />;
 
     renderTextContent = ({ header, text }) => [
       this.renderHeader(header),
-      <p style={{ fontSize: '1.33em' }}>{text}</p>,
+      <p key={text} style={{ fontSize: '1.33em' }}>{text}</p>,
     ];
 
     renderListItem = ({ link, name, description }) => (
@@ -45,9 +45,9 @@ class App extends Component {
 
     render() {
       const menuItems = [
-        <Menu.Item as="a" active>Demo</Menu.Item>,
-        <Menu.Item as="a" href="https://uvi.colorado.edu/">VerbNet</Menu.Item>,
-        <Menu.Item as="a" href="https://www.colorado.edu/lab/clear/">CLEAR @ Colorado</Menu.Item>,
+        <Menu.Item key="Demo" as="a" active>Demo</Menu.Item>,
+        <Menu.Item key="VerbNet" as="a" href="https://uvi.colorado.edu/">VerbNet</Menu.Item>,
+        <Menu.Item key="CLEAR" as="a" href="https://www.colorado.edu/lab/clear/">CLEAR @ Colorado</Menu.Item>,
       ];
 
       const content1 = {

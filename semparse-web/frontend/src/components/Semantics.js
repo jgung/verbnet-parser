@@ -38,10 +38,10 @@ const Semantics = ({ events }) => {
         {
             event.predicates.map(pred => (
               <Predicate
-                key={pred.predicate + pred.type}
+                key={pred.predicate + pred.predicateType}
                 polarity={pred.polarity}
                 args={pred.args}
-                predicateType={pred.type}
+                predicateType={pred.predicateType}
               />
             ))
         }
@@ -55,7 +55,7 @@ Semantics.propTypes = {
   events: PropTypes.arrayOf(PropTypes.shape(
     {
       name: PropTypes.string,
-      predicates: predicateShape,
+      predicates: PropTypes.arrayOf(PropTypes.shape(predicateShape)),
     },
   )).isRequired,
 };

@@ -51,13 +51,13 @@ public class SemanticPredicateModel {
 
     private String eventName;
     private String predicate;
-    private String type;
+    private String predicateType;
     private List<SemanticArgumentModel> args = new ArrayList<>();
     private boolean polarity = true;
 
     public SemanticPredicateModel(SemanticPredicate predicate) {
         this.predicate = predicate.toString();
-        this.type = StringUtils.capitalized(predicate.type());
+        this.predicateType = StringUtils.capitalized(predicate.type());
         this.args = predicate.arguments().stream()
                 .map(SemanticArgumentModel::new)
                 .collect(Collectors.toList());

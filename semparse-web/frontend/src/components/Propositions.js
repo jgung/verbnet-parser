@@ -26,23 +26,25 @@ const Proposition = ({
 
 const propositionTypes = {
   sense: PropTypes.string.isRequired,
-  showVerbNet: PropTypes.bool.isRequired,
-  showPropBank: PropTypes.bool.isRequired,
   spans: PropTypes.arrayOf(PropTypes.object).isRequired,
   events: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-Proposition.propTypes = propositionTypes;
+Proposition.propTypes = {
+  ...propositionTypes,
+  showVerbNet: PropTypes.bool.isRequired,
+  showPropBank: PropTypes.bool.isRequired,
+};
 
 const Propositions = ({
   propositions, propIndex, handleTabChange, showPropBank, showVerbNet, showSemantics,
 }) => {
-  const propPanes = propositions.map((prop) => {
+  const propPanes = propositions.map((prop, index) => {
     const {
       sense, spans, events,
     } = prop;
     return {
-      menuItem: sense,
+      menuItem: sense + (' '.repeat(index)),
       render: () => (
         <Tab.Pane key={sense} attached={false}>
           <Proposition
