@@ -11,10 +11,6 @@
         <relativePath>..</relativePath>
     </parent>
 
-    <properties>
-        <clearwsd.version>0.9.0</clearwsd.version>
-    </properties>
-
     <artifactId>semparse-core</artifactId>
 
     <dependencies>
@@ -26,16 +22,6 @@
         <dependency>
             <groupId>io.github.clearwsd</groupId>
             <artifactId>clearwsd-core</artifactId>
-            <version>${clearwsd.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.clearwsd</groupId>
-            <artifactId>clearwsd-nlp4j</artifactId>
-            <version>${clearwsd.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.clearwsd</groupId>
-            <artifactId>clearwsd-models</artifactId>
             <version>${clearwsd.version}</version>
         </dependency>
     </dependencies>

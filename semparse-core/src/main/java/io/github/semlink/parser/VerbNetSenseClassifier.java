@@ -24,10 +24,9 @@ import io.github.clearwsd.DefaultSensePrediction;
 import io.github.clearwsd.DefaultSensePredictor;
 import io.github.clearwsd.ParsingSensePredictor;
 import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.parser.Nlp4jDependencyParser;
+import io.github.clearwsd.parser.NlpParser;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
-import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnIndex;
 import lombok.AllArgsConstructor;
@@ -85,17 +84,11 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VnClass> {
     /**
      * Initialize from a given {@link io.github.clearwsd.SensePredictor} model path and {@link VnIndex} lexicon.
      */
-    public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath, @NonNull VnIndex verbNet) {
+    public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath, @NonNull VnIndex verbNet,
+                                                       @NonNull NlpParser nlpParser) {
         DefaultSensePredictor<VnClass> predictor = DefaultSensePredictor.loadFromResource(modelPath,
-                new Nlp4jDependencyParser());
+                nlpParser);
         return new VerbNetSenseClassifier(predictor, verbNet);
-    }
-
-    /**
-     * Initialize from a given {@link io.github.clearwsd.SensePredictor} model path.
-     */
-    public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath) {
-        return fromModelPath(modelPath, new DefaultVnIndex());
     }
 
 }

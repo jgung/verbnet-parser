@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.github.clearwsd.parser.Nlp4jDependencyParser;
+import io.github.clearwsd.parser.NlpParser;
 import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.parser.LightVerbMapper;
@@ -43,15 +45,15 @@ import static io.github.semlink.parser.VerbNetParser.pbRoleLabeler;
 public class PredictionConfiguration {
 
     @Value("${verbnet.demo.pbvn-mappings-path:pbvn-mappings.json}")
-    private String mappingsPath = "pbvn-mappings.json";
-    @Value("${verbnet.demo.wsd-mode-path:models/nlp4j-verbnet-3.3.bin}")
-    private String wsdModel = "models/nlp4j-verbnet-3.3.bin";
-    @Value("${verbnet.demo.srl-model-path:models/unified-propbank}")
-    private String srlModelDir = "models/unified-propbank/";
+    private String mappingsPath;
+    @Value("${verbnet.demo.pb-path:unified-frames.bin}")
+    private String pbPath;
+    @Value("${verbnet.demo.wsd-mode-path:nlp4j-verbnet-3.3.bin}")
+    private String wsdModel;
+    @Value("${verbnet.demo.srl-model-path:propbank-srl}")
+    private String srlModelDir;
     @Value("${verbnet.demo.lvm-path:lvm.tsv}")
-    private String lvmPath = "lvm.tsv";
-    @Value("${verbnet.demo.pb-path:propbank/unified-frames.bin}")
-    private String pbPath = "propbank/unified-frames.bin";
+    private String lvmPath;
 
     @Bean
     public VnIndex verbNet() {
@@ -59,9 +61,14 @@ public class PredictionConfiguration {
     }
 
     @Bean
-    public VerbNetSenseClassifier verbNetSenseClassifier(@Autowired VnIndex verbNet) {
+    public NlpParser nlpParser() {
+        return new Nlp4jDependencyParser();
+    }
+
+    @Bean
+    public VerbNetSenseClassifier verbNetSenseClassifier(@Autowired VnIndex verbNet, @Autowired NlpParser nlpParser) {
         String wsdModel = resolveFile(this.wsdModel);
-        return VerbNetSenseClassifier.fromModelPath(wsdModel, verbNet);
+        return VerbNetSenseClassifier.fromModelPath(wsdModel, verbNet, nlpParser);
     }
 
     @Bean

@@ -19,14 +19,11 @@ package io.github.semlink.parser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
-import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnClass;
-import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;
@@ -88,38 +85,6 @@ public class VerbNetParser {
 
     public static SemanticRoleLabeler<PropBankArg> pbRoleLabeler(@NonNull String modelPath) {
         return new DefaultSemanticRoleLabeler<>(RoleLabelerUtils.shallowSemanticParser(modelPath), PropBankArg::fromLabel);
-    }
-
-    public static void main(String[] args) {
-        String mappingsPath = "data/pbvn-mappings.json.updated.json";
-        String modelDir = "data/models/unified-propbank";
-        String wsdModel = "data/models/verbnet/nlp4j-verbnet-3.3.bin";
-        String lightVerbMappings = "semparse-core/src/main/resources/lvm.tsv";
-        String propbank = "data/unified-frames.bin";
-
-        SemanticRoleLabeler<PropBankArg> roleLabeler = pbRoleLabeler(modelDir);
-        VnIndex verbNet = new DefaultVnIndex();
-        VerbNetSenseClassifier classifier = VerbNetSenseClassifier.fromModelPath(wsdModel, verbNet);
-        LightVerbMapper verbMapper = LightVerbMapper.fromMappingsPath(lightVerbMappings, verbNet);
-        VerbNetAligner aligner = VerbNetAligner.of(mappingsPath, propbank);
-
-        VerbNetParser parser = new VerbNetParser(classifier, roleLabeler, aligner, verbMapper);
-
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            try {
-                System.out.print(">> ");
-                String line = scanner.nextLine().trim();
-                if (line.equalsIgnoreCase("quit")) {
-                    break;
-                }
-                classifier.segment(line).stream()
-                        .map(parser::parse)
-                        .forEach(System.out::println);
-            } catch (Exception e) {
-                log.warn("An unexpected error occurred", e);
-            }
-        }
     }
 
 }
