@@ -69,6 +69,6 @@ mvn clean install -DskipTests
 cd semparse-web
 mvn spring-boot:run
 ```
-Then just open [localhost:8080](localhost:8080) in your browser.
+Then just open [localhost:8080](http://localhost:8080) in your browser.
 
 [Try the demo here!](http://verbnet-semantic-parser.appspot.com/)
