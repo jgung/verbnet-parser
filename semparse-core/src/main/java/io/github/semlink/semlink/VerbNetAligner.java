@@ -53,6 +53,7 @@ import io.github.semlink.semlink.aligner.SynResAligner;
 import io.github.semlink.verbnet.type.NounPhrase;
 import io.github.semlink.verbnet.type.SyntacticFrame;
 import io.github.semlink.verbnet.type.ThematicRoleType;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 /**
@@ -60,24 +61,24 @@ import lombok.NonNull;
  *
  * @author jgung
  */
+@AllArgsConstructor
 public class VerbNetAligner {
 
     private PbVnMappings mappings;
-
-    private List<PbVnAligner> aligners = ImmutableList.of(
-            new RelAligner(),
-            new RoleMappingAligner(),
-            new SynResAligner(),
-            new SelResAligner(),
-            new FillerAligner(),
-            new SelResAligner(SelResAligner::getThematicRolesGreedy)
-    );
-
-    private VnPredicateExtractor predicateExtractor = new VnPredicateExtractor();
+    private List<PbVnAligner> aligners;
+    private VnPredicateExtractor predicateExtractor;
 
     public VerbNetAligner(@NonNull PbVnMappings mappings) {
-        this.mappings = mappings;
-
+        this(mappings,
+                ImmutableList.of(
+                        new RelAligner(),
+                        new RoleMappingAligner(),
+                        new SynResAligner(),
+                        new SelResAligner(),
+                        new FillerAligner(),
+                        new SelResAligner(SelResAligner::getThematicRolesGreedy)),
+                new VnPredicateExtractor()
+        );
     }
 
     public VerbNetParse align(@NonNull DepTree parsed,
@@ -87,20 +88,20 @@ public class VerbNetAligner {
         VerbNetParse parse = new VerbNetParse()
                 .tokens(tokens)
                 .tree(parsed);
-        for (Proposition<VnClass, PropBankArg> prop : props) {
-            if (prop.predicate() == null) {
-                continue;
-            }
-            parse.props().add(alignProp(prop, parsed, tokens));
-        }
+
+        List<DefaultVerbNetProp> vnProps = props.stream()
+                .filter(prop -> null != prop.predicate())
+                .map(prop -> alignProp(prop, parsed).tokens(tokens))
+                .collect(Collectors.toList());
+
+        parse.props(vnProps);
 
         return parse;
     }
 
-    private DefaultVerbNetProp alignProp(Proposition<VnClass, PropBankArg> prop, DepTree parsed, List<String> tokens) {
+    private DefaultVerbNetProp alignProp(Proposition<VnClass, PropBankArg> prop, DepTree parsed) {
         DefaultVerbNetProp vnProp = new DefaultVerbNetProp()
-                .proposition(SemlinkRole.convert(prop))
-                .tokens(tokens);
+                .proposition(SemlinkRole.convert(prop));
 
         align(prop, parsed).ifPresent(aligned -> {
             // get thematic role alignment

@@ -318,8 +318,8 @@ public final class VerbNetMappings {
     public static void main(String[] args) throws IOException {
         String framesPath = "data/propbank-frames.bin";
         String outPath = "data/pbvn-mappings.json";
-        //        writeMappings(framesPath, outPath);
-        //        incompleteMappings(outPath);
+        writeMappings(framesPath, outPath);
+        incompleteMappings(outPath);
         outputUpdatedMappings(outPath);
     }
 
