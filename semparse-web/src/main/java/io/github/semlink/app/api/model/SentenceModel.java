@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.github.semlink.app.Span;
-import io.github.semlink.parser.VerbNetSemanticParse;
+import io.github.semlink.parser.VerbNetParse;
 import io.github.semlink.semlink.SemlinkRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +45,7 @@ public class SentenceModel {
     private List<SemlinkRoleModel> tokens = new ArrayList<>();
     private List<PropModel> props = new ArrayList<>();
 
-    public SentenceModel(VerbNetSemanticParse semanticParse) {
+    public SentenceModel(VerbNetParse semanticParse) {
         List<SemlinkRoleModel> rels = semanticParse.props().stream().map(p -> {
             Span<SemlinkRole> relSpan = p.proposition().relSpan();
             return new SemlinkRoleModel().start(relSpan.startIndex())

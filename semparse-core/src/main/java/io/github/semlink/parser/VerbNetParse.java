@@ -33,7 +33,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(fluent = true)
-public class VerbNetSemanticParse {
+public class VerbNetParse {
 
     private DepTree tree;
     private List<String> tokens;

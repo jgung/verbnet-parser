@@ -31,7 +31,7 @@ import java.util.List;
 import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.app.api.model.SentenceModel;
 import io.github.semlink.parser.DefaultSentenceNormalizer;
-import io.github.semlink.parser.VerbNetSemanticParse;
+import io.github.semlink.parser.VerbNetParse;
 import io.github.semlink.parser.VerbNetParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class PredictionApi {
     private final VerbNetSenseClassifier verbNetSenseClassifier;
     private final VnIndex verbNet;
 
-    private LoadingCache<String, VerbNetSemanticParse> parseCache;
+    private LoadingCache<String, VerbNetParse> parseCache;
 
     @Autowired
     public PredictionApi(VerbNetParser parser, VerbNetSenseClassifier verbNetSenseClassifier, VnIndex verbNet) {
@@ -56,7 +56,7 @@ public class PredictionApi {
         this.verbNet = verbNet;
         parseCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
-                .build(CacheLoader.from(parser::parseSentence));
+                .build(CacheLoader.from(parser::parse));
     }
 
     @RequestMapping("/predict/semantics")
@@ -67,7 +67,7 @@ public class PredictionApi {
         utterance = sentences.size() > 0 ? sentences.get(0) : utterance;
         utterance = new DefaultSentenceNormalizer().normalize(utterance);
 
-        VerbNetSemanticParse verbNetSemanticParses = parseCache.getUnchecked(utterance);
+        VerbNetParse verbNetSemanticParses = parseCache.getUnchecked(utterance);
         log.info("Processed utterance \"{}\" in {}", utterance, sw.stop());
 
         return new SentenceModel(verbNetSemanticParses);

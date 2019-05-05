@@ -32,7 +32,7 @@ import io.github.semlink.semlink.VerbNetAligner;
 
 import static io.github.semlink.app.util.JarExtractionUtil.resolveDirectory;
 import static io.github.semlink.app.util.JarExtractionUtil.resolveFile;
-import static io.github.semlink.parser.VerbNetParser.roleLabeler;
+import static io.github.semlink.parser.VerbNetParser.pbRoleLabeler;
 
 /**
  * Prediction configuration file.
@@ -72,7 +72,7 @@ public class PredictionConfiguration {
         String lvmPath = resolveFile(this.lvmPath);
         String pbPath = resolveFile(this.pbPath);
 
-        SemanticRoleLabeler<PropBankArg> roleLabeler = roleLabeler(modelDir);
+        SemanticRoleLabeler<PropBankArg> roleLabeler = pbRoleLabeler(modelDir);
 
         VerbNetAligner aligner = VerbNetAligner.of(mappingsPath, pbPath);
 
