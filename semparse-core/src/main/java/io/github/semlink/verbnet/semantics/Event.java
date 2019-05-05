@@ -1,6 +1,7 @@
 package io.github.semlink.verbnet.semantics;
 
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;

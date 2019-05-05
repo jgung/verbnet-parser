@@ -18,6 +18,14 @@ package io.github.semlink.parser;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.FunctionTag;
@@ -27,12 +35,6 @@ import io.github.semlink.verbnet.semantics.Event;
 import io.github.semlink.verbnet.semantics.EventArgument;
 import io.github.semlink.verbnet.semantics.SemanticPredicate;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -59,59 +61,59 @@ public class DefaultVerbNetProp implements VerbNetProp {
 
     public List<Span<SemlinkRole>> byThematicRole(@NonNull ThematicRoleType type) {
         return proposition.arguments().spans().stream()
-            .filter(span -> span.label().vn().map(vn -> type == vn).orElse(false))
-            .collect(Collectors.toList());
+                .filter(span -> span.label().vn().map(vn -> type == vn).orElse(false))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Event> events() {
         ListMultimap<EventArgument, SemanticPredicate> predicatesByEvent = Multimaps.index(predicates, SemanticPredicate::event);
         return predicatesByEvent.keySet().stream()
-            .map(entry -> new Event(entry, predicatesByEvent.get(entry)))
-            .sorted(Comparator.comparing(e -> e.event.id()))
-            .collect(Collectors.toList());
+                .map(entry -> new Event(entry, predicatesByEvent.get(entry)))
+                .sorted(Comparator.comparing(e -> e.event.id()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Map<ThematicRoleType, List<Span<ThematicRoleType>>> rolesByType() {
         Map<ThematicRoleType, List<Span<ThematicRoleType>>> spansByType = new HashMap<>();
         proposition.arguments().spans().stream()
-            .filter(span -> span.label().vn().isPresent())
-            .forEach(span -> {
-                List<Span<ThematicRoleType>> spans = spansByType
-                    .computeIfAbsent(span.label().thematicRoleType(), type -> new ArrayList<>());
-                spans.add(Span.convert(span, span.label().thematicRoleType()));
-            });
+                .filter(span -> span.label().vn().isPresent())
+                .forEach(span -> {
+                    List<Span<ThematicRoleType>> spans = spansByType
+                            .computeIfAbsent(span.label().thematicRoleType(), type -> new ArrayList<>());
+                    spans.add(Span.convert(span, span.label().thematicRoleType()));
+                });
         return spansByType;
     }
 
     @Override
     public List<Span<ThematicRoleType>> rolesByType(@NonNull ThematicRoleType type) {
         return byThematicRole(type).stream()
-            .map(span -> Span.convert(span, span.label().thematicRoleType()))
-            .collect(Collectors.toList());
+                .map(span -> Span.convert(span, span.label().thematicRoleType()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Span<PropBankArg>> modifiersByType(@NonNull FunctionTag type) {
         return proposition.arguments().spans().stream()
-            .filter(span -> !span.label().vn().isPresent())
-            .filter(span -> span.label().pb().map(pb -> pb.isModifier() && pb.getFunctionTag() == type).orElse(false))
-            .map(span -> Span.convert(span, span.label().propBankArg()))
-            .collect(Collectors.toList());
+                .filter(span -> !span.label().vn().isPresent())
+                .filter(span -> span.label().pb().map(pb -> pb.isModifier() && pb.getFunctionTag() == type).orElse(false))
+                .map(span -> Span.convert(span, span.label().propBankArg()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Map<FunctionTag, List<Span<PropBankArg>>> modifiersByType() {
         Map<FunctionTag, List<Span<PropBankArg>>> spansByType = new HashMap<>();
         proposition.arguments().spans().stream()
-            .filter(span -> !span.label().vn().isPresent())
-            .filter(span -> span.label().pb().map(PropBankArg::isModifier).orElse(false))
-            .forEach(span -> {
-                List<Span<PropBankArg>> spans = spansByType
-                    .computeIfAbsent(span.label().propBankArg().getFunctionTag(), type -> new ArrayList<>());
-                spans.add(Span.convert(span, span.label().propBankArg()));
-            });
+                .filter(span -> !span.label().vn().isPresent())
+                .filter(span -> span.label().pb().map(PropBankArg::isModifier).orElse(false))
+                .forEach(span -> {
+                    List<Span<PropBankArg>> spans = spansByType
+                            .computeIfAbsent(span.label().propBankArg().getFunctionTag(), type -> new ArrayList<>());
+                    spans.add(Span.convert(span, span.label().propBankArg()));
+                });
         return spansByType;
     }
 

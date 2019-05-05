@@ -18,14 +18,16 @@ package io.github.semlink.verbnet.type;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
-import io.github.clearwsd.verbnet.VnFrame;
-import io.github.clearwsd.verbnet.syntax.VnSyntax;
-import io.github.clearwsd.verbnet.syntax.VnSyntaxType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import io.github.clearwsd.verbnet.VnFrame;
+import io.github.clearwsd.verbnet.syntax.VnSyntax;
+import io.github.clearwsd.verbnet.syntax.VnSyntaxType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -52,7 +52,7 @@ public class DefaultSemanticRoleLabeler<A> implements SemanticRoleLabeler<A> {
      * function.
      *
      * @param shallowParser base shallow parser, which produces string labels irrespective of the argument type
-     * @param argMapper function mapping labels output by the shallow parser onto the correct argument type
+     * @param argMapper     function mapping labels output by the shallow parser onto the correct argument type
      */
     public DefaultSemanticRoleLabeler(@NonNull ShallowParser shallowParser, @NonNull Function<String, A> argMapper) {
         this(shallowParser, argMapper, RoleLabelerUtils::focus2Sequence);
@@ -66,24 +66,24 @@ public class DefaultSemanticRoleLabeler<A> implements SemanticRoleLabeler<A> {
 
         // (1) map dependency parse tree to an input sequence of features given each predicate
         List<ITokenSequence> featsGivenPredicate = indices.stream()
-            .map(predicate -> new DefaultNlpFocus<>(predicate, tree.get(predicate), tree))
-            .map(inputAdapter)
-            .collect(Collectors.toList());
+                .map(predicate -> new DefaultNlpFocus<>(predicate, tree.get(predicate), tree))
+                .map(inputAdapter)
+                .collect(Collectors.toList());
 
         // (2) apply shallow parser to feature inputs as a single batch
         List<Chunking<A>> chunkings = shallowParser.shallowParseBatch(featsGivenPredicate).stream()
-            .map(chunks -> ShallowParserUtils.mapChunks(chunks, argMapper))
-            .collect(Collectors.toList());
+                .map(chunks -> ShallowParserUtils.mapChunks(chunks, argMapper))
+                .collect(Collectors.toList());
         Preconditions.checkState(chunkings.size() == indices.size());
 
         // (3) map batched predictions to each input proposition
         Iterator<Integer> senses = indices.iterator();
         return chunkings.stream()
-            .map(chunking -> {
-                int index = senses.next();
-                return new Proposition<>(index, tree.get(index), chunking);
-            })
-            .collect(Collectors.toList());
+                .map(chunking -> {
+                    int index = senses.next();
+                    return new Proposition<>(index, tree.get(index), chunking);
+                })
+                .collect(Collectors.toList());
     }
 
 }

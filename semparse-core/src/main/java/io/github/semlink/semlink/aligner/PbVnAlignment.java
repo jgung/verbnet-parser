@@ -59,8 +59,8 @@ public class PbVnAlignment {
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {
         return propbankPhrases.stream()
-            .filter(s -> s.getNumber() == number)
-            .collect(Collectors.toList());
+                .filter(s -> s.getNumber() == number)
+                .collect(Collectors.toList());
     }
 
     public <T extends FramePhrase> List<T> bySyntacticType(@NonNull VerbNetSyntaxType type) {

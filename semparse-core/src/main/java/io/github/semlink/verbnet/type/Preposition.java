@@ -16,13 +16,14 @@
 
 package io.github.semlink.verbnet.type;
 
-import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
-import io.github.clearwsd.verbnet.syntax.VnPrep;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
+import io.github.clearwsd.verbnet.syntax.VnPrep;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -46,7 +47,7 @@ public class Preposition extends FramePhrase {
         preposition.valid(prepArgDesc.types().stream().map(PrepType::fromString).collect(Collectors.toSet()));
 
         List<DefaultVnRestrictions<PrepSelRelType>> restrictions = DefaultVnRestrictions
-            .map(prepArgDesc.restrictions(), PrepSelRelType::fromString);
+                .map(prepArgDesc.restrictions(), PrepSelRelType::fromString);
         if (restrictions.size() > 0) {
             preposition.exclude(restrictions.get(0).exclude());
             preposition.include(restrictions.get(0).include());

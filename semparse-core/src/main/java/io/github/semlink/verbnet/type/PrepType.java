@@ -17,6 +17,7 @@
 package io.github.semlink.verbnet.type;
 
 import java.util.EnumSet;
+
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,7 +70,7 @@ public enum PrepType {
 
     public boolean maybeLocation() {
         return EnumSet.of(UPON, UNDER, TOWARDS, TO, THROUGH, OVER, OUT_OF, ONTO, ON, OFF, INTO, IN_BETWEEN, IN, FROM,
-            BY, BETWEEN, BELOW, BACK, AT, ABOVE).contains(this);
+                BY, BETWEEN, BELOW, BACK, AT, ABOVE).contains(this);
     }
 
     public boolean maybeSource() {

@@ -18,6 +18,7 @@ package io.github.semlink.propbank.type;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

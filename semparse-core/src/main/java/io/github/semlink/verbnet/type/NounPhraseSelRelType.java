@@ -17,6 +17,7 @@
 package io.github.semlink.verbnet.type;
 
 import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 

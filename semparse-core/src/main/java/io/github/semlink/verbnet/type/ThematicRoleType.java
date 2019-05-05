@@ -16,9 +16,10 @@
 
 package io.github.semlink.verbnet.type;
 
-import io.github.semlink.util.StringUtils;
 import java.util.EnumSet;
 import java.util.Optional;
+
+import io.github.semlink.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -89,9 +90,9 @@ public enum ThematicRoleType {
 
     public static Optional<ThematicRoleType> fromString(@NonNull String themRole) {
         themRole = themRole.toUpperCase().trim()
-            .replaceAll(" ", "_")
-            .replaceAll("-", "_")
-            .replaceAll("\\?", "");
+                .replaceAll(" ", "_")
+                .replaceAll("-", "_")
+                .replaceAll("\\?", "");
         try {
             return Optional.of(valueOf(themRole.toUpperCase().trim()));
         } catch (Exception ignored) {

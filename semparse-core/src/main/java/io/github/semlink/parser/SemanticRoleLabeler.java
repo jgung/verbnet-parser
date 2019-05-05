@@ -16,13 +16,14 @@
 
 package io.github.semlink.parser;
 
-import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.type.DepNode;
-import io.github.clearwsd.type.DepTree;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.github.clearwsd.SensePrediction;
+import io.github.clearwsd.type.DepNode;
+import io.github.clearwsd.type.DepTree;
 import lombok.NonNull;
 
 /**
@@ -38,7 +39,7 @@ public interface SemanticRoleLabeler<A> {
      * Apply semantic role labeling to an input {@link DepTree dependency parse} with respect to a list of {@link SensePrediction
      * predicates}. A single {@link Proposition proposition} is created for each input predicate.
      *
-     * @param tree input dependency parse tree
+     * @param tree       input dependency parse tree
      * @param predicates indices of predicates in the tree
      * @return a list of propositions corresponding to role labels for each input predicate
      */

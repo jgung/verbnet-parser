@@ -19,6 +19,7 @@ package io.github.semlink.semlink;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Sets;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -49,7 +51,7 @@ public class Alignment<S extends AlignPhrase, T extends AlignPhrase> {
     private Set<T> targetPhrases = new LinkedHashSet<>();
 
     public static <S extends AlignPhrase, T extends AlignPhrase> Alignment<S, T> of(@NonNull List<S> sourcePhrases,
-        @NonNull List<T> targetPhrases) {
+                                                                                    @NonNull List<T> targetPhrases) {
         Alignment<S, T> result = new Alignment<>();
         result.sourcePhrases.addAll(sourcePhrases);
         result.targetPhrases.addAll(targetPhrases);
@@ -112,14 +114,14 @@ public class Alignment<S extends AlignPhrase, T extends AlignPhrase> {
             allAligned.addAll(aligned);
 
             String target = aligned.stream()
-                .map(Object::toString)
-                .collect(Collectors.joining(" ... "));
+                    .map(Object::toString)
+                    .collect(Collectors.joining(" ... "));
 
             lines.add(String.format("%-20s -> %-20s", source, target.isEmpty() ? "" : target));
         }
 
         Sets.difference(targetPhrases, allAligned).forEach(notAligned ->
-            lines.add(String.format("%-20s <- %-20s", "", notAligned)));
+                lines.add(String.format("%-20s <- %-20s", "", notAligned)));
 
         return String.join("\n", lines);
     }

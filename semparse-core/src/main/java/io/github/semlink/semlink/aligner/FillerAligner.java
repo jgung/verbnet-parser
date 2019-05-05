@@ -16,12 +16,13 @@
 
 package io.github.semlink.semlink.aligner;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.verbnet.type.NounPhrase;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 
 /**
@@ -36,15 +37,15 @@ public class FillerAligner implements PbVnAligner {
 
         // TODO: this seems like a hack
         boolean noAgentiveA0 = alignment.proposition().predicate().related().stream()
-            .allMatch(s -> s.roles().stream()
-                .map(r -> ThematicRoleType.fromString(r.type()).orElse(ThematicRoleType.NONE))
-                .noneMatch(ThematicRoleType::isAgentive));
+                .allMatch(s -> s.roles().stream()
+                        .map(r -> ThematicRoleType.fromString(r.type()).orElse(ThematicRoleType.NONE))
+                        .noneMatch(ThematicRoleType::isAgentive));
 
         for (PropBankPhrase phrase : alignment.sourcePhrases(false)) {
             List<NounPhrase> unaligned = alignment.targetPhrases(false).stream()
-                .filter(i -> i instanceof NounPhrase)
-                .map(i -> ((NounPhrase) i))
-                .collect(Collectors.toList());
+                    .filter(i -> i instanceof NounPhrase)
+                    .map(i -> ((NounPhrase) i))
+                    .collect(Collectors.toList());
             if (phrase.getNumber() == ArgNumber.A0) {
                 // TODO: seems like a hack
                 if (alignment.proposition().predicate().verbNetId().classId().startsWith("51") && noAgentiveA0) {
@@ -65,7 +66,7 @@ public class FillerAligner implements PbVnAligner {
             } else if (phrase.getNumber() == ArgNumber.A1) {
                 for (NounPhrase unalignedPhrase : unaligned) {
                     if (unalignedPhrase.thematicRoleType() == ThematicRoleType.THEME
-                        || unalignedPhrase.thematicRoleType() == ThematicRoleType.PATIENT) {
+                            || unalignedPhrase.thematicRoleType() == ThematicRoleType.PATIENT) {
                         alignment.add(phrase, unalignedPhrase);
                         break;
                     }

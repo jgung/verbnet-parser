@@ -99,7 +99,7 @@ public class FramesetFactory {
             parserFactory.setFeature(LOAD_EXTERNAL_DTD, false);
             SAXSource source = new SAXSource(parserFactory.newSAXParser().getXMLReader(), new InputSource(inputStream));
             Frameset frameset = (Frameset) JAXBContext.newInstance(Frameset.class, Example.ExampleRelation.class,
-                Example.ExampleRelation.class).createUnmarshaller().unmarshal(source);
+                    Example.ExampleRelation.class).createUnmarshaller().unmarshal(source);
             setPointers(frameset);
             return frameset;
         } catch (Exception e) {

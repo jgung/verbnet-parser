@@ -17,12 +17,14 @@
 package io.github.semlink.app.api.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import io.github.semlink.app.Chunking;
-import io.github.semlink.parser.DefaultVerbNetProp;
-import io.github.semlink.semlink.SemlinkRole;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.github.semlink.app.Chunking;
+import io.github.semlink.parser.DefaultVerbNetProp;
+import io.github.semlink.semlink.SemlinkRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

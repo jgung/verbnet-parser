@@ -19,6 +19,12 @@ package io.github.semlink.semlink.aligner;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultiset;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.FeatureType;
 import io.github.semlink.propbank.type.ArgNumber;
@@ -27,10 +33,6 @@ import io.github.semlink.semlink.PropBankPhrase;
 import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.PrepType;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -82,8 +84,8 @@ public class SelResAligner implements PbVnAligner {
             Multiset<ThematicRoleType> thematicRoles = roleMapper.apply(phrase);
 
             List<ThematicRoleType> sorted = thematicRoles.entrySet().stream()
-                .sorted(Ordering.natural().reverse().onResultOf(Multiset.Entry::getCount))
-                .map(Multiset.Entry::getElement).collect(Collectors.toList());
+                    .sorted(Ordering.natural().reverse().onResultOf(Multiset.Entry::getCount))
+                    .map(Multiset.Entry::getElement).collect(Collectors.toList());
 
             for (ThematicRoleType type : sorted) {
                 Optional<FramePhrase> framePhrase = alignment.byRole(type);

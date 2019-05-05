@@ -16,10 +16,11 @@
 
 package io.github.semlink.parser;
 
-import io.github.clearwsd.type.DepTree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.github.clearwsd.type.DepTree;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -41,7 +42,7 @@ public class VerbNetSemanticParse {
     @Override
     public String toString() {
         return props.stream()
-            .map(Object::toString)
-            .collect(Collectors.joining("\n\n"));
+                .map(Object::toString)
+                .collect(Collectors.joining("\n\n"));
     }
 }

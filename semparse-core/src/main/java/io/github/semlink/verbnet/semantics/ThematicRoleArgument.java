@@ -16,10 +16,11 @@
 
 package io.github.semlink.verbnet.semantics;
 
+import java.util.Optional;
+
 import io.github.semlink.util.StringUtils;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import java.util.Optional;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;

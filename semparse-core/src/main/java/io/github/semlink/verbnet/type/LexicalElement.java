@@ -16,8 +16,9 @@
 
 package io.github.semlink.verbnet.type;
 
-import io.github.clearwsd.verbnet.syntax.VnLex;
 import java.util.Optional;
+
+import io.github.clearwsd.verbnet.syntax.VnLex;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;
@@ -64,9 +65,9 @@ public class LexicalElement extends FramePhrase {
         public static Optional<LexType> fromString(@NonNull String string) {
             try {
                 string = string.toUpperCase()
-                    .replaceAll("[]+\\[']", " ")
-                    .trim()
-                    .replaceAll(" +", "_");
+                        .replaceAll("[]+\\[']", " ")
+                        .trim()
+                        .replaceAll(" +", "_");
 
                 return Optional.of(LexType.valueOf(string));
             } catch (Exception ignored) {

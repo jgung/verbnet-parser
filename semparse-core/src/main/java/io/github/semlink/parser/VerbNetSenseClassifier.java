@@ -16,6 +16,10 @@
 
 package io.github.semlink.parser;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.DefaultSensePrediction;
 import io.github.clearwsd.DefaultSensePredictor;
 import io.github.clearwsd.ParsingSensePredictor;
@@ -26,9 +30,6 @@ import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnIndex;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
@@ -73,7 +74,7 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VnClass> {
         VnClass result = null;
         if (sense.sense() != null) {
             Set<VnClass> senses = verbNet
-                .getByBaseIdAndLemma(sense.id(), tree.get(sense.index()).feature(FeatureType.Lemma));
+                    .getByBaseIdAndLemma(sense.id(), tree.get(sense.index()).feature(FeatureType.Lemma));
             if (!senses.isEmpty()) {
                 result = senses.stream().findFirst().get();
             }
@@ -86,7 +87,7 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VnClass> {
      */
     public static VerbNetSenseClassifier fromModelPath(@NonNull String modelPath, @NonNull VnIndex verbNet) {
         DefaultSensePredictor<VnClass> predictor = DefaultSensePredictor.loadFromResource(modelPath,
-            new Nlp4jDependencyParser());
+                new Nlp4jDependencyParser());
         return new VerbNetSenseClassifier(predictor, verbNet);
     }
 

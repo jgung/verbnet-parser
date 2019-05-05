@@ -17,9 +17,11 @@
 package io.github.semlink.app.api.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import io.github.semlink.verbnet.semantics.Event;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+import io.github.semlink.verbnet.semantics.Event;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

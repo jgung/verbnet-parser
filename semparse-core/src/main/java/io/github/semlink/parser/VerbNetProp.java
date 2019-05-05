@@ -16,15 +16,16 @@
 
 package io.github.semlink.parser;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.FunctionTag;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.verbnet.semantics.Event;
 import io.github.semlink.verbnet.type.ThematicRoleType;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import lombok.NonNull;
 
 /**

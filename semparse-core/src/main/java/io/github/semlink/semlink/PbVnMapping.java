@@ -19,13 +19,15 @@ package io.github.semlink.semlink;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.semlink.propbank.type.ArgNumber;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import io.github.semlink.propbank.type.ArgNumber;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.experimental.Accessors;

@@ -16,12 +16,13 @@
 
 package io.github.semlink.verbnet.type;
 
-import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
-import io.github.clearwsd.verbnet.syntax.VnNounPhrase;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
+import io.github.clearwsd.verbnet.syntax.VnNounPhrase;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -52,10 +53,10 @@ public class NounPhrase extends FramePhrase {
         NounPhrase nounPhrase = new NounPhrase();
 
         ThematicRoleType.fromString(np.thematicRole())
-            .ifPresent(nounPhrase::thematicRoleType);
+                .ifPresent(nounPhrase::thematicRoleType);
 
         List<DefaultVnRestrictions<NounPhraseSynRelType>> restrictions = DefaultVnRestrictions
-            .map(np.syntacticRestrictions(), NounPhraseSynRelType::fromString);
+                .map(np.syntacticRestrictions(), NounPhraseSynRelType::fromString);
         if (restrictions.size() > 0) {
             // TODO: just use selectional restrictions directly from VnNounPhrase
             nounPhrase.exclude(restrictions.get(0).exclude());

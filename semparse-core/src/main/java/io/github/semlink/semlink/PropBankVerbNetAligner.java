@@ -55,12 +55,12 @@ public class PropBankVerbNetAligner {
     private PbVnMappings mappings;
 
     private List<PbVnAligner> aligners = ImmutableList.of(
-        new RelAligner(),
-        new RoleMappingAligner(),
-        new SynResAligner(),
-        new SelResAligner(),
-        new FillerAligner(),
-        new SelResAligner(SelResAligner::getThematicRolesGreedy)
+            new RelAligner(),
+            new RoleMappingAligner(),
+            new SynResAligner(),
+            new SelResAligner(),
+            new FillerAligner(),
+            new SelResAligner(SelResAligner::getThematicRolesGreedy)
     );
 
     public PropBankVerbNetAligner(@NonNull PbVnMappings mappings) {
@@ -69,16 +69,16 @@ public class PropBankVerbNetAligner {
     }
 
     private PbVnAlignment align(@NonNull Proposition<VnClass, PropBankArg> proposition,
-        @NonNull List<PropBankPhrase> chunk,
-        @NonNull SyntacticFrame frame,
-        @NonNull List<MappedRoleset> rolesets) {
+                                @NonNull List<PropBankPhrase> chunk,
+                                @NonNull SyntacticFrame frame,
+                                @NonNull List<MappedRoleset> rolesets) {
 
         PbVnAlignment pbVnAlignment = new PbVnAlignment()
-            .alignment(Alignment.of(chunk, frame.elements()))
-            .frame(frame)
-            .propbankPhrases(chunk)
-            .rolesets(rolesets)
-            .proposition(proposition);
+                .alignment(Alignment.of(chunk, frame.elements()))
+                .frame(frame)
+                .propbankPhrases(chunk)
+                .rolesets(rolesets)
+                .proposition(proposition);
 
         for (PbVnAligner aligner : aligners) {
             aligner.align(pbVnAlignment);
@@ -88,7 +88,7 @@ public class PropBankVerbNetAligner {
     }
 
     public Optional<PbVnAlignment> align(@NonNull Proposition<VnClass, PropBankArg> prop,
-        @NonNull DepTree source) {
+                                         @NonNull DepTree source) {
 
         List<PropBankPhrase> phrases = PropBankPhrase.fromProp(prop, source);
 
@@ -96,10 +96,10 @@ public class PropBankVerbNetAligner {
 
         String lemma = source.get(prop.relSpan().startIndex()).feature(FeatureType.Lemma);
         List<MappedRoleset> rolesets = prop.predicate().related().stream()
-            .map(s -> mappings.rolesets(lemma, s.verbNetId().classId()))
-            .flatMap(List::stream)
-            .distinct()
-            .collect(Collectors.toList());
+                .map(s -> mappings.rolesets(lemma, s.verbNetId().classId()))
+                .flatMap(List::stream)
+                .distinct()
+                .collect(Collectors.toList());
 
         // enumerate VerbNet frames
         for (VnClass cls : prop.predicate().related()) {
@@ -124,7 +124,7 @@ public class PropBankVerbNetAligner {
 
     private static Comparator<PbVnAlignment> alignmentComparator() {
         Comparator<PbVnAlignment> comparing = Comparator.comparing(al
-            -> al.sourcePhrases(true).size());
+                -> al.sourcePhrases(true).size());
         comparing.thenComparing(al -> al.targetPhrases().size() - al.targetPhrases(false).size());
         return comparing;
     }

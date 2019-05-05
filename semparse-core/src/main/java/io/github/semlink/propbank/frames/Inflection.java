@@ -16,13 +16,15 @@
 
 package io.github.semlink.propbank.frames;
 
-import io.github.semlink.util.LowerCaseEnumAdapter;
 import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import io.github.semlink.util.LowerCaseEnumAdapter;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

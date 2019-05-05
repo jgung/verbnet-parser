@@ -16,15 +16,16 @@
 
 package io.github.semlink.verbnet.semantics;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.verbnet.semantics.VnPredicatePolarity;
 import io.github.clearwsd.verbnet.semantics.VnSemanticArgument;
 import io.github.clearwsd.verbnet.semantics.VnSemanticPredicate;
 import io.github.semlink.util.StringUtils;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.verbnet.type.SemanticPredicateType;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -50,22 +51,22 @@ public class SemanticPredicate {
 
     public EventArgument event() {
         return arguments.stream()
-            .filter(arg -> arg.type == SemanticArgumentType.EVENT)
-            .map(arg -> (EventArgument) arg).min(Comparator.comparing(EventArgument::id)).orElse(new EventArgument(DEFAULT_EVENT));
+                .filter(arg -> arg.type == SemanticArgumentType.EVENT)
+                .map(arg -> (EventArgument) arg).min(Comparator.comparing(EventArgument::id)).orElse(new EventArgument(DEFAULT_EVENT));
     }
 
     public <T> List<T> get(@NonNull SemanticArgumentType type) {
         //noinspection unchecked
         return (List<T>) arguments.stream()
-            .filter(i -> i.type() == type)
-            .collect(Collectors.toList());
+                .filter(i -> i.type() == type)
+                .collect(Collectors.toList());
     }
 
     public static SemanticPredicate of(@NonNull VnSemanticPredicate desc) {
         SemanticPredicateType type = SemanticPredicateType.fromString(desc.type());
         List<SemanticArgument> arguments = desc.semanticArguments().stream()
-            .map(SemanticPredicate::of)
-            .collect(Collectors.toList());
+                .map(SemanticPredicate::of)
+                .collect(Collectors.toList());
 
         return new SemanticPredicate(type, arguments, desc.polarity() == VnPredicatePolarity.TRUE);
     }
@@ -89,6 +90,6 @@ public class SemanticPredicate {
     @Override
     public String toString() {
         return (!polarity ? "!" : "") + StringUtils.capitalized(type) + "["
-            + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
+                + arguments.stream().map(Object::toString).collect(Collectors.joining(", ")) + "]";
     }
 }
