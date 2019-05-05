@@ -37,13 +37,25 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class Proposition<R, A> {
 
+    /**
+     * Token index of the relation/predicate/main event/verb of this proposition.
+     */
     @Getter
     private final int relIndex;
+    /**
+     * Relation/predicate/main event/verb of this proposition.
+     */
     @Getter
     private final R predicate;
+    /**
+     * Labeled arguments of this proposition.
+     */
     @Getter
     private final Chunking<A> arguments;
 
+    /**
+     * Span covering the relation.
+     */
     public Span<A> relSpan() {
         return arguments.span(relIndex);
     }

@@ -47,6 +47,13 @@ public class Span<T> {
         this.endIndex = endIndex;
     }
 
+    /**
+     * Return the sub list of tokens covered by this span.
+     *
+     * @param tokens full token list
+     * @param <V>    type of token
+     * @return sublist of tokens
+     */
     public <V> List<V> get(@NonNull List<V> tokens) {
         return tokens.subList(startIndex, endIndex + 1);
     }

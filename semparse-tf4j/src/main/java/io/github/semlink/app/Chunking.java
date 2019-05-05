@@ -28,10 +28,19 @@ import lombok.NonNull;
  */
 public interface Chunking<T> {
 
+    /**
+     * Returns the span covering tokens at a given index.
+     */
     Span<T> span(int index);
 
+    /**
+     * Return all spans in this chunking.
+     */
     List<Span<T>> spans();
 
+    /**
+     * Return a list of spans matching a given label.
+     */
     List<Span<T>> spans(@NonNull T label);
 
     <V> String toString(@NonNull List<V> tokens);
