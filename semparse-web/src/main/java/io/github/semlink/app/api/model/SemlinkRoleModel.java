@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.frames.PbRole;
+import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.SemlinkRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +63,10 @@ public class SemlinkRoleModel {
         pb = span.label().pb().map(Object::toString).orElse("");
         vn = span.label().vn().map(Object::toString).orElse("");
         description = span.label().definition().map(PbRole::description).orElse("");
+        if (description.isEmpty() && span.label().pb().map(PropBankArg::isModifier).orElse(false)) {
+            description = span.label().propBankArg().getFunctionTag().getDescription();
+        }
+        description = description().toLowerCase();
     }
 
     private static String coveredText(Span<?> span, List<String> tokens) {

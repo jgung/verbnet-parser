@@ -16,6 +16,8 @@
 
 package io.github.semlink.propbank.type;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,33 +27,37 @@ import lombok.extern.slf4j.Slf4j;
  * @author jgung
  */
 @Slf4j
+@AllArgsConstructor
 public enum FunctionTag {
 
-    ADJ,
-    ADV,
-    CAU,
-    COM,
-    CXN,
-    DIR,
-    EXT,
-    GOL,
-    LOC,
-    MNR,
-    PAG,
-    PPT,
-    PRD,
-    PNC,
-    PRP,
-    REC,
-    TMP,
-    VSP,
+    ADJ("Adjectival"),
+    ADV("Adverbial"),
+    CAU("Cause"),
+    COM("Comitative"),
+    CXN("Construction"),
+    DIR("Direction"),
+    EXT("Extent"),
+    GOL("Goal"),
+    LOC("Location"),
+    MNR("Manner"),
+    PAG("Proto Agent"),
+    PPT("Proto Patient"),
+    PRD("Secondary Predication"),
+    PNC("Purpose Not Cause"),
+    PRP("Purpose"),
+    REC("Reciprocal"),
+    TMP("Temporal"),
+    VSP("Verb-Specific"),
 
-    MOD,
-    NEG,
+    MOD("Modal"),
+    NEG("Negation"),
 
-    DIS,
-    PRR,
-    DSP;
+    DIS("Discourse"),
+    PRR("Predicating Relation"),
+    DSP("Direct Speech");
+
+    @Getter
+    private String description;
 
     public static FunctionTag fromString(@NonNull String string) {
         try {
