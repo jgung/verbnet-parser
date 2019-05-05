@@ -77,6 +77,12 @@ public class VerbNetSenseClassifier implements ParsingSensePredictor<VnClass> {
             if (!senses.isEmpty()) {
                 result = senses.stream().findFirst().get();
             }
+        } else {
+            String lemma = tree.get(sense.index()).feature(FeatureType.Lemma);
+            Set<VnClass> possibleSenses = verbNet.getByLemma(lemma);
+            if (possibleSenses.size() == 1) {
+                result = possibleSenses.iterator().next();
+            }
         }
         return new DefaultSensePrediction<>(sense.index(), sense.originalText(), sense.id(), result);
     }
