@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.github.clearwsd.verbnet.DefaultVnIndex;
 import io.github.clearwsd.verbnet.VnIndex;
-import io.github.semlink.parser.PropBankLightVerbMapper;
+import io.github.semlink.parser.LightVerbMapper;
 import io.github.semlink.parser.SemanticRoleLabeler;
 import io.github.semlink.parser.VerbNetSemanticParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
@@ -76,8 +76,7 @@ public class PredictionConfiguration {
 
         PropBankVerbNetAligner aligner = PropBankVerbNetAligner.of(mappingsPath, pbPath);
 
-        PropBankLightVerbMapper mapper = new PropBankLightVerbMapper(PropBankLightVerbMapper.fromMappingsPath(lvmPath, verbNet),
-            roleLabeler);
+        LightVerbMapper mapper = LightVerbMapper.fromMappingsPath(lvmPath, verbNet);
 
         return new VerbNetSemanticParser(verbNetSenseClassifier, roleLabeler, aligner, mapper);
     }
