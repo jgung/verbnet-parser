@@ -48,6 +48,7 @@ public enum FunctionTag {
     REC("Reciprocal"),
     TMP("Temporal"),
     VSP("Verb-Specific"),
+    LVB("Light Verb"),
 
     MOD("Modal"),
     NEG("Negation"),

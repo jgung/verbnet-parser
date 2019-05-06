@@ -35,6 +35,7 @@ public enum ThematicRoleType {
     AXIS,
     BENEFICIARY,
     CAUSER,
+    CIRCUMSTANCE,
     CO_AGENT,
     CO_PATIENT,
     CO_THEME,

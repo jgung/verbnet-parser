@@ -116,7 +116,9 @@ public class SelResAligner implements PbVnAligner {
         if (prep.isPresent()) {
             PrepType type = prep.get();
             if (type.maybeDestination()) {
-                themRoles.add(DESTINATION);
+                if (phrase.argument().getFunctionTag() != FunctionTag.PRP) {
+                    themRoles.add(DESTINATION);
+                }
                 themRoles.add(GOAL);
             }
             if (type == PrepType.TO) {
@@ -124,7 +126,7 @@ public class SelResAligner implements PbVnAligner {
                 themRoles.add(RESULT);
                 themRoles.add(PREDICATE);
             }
-            if (type.maybeLocation()) {
+            if (type.maybeLocation() && phrase.argument().getFunctionTag() != FunctionTag.TMP) {
                 themRoles.add(LOCATION);
             }
             if (type.isTrajectory() || type == PrepType.FROM) {
@@ -144,7 +146,9 @@ public class SelResAligner implements PbVnAligner {
         if (prep.isPresent()) {
             PrepType type = prep.get();
             if (type == PrepType.TO) {
-                themRoles.add(DESTINATION);
+                if (phrase.argument().getFunctionTag() != FunctionTag.PRP) {
+                    themRoles.add(DESTINATION);
+                }
                 themRoles.add(BENEFICIARY);
                 themRoles.add(RECIPIENT);
                 themRoles.add(GOAL);
