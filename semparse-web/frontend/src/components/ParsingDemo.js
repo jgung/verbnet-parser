@@ -14,8 +14,9 @@ import Propositions from './Propositions';
 
 const MAX_LENGTH = 512;
 
+let examplesIndex = 0;
 
-const examples = [
+const examples = _.shuffle([
   'If you liked the music we were playing last night, you will absolutely love what we\'re playing tomorrow!',
   'I didn\'t want to spend the next thirty years writing about bad things happening in the same small town',
   'John ate an apple and dropped the core into the trash',
@@ -25,10 +26,12 @@ const examples = [
   'Alice went to the corner shop to buy some eggs, milk and bread for breakfast',
   'Mary discovered the impending layoffs from taking a look at her boss\'s computer',
   'In 2018, crude futures rose 74 cents, or 1.4 percent, to $53.95 from $53.21',
-];
+]);
 
 function randomExample() {
-  return _.sample(examples);
+  const result = examples[examplesIndex % examples.length];
+  examplesIndex += 1;
+  return result;
 }
 
 class ParsingDemo extends Component {
