@@ -44,7 +44,7 @@ import static io.github.semlink.parser.VerbNetParser.pbRoleLabeler;
 @Configuration
 public class PredictionConfiguration {
 
-    @Value("${verbnet.demo.pbvn-mappings-path:pbvn-mappings.json}")
+    @Value("${verbnet.demo.pbvn-mappings-path:mappings/pbvn-mappings.json}")
     private String mappingsPath;
     @Value("${verbnet.demo.pb-path:unified-frames.bin}")
     private String pbPath;
@@ -52,7 +52,7 @@ public class PredictionConfiguration {
     private String wsdModel;
     @Value("${verbnet.demo.srl-model-path:propbank-srl}")
     private String srlModelDir;
-    @Value("${verbnet.demo.lvm-path:lvm.tsv}")
+    @Value("${verbnet.demo.lvm-path:mappings/lvm.tsv}")
     private String lvmPath;
 
     @Bean
