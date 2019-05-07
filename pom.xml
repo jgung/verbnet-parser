@@ -57,7 +57,7 @@
         <junit.version>4.12</junit.version>
         <jackson.version>2.9.0</jackson.version>
         <woodstox.version>5.1.0</woodstox.version>
-        <clearwsd.version>0.9.0</clearwsd.version>
+        <clearwsd.version>0.10.0</clearwsd.version>
     </properties>
 
     <modules>
