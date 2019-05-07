@@ -59,12 +59,6 @@ public class DefaultVerbNetProp implements VerbNetProp {
         return proposition.predicate();
     }
 
-    public List<Span<SemlinkRole>> byThematicRole(@NonNull ThematicRoleType type) {
-        return proposition.arguments().spans().stream()
-                .filter(span -> span.label().vn().map(vn -> type == vn).orElse(false))
-                .collect(Collectors.toList());
-    }
-
     @Override
     public List<Event> events() {
         ListMultimap<EventArgument, SemanticPredicate> predicatesByEvent = Multimaps.index(predicates, SemanticPredicate::event);
@@ -117,8 +111,24 @@ public class DefaultVerbNetProp implements VerbNetProp {
         return spansByType;
     }
 
+    /**
+     * Returns a list of {@link Span spans} for {@link SemlinkRole} roles, which directly map PropBank roles with corresponding
+     * VerbNet thematic roles and descriptions.
+     */
     public List<Span<SemlinkRole>> semlinkRoles() {
         return proposition.arguments().spans();
+    }
+
+    /**
+     * Return {@link SemlinkRole} spans by VerbNet thematic role type.
+     *
+     * @param type thematic role type
+     * @return SemLink roles for a give thematic role type
+     */
+    public List<Span<SemlinkRole>> byThematicRole(@NonNull ThematicRoleType type) {
+        return proposition.arguments().spans().stream()
+                .filter(span -> span.label().vn().map(vn -> type == vn).orElse(false))
+                .collect(Collectors.toList());
     }
 
     public String toString() {

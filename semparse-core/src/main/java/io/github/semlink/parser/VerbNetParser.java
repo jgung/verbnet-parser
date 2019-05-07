@@ -49,6 +49,14 @@ public class VerbNetParser {
     private VerbNetAligner aligner;
     private LightVerbMapper lightVerbMapper;
 
+    /**
+     * Generate a {@link VerbNetParse} from a {@link DepTree dependency parse} for a list of specific verbs/predicates linked to
+     * VerbNet classes. Performs semantic role labeling and alignment to VerbNet frames.
+     *
+     * @param parsed dependency parse
+     * @param senses predicates (verbs)
+     * @return VerbNet semantic parse
+     */
     public VerbNetParse parse(@NonNull DepTree parsed,
                               @NonNull List<SensePrediction<VnClass>> senses) {
         List<VnClass> vnClasses = new ArrayList<>();
@@ -72,17 +80,34 @@ public class VerbNetParser {
         return aligner.align(parsed, convert(props, vnClasses));
     }
 
+    /**
+     * Generate a {@link VerbNetParse} from a {@link DepTree dependency parse}. Performs VerbNet classification to identify
+     * predicates and their corresponding VerbNet classes. Then performs semantic role labeling and alignment to VerbNet frames.
+     *
+     * @param parsed dependency parse
+     * @return VerbNet semantic parse
+     */
     public VerbNetParse parse(@NonNull DepTree parsed) {
         List<SensePrediction<VnClass>> senses = verbNetClassifier.predict(parsed);
         return parse(parsed, senses);
     }
 
+    /**
+     * Generate a {@link VerbNetParse} from a raw, untokenized input sentence. Performs VerbNet classification to identify
+     * predicates and their corresponding VerbNet classes. Then performs semantic role labeling and alignment to VerbNet frames.
+     *
+     * @param sentence raw input sentence
+     * @return VerbNet semantic parse
+     */
     public VerbNetParse parse(@NonNull String sentence) {
         List<String> tokens = verbNetClassifier.tokenize(sentence);
         DepTree depTree = verbNetClassifier.parse(tokens);
         return parse(depTree);
     }
 
+    /**
+     * Instantiate a new {@link SemanticRoleLabeler} for PropBank from a given model path.
+     */
     public static SemanticRoleLabeler<PropBankArg> pbRoleLabeler(@NonNull String modelPath) {
         return new DefaultSemanticRoleLabeler<>(RoleLabelerUtils.shallowSemanticParser(modelPath), PropBankArg::fromLabel);
     }

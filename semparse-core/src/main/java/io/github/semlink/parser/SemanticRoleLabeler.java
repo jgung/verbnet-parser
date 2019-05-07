@@ -56,10 +56,28 @@ public interface SemanticRoleLabeler<A> {
         return parse(tree, Collections.singletonList(index)).get(0);
     }
 
+    /**
+     * Convert from a {@link Proposition} with one relation type to another type.
+     *
+     * @param proposition input proposition
+     * @param rel         new relation
+     * @param <R>         new relation type
+     * @param <A>         argument type
+     * @return proposition with new rel
+     */
     static <R, A> Proposition<R, A> convert(Proposition<?, A> proposition, R rel) {
         return new Proposition<>(proposition.relIndex(), rel, proposition.arguments());
     }
 
+    /**
+     * Convert from a list of {@link Proposition} with one relation type to another type.
+     *
+     * @param propositions input propositions
+     * @param rels         new relation
+     * @param <R>          new relation type
+     * @param <A>          argument type
+     * @return proposition with new rel
+     */
     static <R, A> List<Proposition<R, A>> convert(List<? extends Proposition<?, A>> propositions, List<R> rels) {
         Iterator<R> relIterator = rels.iterator();
         return propositions.stream().map(prop -> convert(prop, relIterator.next())).collect(Collectors.toList());
