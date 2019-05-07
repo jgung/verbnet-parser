@@ -24,6 +24,11 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * VerbNet thematic role type.
+ *
+ * @author jgung
+ */
 @Slf4j
 @AllArgsConstructor
 public enum ThematicRoleType {

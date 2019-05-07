@@ -19,26 +19,24 @@ package io.github.semlink.verbnet.type;
 import java.util.Optional;
 
 import io.github.clearwsd.verbnet.syntax.VnLex;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.experimental.Accessors;
 
-
-@Getter
-@Accessors(fluent = true)
+/**
+ * Lexical element within a VerbNet syntactic frame.
+ *
+ * @author jgung
+ */
 public class LexicalElement extends FramePhrase {
 
-    private LexType value;
+    private VnLex lex;
 
-    public LexicalElement(LexType type) {
+    public LexicalElement(@NonNull VnLex lex) {
         super(VerbNetSyntaxType.LEX);
-        this.value = type;
+        this.lex = lex;
     }
 
-    public static LexicalElement of(@NonNull VnLex desc) {
-        LexicalElement element = new LexicalElement(LexType.NONE);
-        LexType.fromString(desc.value()).ifPresent(val -> element.value = val);
-        return element;
+    public LexType value() {
+        return LexType.fromString(lex.value()).orElse(LexType.NONE);
     }
 
     public enum LexType {

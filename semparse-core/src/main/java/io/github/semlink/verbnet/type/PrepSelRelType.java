@@ -20,6 +20,11 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Selectional restriction for a preposition in a VerbNet frame.
+ *
+ * @author jgung
+ */
 @Slf4j
 @AllArgsConstructor
 public enum PrepSelRelType {

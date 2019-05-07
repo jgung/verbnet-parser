@@ -19,7 +19,7 @@ package io.github.semlink.verbnet.type;
 import lombok.NonNull;
 
 /**
- * Semantic argument types.
+ * VerbNet semantic argument types.
  *
  * @author jgung
  */

@@ -19,8 +19,13 @@ package io.github.semlink.verbnet.type;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Syntactic restriction for a Noun Phrase in a VerbNet syntactic frame.
+ *
+ * @author jgung
+ */
 @Slf4j
-public enum NounPhraseSynRelType {
+public enum NpSynRes {
 
     AC_ING,
     AC_TO_INF,
@@ -59,7 +64,7 @@ public enum NounPhraseSynRelType {
     WHETH_INF,
     UNKNOWN;
 
-    public static NounPhraseSynRelType fromString(@NonNull String string) {
+    public static NpSynRes fromString(@NonNull String string) {
         try {
             return valueOf(string.toUpperCase().trim());
         } catch (Exception ignored) {

@@ -16,58 +16,78 @@
 
 package io.github.semlink.verbnet.type;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
+import io.github.clearwsd.verbnet.restrictions.VnRestrictions;
 import io.github.clearwsd.verbnet.syntax.VnNounPhrase;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@Setter
+/**
+ * Noun Phrase (NP) within a VerbNet syntactic frame.
+ *
+ * @author jgung
+ */
 @Accessors(fluent = true)
 public class NounPhrase extends FramePhrase {
 
-    @Getter
-    private ThematicRoleType thematicRoleType = ThematicRoleType.NONE;
-    @Getter
-    private Set<NounPhraseSynRelType> include = new HashSet<>();
-    @Getter
-    private Set<NounPhraseSynRelType> exclude = new HashSet<>();
+    private VnNounPhrase vnNounPhrase;
 
+    @Setter
     private Preposition preposition;
 
-    public NounPhrase() {
+    public NounPhrase(@NonNull VnNounPhrase vnNounPhrase) {
         super(VerbNetSyntaxType.NP);
+        this.vnNounPhrase = vnNounPhrase;
     }
 
+    /**
+     * Preposition associated with this NP such as in a mapped VerbNet frame, e.g. "to" in "[to] NP".
+     */
     public Optional<Preposition> preposition() {
         return Optional.ofNullable(preposition);
     }
 
-    public static NounPhrase of(@NonNull VnNounPhrase np) {
-        NounPhrase nounPhrase = new NounPhrase();
+    /**
+     * VerbNet thematic role type for this NP.
+     */
+    public ThematicRoleType thematicRoleType() {
+        return ThematicRoleType.fromString(vnNounPhrase.thematicRole()).orElse(ThematicRoleType.NONE);
+    }
 
-        ThematicRoleType.fromString(np.thematicRole())
-                .ifPresent(nounPhrase::thematicRoleType);
+    /**
+     * Return syntactic restrictions for this noun phrase.
+     *
+     * @param valid if True, return valid types, if False return excluded types
+     * @return set of syntactic restriction types
+     */
+    public Set<NpSynRes> syntacticRes(boolean valid) {
+        return DefaultVnRestrictions.map(vnNounPhrase.syntacticRestrictions(), NpSynRes::fromString).stream()
+                .map(valid ? DefaultVnRestrictions::include : DefaultVnRestrictions::exclude)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+    }
 
-        List<DefaultVnRestrictions<NounPhraseSynRelType>> restrictions = DefaultVnRestrictions
-                .map(np.syntacticRestrictions(), NounPhraseSynRelType::fromString);
-        if (restrictions.size() > 0) {
-            // TODO: just use selectional restrictions directly from VnNounPhrase
-            nounPhrase.exclude(restrictions.get(0).exclude());
-            nounPhrase.include(restrictions.get(0).include());
-        }
-        return nounPhrase;
+    /**
+     * Return selectional restrictions for this noun phrase.
+     *
+     * @param valid if True, return valid types , if False return excluded types
+     * @return set of selectional restriction types
+     */
+    public Set<NpSelRes> selectionalRes(boolean valid) {
+        return DefaultVnRestrictions.map(vnNounPhrase.selectionalRestrictions(), NpSelRes::fromString).stream()
+                .map(valid ? VnRestrictions::include : VnRestrictions::exclude)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
     }
 
     @Override
     public String toString() {
-        String result = type() + "[" + thematicRoleType.name() + "]";
+        String result = type() + "[" + thematicRoleType().name() + "]";
         if (preposition().isPresent()) {
             result = preposition.toString() + " " + result;
         }

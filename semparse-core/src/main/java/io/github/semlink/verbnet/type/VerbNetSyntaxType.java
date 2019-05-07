@@ -16,6 +16,11 @@
 
 package io.github.semlink.verbnet.type;
 
+/**
+ * VerbNet syntactic frame constituent type.
+ *
+ * @author jgung
+ */
 public enum VerbNetSyntaxType {
 
     VERB,

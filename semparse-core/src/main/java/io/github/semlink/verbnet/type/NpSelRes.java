@@ -16,49 +16,67 @@
 
 package io.github.semlink.verbnet.type;
 
-import java.util.Optional;
-
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Syntactic restriction for a Noun Phrase in VerbNet syntactic frame.
+ *
+ * @author jgung
+ */
+@Slf4j
 @AllArgsConstructor
-public enum NounPhraseSelRelType {
+public enum NpSelRes {
 
     ABSTRACT,
     ANIMAL,
     ANIMATE,
+    AT,
     BIOTIC,
     BODY_PART,
     COMESTIBLE,
     COMMUNICATION,
     CONCRETE,
     CURRENCY,
+    DEST,
+    DEST_CONF,
+    DEST_DIR,
+    DIR,
     ELONGATED,
     EVENTIVE,
     FORCE,
     GARMENT,
     HUMAN,
     INT_CONTROL,
+    LOC,
     LOCATION,
     MACHINE,
     NONRIGID,
     ORGANIZATION,
+    PATH,
     PLURAL,
     POINTY,
+    QUESTION,
     REFL,
     REGION,
     SOLID,
     SOUND,
+    SPATIAL,
+    SRC,
     STATE,
     SUBSTANCE,
     TIME,
-    VEHICLE;
+    VEHICLE,
+    VEHICLE_PART,
+    UNKNOWN;
 
-    public static Optional<NounPhraseSelRelType> fromString(@NonNull String string) {
+    public static NpSelRes fromString(@NonNull String string) {
         try {
-            return Optional.of(valueOf(string.toUpperCase().trim()));
+            return valueOf(string.toUpperCase().trim());
         } catch (Exception ignored) {
+            log.debug("Unrecognized selectional restriction type: {}", string);
+            return UNKNOWN;
         }
-        return Optional.empty();
     }
 }

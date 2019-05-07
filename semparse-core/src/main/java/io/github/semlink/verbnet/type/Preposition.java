@@ -16,43 +16,46 @@
 
 package io.github.semlink.verbnet.type;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
+import io.github.clearwsd.verbnet.restrictions.VnRestrictions;
 import io.github.clearwsd.verbnet.syntax.VnPrep;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Setter
-@Getter
-@Accessors(fluent = true)
+/**
+ * Preposition within a VerbNet syntactic frame.
+ *
+ * @author jgung
+ */
 public class Preposition extends FramePhrase {
 
-    private Set<PrepType> valid = Collections.emptySet();
-    private Set<PrepSelRelType> include = new HashSet<>();
-    private Set<PrepSelRelType> exclude = new HashSet<>();
+    private VnPrep prep;
 
-    public Preposition() {
+    public Preposition(@NonNull VnPrep prep) {
         super(VerbNetSyntaxType.PREP);
+        this.prep = prep;
     }
 
-    public static Preposition of(@NonNull VnPrep prepArgDesc) {
-        Preposition preposition = new Preposition();
-        preposition.valid(prepArgDesc.types().stream().map(PrepType::fromString).collect(Collectors.toSet()));
+    /**
+     * Return valid prepositions for this phrase.
+     */
+    public Set<PrepType> valid() {
+        return prep.types().stream().map(PrepType::fromString).collect(Collectors.toSet());
+    }
 
-        List<DefaultVnRestrictions<PrepSelRelType>> restrictions = DefaultVnRestrictions
-                .map(prepArgDesc.restrictions(), PrepSelRelType::fromString);
-        if (restrictions.size() > 0) {
-            preposition.exclude(restrictions.get(0).exclude());
-            preposition.include(restrictions.get(0).include());
-        }
-        return preposition;
+    /**
+     * Return selectional restrictions for this preposition.
+     *
+     * @param valid if True, return valid types , if False return excluded types
+     * @return set of selectional restriction types
+     */
+    public Set<PrepSelRelType> selectionalRes(boolean valid) {
+        return DefaultVnRestrictions.map(prep.restrictions(), PrepSelRelType::fromString).stream()
+                .map(valid ? VnRestrictions::include : VnRestrictions::exclude)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
     }
 
     @Override

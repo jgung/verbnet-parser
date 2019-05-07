@@ -21,6 +21,11 @@ import java.util.EnumSet;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Preposition type within a VerbNet syntactic frame.
+ *
+ * @author jgung
+ */
 @Slf4j
 public enum PrepType {
 
