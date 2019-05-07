@@ -64,6 +64,7 @@
         <module>semparse-core</module>
         <module>semparse-tf4j</module>
         <module>semparse-web</module>
+        <module>semparse-tf4j-grpc</module>
     </modules>
 
     <dependencies>
@@ -121,6 +122,11 @@
             <dependency>
                 <groupId>io.github.semlink</groupId>
                 <artifactId>semparse-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.semlink</groupId>
+                <artifactId>semparse-tf4j-grpc</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
