@@ -13,7 +13,7 @@
     <artifactId>semparse-tf4j</artifactId>
 
     <properties>
-        <tensorflow.version>1.12.0</tensorflow.version>
+        <tensorflow.version>1.13.1</tensorflow.version>
         <grpc.version>3.7.0</grpc.version>
         <protoc.version>3.7.1</protoc.version>
         <protobuf-java.version>1.19.0</protobuf-java.version>
