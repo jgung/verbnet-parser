@@ -14,6 +14,7 @@ const spanType = PropTypes.shape({
   pb: PropTypes.string,
   description: PropTypes.string,
   isPredicate: PropTypes.bool,
+  isModifier: PropTypes.bool,
 });
 
 // credit: https://stackoverflow.com/a/5723274
@@ -37,7 +38,7 @@ const Span = ({
   sense, span, showVerbNet, showPropBank,
 }) => {
   const {
-    vn, pb, description, text, isPredicate,
+    vn, pb, description, text, isPredicate, isModifier,
   } = span;
   return (
     <List.Item>
@@ -72,7 +73,7 @@ const Span = ({
               showPropBank && pb && !isPredicate
               && (
               <Label
-                color="purple"
+                color={isModifier ? 'grey' : 'purple'}
                 basic
                 size="large"
                 content={pb}

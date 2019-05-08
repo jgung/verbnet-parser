@@ -45,6 +45,7 @@ public class SemlinkRoleModel {
 
     private int index = 0;
     private boolean isPredicate;
+    private boolean isModifier;
     private String label;
     private int start;
     private int end;
@@ -63,6 +64,7 @@ public class SemlinkRoleModel {
         pb = span.label().pb().map(Object::toString).orElse("");
         vn = span.label().vn().map(Object::toString).orElse("");
         description = span.label().definition().map(PbRole::description).orElse("");
+        isModifier = span.label().pb().map(PropBankArg::isModifier).orElse(false);
         if (description.isEmpty() && span.label().pb().map(PropBankArg::isModifier).orElse(false)) {
             description = span.label().propBankArg().getFunctionTag().getDescription();
         }
