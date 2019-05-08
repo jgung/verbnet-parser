@@ -16,24 +16,20 @@
 
 package io.github.semlink.parser;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.github.clearwsd.SensePrediction;
-import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
+import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.VnClass;
-import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.github.semlink.parser.SemanticRoleLabeler.convert;
 
 /**
  * Facade around VerbNet parsing components (VerbNet class disambiguation, semantic role labeling, frame alignment, etc.).
@@ -46,18 +42,15 @@ import static io.github.semlink.parser.SemanticRoleLabeler.convert;
 public class VerbNetParser {
 
     private VerbNetSenseClassifier verbNetClassifier;
-    private SemanticRoleLabeler<PropBankArg> roleLabeler;
-    private VerbNetAligner aligner;
-    private List<PredicateMapper<VnClass>> predicateMappers;
+
+    private VerbNetSemParser verbNetRoleLabeler;
 
     public VerbNetParser(@NonNull VerbNetSenseClassifier verbNetClassifier,
                          @NonNull SemanticRoleLabeler<PropBankArg> roleLabeler,
                          @NonNull VerbNetAligner aligner,
                          @NonNull PredicateMapper<VnClass> predicateMapper) {
         this.verbNetClassifier = verbNetClassifier;
-        this.roleLabeler = roleLabeler;
-        this.aligner = aligner;
-        this.predicateMappers = Collections.singletonList(predicateMapper);
+        this.verbNetRoleLabeler = new VerbNetSemParser(roleLabeler, aligner, Collections.singletonList(predicateMapper));
     }
 
     /**
@@ -70,29 +63,14 @@ public class VerbNetParser {
      */
     public VerbNetParse parse(@NonNull DepTree parsed,
                               @NonNull List<SensePrediction<VnClass>> senses) {
-        List<VnClass> vnClasses = new ArrayList<>();
-        List<Integer> predicateIndices = new ArrayList<>();
-        for (SensePrediction<VnClass> sense : senses) {
-            DepNode verb = parsed.get(sense.index());
+        List<VerbNetProp> vnProps = verbNetRoleLabeler.extractProps(parsed, senses);
 
-            // map light verbs to nominal props
-            Optional<Span<VnClass>> possibleHeavyNoun = predicateMappers.stream()
-                    .map(mapper -> mapper.mapPredicate(verb))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .findFirst();
-            if (possibleHeavyNoun.isPresent()) {
-                vnClasses.add(possibleHeavyNoun.get().label());
-                predicateIndices.add(possibleHeavyNoun.get().startIndex());
-            } else {
-                // otherwise just use verbal prop
-                vnClasses.add(sense.sense());
-                predicateIndices.add(sense.index());
-            }
-        }
-
-        List<Proposition<DepNode, PropBankArg>> props = roleLabeler.parse(parsed, predicateIndices);
-        return aligner.align(parsed, convert(props, vnClasses));
+        return new VerbNetParse()
+                .tokens(parsed.stream()
+                        .map(node -> (String) node.feature(FeatureType.Text))
+                        .collect(Collectors.toList()))
+                .tree(parsed)
+                .props(vnProps.stream().map(prop -> (DefaultVerbNetProp) prop).collect(Collectors.toList()));
     }
 
     /**

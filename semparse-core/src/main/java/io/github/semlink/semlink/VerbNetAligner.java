@@ -36,7 +36,6 @@ import io.github.clearwsd.verbnet.VnFrame;
 import io.github.semlink.app.Span;
 import io.github.semlink.parser.DefaultVerbNetProp;
 import io.github.semlink.parser.Proposition;
-import io.github.semlink.parser.VerbNetParse;
 import io.github.semlink.propbank.DefaultPbIndex;
 import io.github.semlink.propbank.frames.PbRole;
 import io.github.semlink.propbank.frames.Roleset;
@@ -81,22 +80,14 @@ public class VerbNetAligner {
         );
     }
 
-    public VerbNetParse align(@NonNull DepTree parsed,
-                              @NonNull List<Proposition<VnClass, PropBankArg>> props) {
+    public List<DefaultVerbNetProp> align(@NonNull DepTree parsed,
+                                          @NonNull List<Proposition<VnClass, PropBankArg>> props) {
         List<String> tokens = parsed.stream().map(node -> (String) node.feature(FeatureType.Text)).collect(Collectors.toList());
 
-        VerbNetParse parse = new VerbNetParse()
-                .tokens(tokens)
-                .tree(parsed);
-
-        List<DefaultVerbNetProp> vnProps = props.stream()
+        return props.stream()
                 .filter(prop -> null != prop.predicate())
                 .map(prop -> alignProp(prop, parsed).tokens(tokens))
                 .collect(Collectors.toList());
-
-        parse.props(vnProps);
-
-        return parse;
     }
 
     private DefaultVerbNetProp alignProp(Proposition<VnClass, PropBankArg> prop, DepTree parsed) {
