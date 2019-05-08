@@ -17,6 +17,7 @@
 package io.github.semlink.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +48,17 @@ public class VerbNetParser {
     private VerbNetSenseClassifier verbNetClassifier;
     private SemanticRoleLabeler<PropBankArg> roleLabeler;
     private VerbNetAligner aligner;
-    private LightVerbMapper lightVerbMapper;
+    private List<PredicateMapper<VnClass>> predicateMappers;
+
+    public VerbNetParser(@NonNull VerbNetSenseClassifier verbNetClassifier,
+                         @NonNull SemanticRoleLabeler<PropBankArg> roleLabeler,
+                         @NonNull VerbNetAligner aligner,
+                         @NonNull PredicateMapper<VnClass> predicateMapper) {
+        this.verbNetClassifier = verbNetClassifier;
+        this.roleLabeler = roleLabeler;
+        this.aligner = aligner;
+        this.predicateMappers = Collections.singletonList(predicateMapper);
+    }
 
     /**
      * Generate a {@link VerbNetParse} from a {@link DepTree dependency parse} for a list of specific verbs/predicates linked to
@@ -65,7 +76,11 @@ public class VerbNetParser {
             DepNode verb = parsed.get(sense.index());
 
             // map light verbs to nominal props
-            Optional<Span<VnClass>> possibleHeavyNoun = lightVerbMapper.mapVerb(verb);
+            Optional<Span<VnClass>> possibleHeavyNoun = predicateMappers.stream()
+                    .map(mapper -> mapper.mapPredicate(verb))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .findFirst();
             if (possibleHeavyNoun.isPresent()) {
                 vnClasses.add(possibleHeavyNoun.get().label());
                 predicateIndices.add(possibleHeavyNoun.get().startIndex());

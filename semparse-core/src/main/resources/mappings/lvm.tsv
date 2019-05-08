@@ -113,13 +113,14 @@ have	control	63
 have	conversation	37.5
 have	convo	37.5
 have	craving	32.2-1
+have	cry	40.1.2-1
 have	debate	36.1.1-1-1
 have	dinner	39.5
 have	discussion	37.6-1
 have	dispute	36.4
+have	divorce	36.2
 have	doubt	29.5
 have	doze	40.4
-have	divorce	36.2
 have	dream	62
 have	drink	39.1-2
 have	effect	31.1
@@ -156,9 +157,11 @@ have	meeting	36.3-1
 have	nap	40.4-1
 have	need	103-2
 have	objection	37.8
+have	pee	40.1.2
 have	performance	26.7
 have	picnic	39.5
 have	plan	61.2-1-1
+have	poop	40.1.2
 have	quarrel	36.4
 have	question	37.1.3
 have	quibble	36.4
@@ -169,6 +172,7 @@ have	respect	31.2
 have	respect	31.2	31.2
 have	response	113
 have	scuffle	36.4
+have	shit	40.1.2
 have	shower	41.1.1
 have	skirmish	36.4
 have	sleep	40.4-1
@@ -367,13 +371,16 @@ take	look	30.3
 take	nap	40.4-1
 take	note	25.2
 take	notice	30.1-1-1
+take	pee	40.1.2
 take	peek	30.3
 take	photo	25.4
 take	picture	25.4
 take	plunge	45.6.1-1
+take	poop	40.1.2
 take	ride	51.4.2
 take	risk	94
 take	seat	50
+take	shit	40.1.2
 take	shower	41.1.1
 take	sniff	30.3
 take	snooze	40.4

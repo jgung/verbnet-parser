@@ -32,25 +32,20 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Light verb proposition mapper.
+ * Check if the given proposition corresponds to a light verb, and map to the corresponding nominal propositional structure
+ * if so. For example, "[John] rel[took] [a look at his phone]" may map to "[John] took a rel[look] [at his phone]".
+ * Maps the sense to a corresponding VerbNet class, e.g look-30.3.
  *
  * @author jgung
  */
 @Slf4j
 @AllArgsConstructor
-public class LightVerbMapper {
+public class LightVerbMapper implements PredicateMapper<VnClass> {
 
     private Map<String, Map<String, VnClass>> mappings;
 
-    /**
-     * Check if the given proposition corresponds to a light verb, and map to the corresponding nominal propositional structure
-     * if so. For example, "[John] rel[took] [a look at his phone]" may map to "[John] took a rel[look] [at his phone]".
-     * Maps the sense to a corresponding VerbNet class, e.g look-30.3.
-     *
-     * @param rel rel node within dependency tree
-     * @return optional mapped nominal proposition
-     */
-    public Optional<Span<VnClass>> mapVerb(@NonNull DepNode rel) {
+    @Override
+    public Optional<Span<VnClass>> mapPredicate(@NonNull DepNode rel) {
         String verb = rel.feature(FeatureType.Lemma);
         Map<String, VnClass> lvMappings = mappings.get(verb);
         if (null == lvMappings) {
