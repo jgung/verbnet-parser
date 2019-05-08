@@ -36,6 +36,7 @@ import io.github.semlink.verbnet.type.ThematicRoleType;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
+import static io.github.semlink.semlink.aligner.AlignmentUtils.getPrep;
 import static io.github.semlink.verbnet.type.ThematicRoleType.AGENT;
 import static io.github.semlink.verbnet.type.ThematicRoleType.ASSET;
 import static io.github.semlink.verbnet.type.ThematicRoleType.ATTRIBUTE;
@@ -112,7 +113,7 @@ public class SelResAligner implements PbVnAligner {
 
     public static Multiset<ThematicRoleType> getThematicRolesGreedy(@NonNull PropBankPhrase phrase) {
         Multiset<ThematicRoleType> themRoles = getThematicRolesStrict(phrase);
-        Optional<PrepType> prep = SynResAligner.getPrep(phrase);
+        Optional<PrepType> prep = getPrep(phrase.tokens());
         if (prep.isPresent()) {
             PrepType type = prep.get();
             if (type.maybeDestination()) {
@@ -140,7 +141,7 @@ public class SelResAligner implements PbVnAligner {
 
     public static Multiset<ThematicRoleType> getThematicRolesStrict(@NonNull PropBankPhrase phrase) {
         Multiset<ThematicRoleType> themRoles = TreeMultiset.create();
-        Optional<PrepType> prep = SynResAligner.getPrep(phrase);
+        Optional<PrepType> prep = getPrep(phrase.tokens());
 
         boolean isClause = AlignmentUtils.isClause(phrase.tokens());
 

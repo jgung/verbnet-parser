@@ -20,10 +20,13 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.FeatureType;
+import io.github.semlink.semlink.PropBankPhrase;
+import io.github.semlink.verbnet.type.PrepType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -56,11 +59,34 @@ public final class AlignmentUtils {
         return nodeList.get(0);
     }
 
+    /**
+     * Returns whether or not a given phrase a clause.
+     */
     public static boolean isClause(@NonNull List<DepNode> phrase) {
         DepNode node = getHead(phrase);
         Set<String> clauseLabels = ImmutableSet.of("advcl", "acl", "csubj", "ccomp", "xcomp");
         String label = node.feature(FeatureType.Dep);
         return clauseLabels.contains(label);
+    }
+
+    /**
+     * Return the {@link PrepType} if present from a given {@link PropBankPhrase}.
+     */
+    public static Optional<PrepType> getPrep(@NonNull List<DepNode> tokens) {
+        String startText = tokens.get(0).feature(FeatureType.Text);
+        if (tokens.size() > 1) {
+            // e.g. "out of" or "in between"
+            String concatenated = startText + "_" + tokens.get(1).feature(FeatureType.Text);
+            try {
+                return Optional.of(PrepType.valueOf(concatenated.toUpperCase()));
+            } catch (Exception ignored) {
+            }
+        }
+        try {
+            return Optional.of(PrepType.valueOf(startText.toUpperCase()));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
     }
 
 }
