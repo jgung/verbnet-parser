@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {
   Card,
+  Icon,
   List,
   Tab,
 } from 'semantic-ui-react';
@@ -13,7 +14,7 @@ const Predicate = ({ predicateType, args, polarity }) => (
       <Card.Header>{predicateType}</Card.Header>
       { !polarity && <Card.Meta>Negated</Card.Meta> }
       <List>
-        {args.map(arg => <List.Item key={arg.type} header={arg.type} content={arg.value} />)}
+        {args.map(arg => <List.Item key={arg.type} header={arg.type} content={arg.value ? arg.value : <Icon name="question circle outline" />} />)}
       </List>
     </Card.Content>
   </Card>

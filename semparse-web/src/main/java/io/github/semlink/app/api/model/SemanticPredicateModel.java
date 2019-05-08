@@ -55,12 +55,19 @@ public class SemanticPredicateModel {
     private List<SemanticArgumentModel> args = new ArrayList<>();
     private boolean polarity = true;
 
-    public SemanticPredicateModel(SemanticPredicate predicate) {
+    public SemanticPredicateModel(String eventName, SemanticPredicate predicate) {
+        this.eventName = eventName;
         this.predicate = predicate.toString();
         this.predicateType = StringUtils.capitalized(predicate.type());
-        this.args = predicate.arguments().stream()
-                .map(SemanticArgumentModel::new)
-                .collect(Collectors.toList());
+        for (SemanticArgument argument : predicate.arguments()) {
+            SemanticArgumentModel model = new SemanticArgumentModel(argument);
+            if (argument instanceof EventArgument && eventName.equals(model.value)) {
+                // remove redundant event argument
+                continue;
+            }
+
+            args.add(model);
+        }
         this.polarity = predicate.polarity();
     }
 

@@ -46,8 +46,9 @@ public class EventModel {
 
     public EventModel(@NonNull Event event) {
         this.name = event.event.id();
-        this.predicates = event.predicates().stream().map(SemanticPredicateModel::new).collect(Collectors.toList());
-        predicates.forEach(p -> p.eventName(name));
+        this.predicates = event.predicates().stream()
+                .map(pred -> new SemanticPredicateModel(name, pred))
+                .collect(Collectors.toList());
     }
 
 }
