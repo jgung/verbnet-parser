@@ -105,6 +105,12 @@ public enum ThematicRoleType {
             if (themRole.equalsIgnoreCase("CAUSE")) {
                 return Optional.of(CAUSER);
             }
+            if (themRole.equalsIgnoreCase("PATIENT_I")) {
+                return Optional.of(PATIENT);
+            }
+            if (themRole.equalsIgnoreCase("PATIENT_J")) {
+                return Optional.of(CO_PATIENT);
+            }
             log.warn("Unrecognized thematic role type: {}", themRole);
         }
         return Optional.empty();
