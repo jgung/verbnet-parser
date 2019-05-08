@@ -46,22 +46,20 @@ const Propositions = ({
     return {
       menuItem: sense + (' '.repeat(index)),
       render: () => (
-        <Tab.Pane key={sense} attached={false}>
-          <Proposition
-            showPropBank={showPropBank}
-            showVerbNet={showVerbNet}
-            spans={spans}
-            events={showSemantics && events}
-            sense={sense}
-          />
-        </Tab.Pane>
+        <Proposition
+          showPropBank={showPropBank}
+          showVerbNet={showVerbNet}
+          spans={spans}
+          events={showSemantics && events}
+          sense={sense}
+        />
       ),
     };
   });
 
   return (
     <Tab
-      menu={{ secondary: true, pointing: true }}
+      menu={{ stackable: true, secondary: true, pointing: true }}
       activeIndex={propIndex}
       onTabChange={handleTabChange}
       panes={propPanes}

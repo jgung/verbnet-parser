@@ -11,7 +11,10 @@ import {
 const Predicate = ({ predicateType, args, polarity }) => (
   <Card>
     <Card.Content>
-      <Card.Header>{predicateType}</Card.Header>
+      <Card.Header>
+        {!polarity && <Icon name="exclamation circle" />}
+        {predicateType}
+      </Card.Header>
       { !polarity && <Card.Meta>Negated</Card.Meta> }
       <List>
         {args.map(arg => <List.Item key={arg.type} header={arg.type} content={arg.value ? arg.value : <Icon name="question circle outline" />} />)}
