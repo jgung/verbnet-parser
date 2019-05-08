@@ -41,7 +41,7 @@ const Span = ({
     vn, pb, description, text, isPredicate, isModifier,
   } = span;
   return (
-    <List.Item>
+    <Label basic>
       <Label.Group>
         <Label
           color="black"
@@ -82,7 +82,7 @@ const Span = ({
               )
           }
       </Label.Group>
-    </List.Item>
+    </Label>
   );
 };
 
@@ -98,7 +98,11 @@ const RoleLabels = ({
 }) => {
   const spans = roles.map((span) => {
     const { start } = span;
-    return (<Span showVerbNet={showVerbNet} showPropBank={showPropBank} sense={sense} key={start} span={span} color="black" />);
+    return (
+      <List.Item key={start}>
+        <Span showVerbNet={showVerbNet} showPropBank={showPropBank} sense={sense} span={span} color="black" />
+      </List.Item>
+    );
   });
   return (
     <List>
