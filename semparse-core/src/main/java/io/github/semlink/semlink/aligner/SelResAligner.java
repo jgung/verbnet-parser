@@ -142,17 +142,23 @@ public class SelResAligner implements PbVnAligner {
         Multiset<ThematicRoleType> themRoles = TreeMultiset.create();
         Optional<PrepType> prep = SynResAligner.getPrep(phrase);
 
+        boolean isClause = AlignmentUtils.isClause(phrase.tokens());
+
         // preposition heuristics
         if (prep.isPresent()) {
             PrepType type = prep.get();
             if (type == PrepType.TO) {
-                if (phrase.argument().getFunctionTag() != FunctionTag.PRP) {
-                    themRoles.add(DESTINATION);
+                if (isClause) {
+                    themRoles.add(TOPIC);
+                } else {
+                    if (phrase.argument().getFunctionTag() != FunctionTag.PRP) {
+                        themRoles.add(DESTINATION);
+                    }
+                    themRoles.add(BENEFICIARY);
+                    themRoles.add(RECIPIENT);
                 }
-                themRoles.add(BENEFICIARY);
-                themRoles.add(RECIPIENT);
-                themRoles.add(GOAL);
                 themRoles.add(RESULT);
+                themRoles.add(GOAL);
             } else if (type == PrepType.TOWARDS) {
                 themRoles.add(DESTINATION);
             } else if (type.maybeSource()) {
