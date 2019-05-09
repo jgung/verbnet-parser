@@ -1,392 +1,390 @@
-bring	blessing	33.1-1
-bring	honor	33.1-1
-conduct	assessment	34.2-1
-conduct	audit	34.1
-conduct	exchange	13.6.1
-conduct	inspection	34.1
-conduct	repair	45.7
-conduct	trade	13.6.1
-deal	blow	23.2
-engage	development	26.1
-engage	expansion	45.4
-engage	investigation	35.4
-exercise	control	63
-extend	offer	13.3
-get	benefit	72.2
-get	call	37.4.2-1
-get	divorce	36.2
-get	dressed	41.1.1
-get	ride	51.4.2
-give	advice	37.9
-give	applause	33.1-1
-give	approval	33.1-1
-give	bath	41.1.1
-give	birth	28.2-1
-give	blessing	33.1-1
-give	bow	40.3.3
-give	call	37.4.2-1
-give	caress	20-1
-give	chase	51.6
-give	command	58.3-1
-give	criticism	33.1-1
-give	curtsey	40.3.3
-give	declaration	37.7-1-1
-give	demonstration	37.1.1
-give	description	29.2-1-1
-give	emphasis	102
-give	encouragement	37.9
-give	estimate	34.2-1
-give	explanation	37.1.1
-give	greeting	33.1-1
-give	guidance	51.7
-give	hint	37.7-1-2
-give	honor	33.1-1
-give	hug	36.2
-give	indication	78
-give	injection	39.1-3
-give	inspection	34.1
-give	inspiration	31.1
-give	instruction	37.9-1
-give	kiss	20-1
-give	laugh	40.2
-give	lick	20-1
-give	look	30.3
-give	massage	20-1
-give	notification	37.9
-give	nudge	20-1
-give	offer	13.3
-give	order	58.3-1
-give	pat	20-1
-give	paw	20-1
-give	peck	20-1
-give	permission	64.1-1
-give	pet	20-1
-give	pinch	20-1
-give	presentation
-give	prod	20-1
-give	punishment	33.2-1
-give	push	12-1-1
-give	rating	29.9-1
-give	recommendation	33.1-1
-give	refund	13.1
-give	report	37.7-1-1
-give	response	37.7-1
-give	ring	37.4.2-1
-give	rub	20-1
-give	sacrifice	13.2-1-1
-give	salute	40.3.3
-give	shout	37.3
-give	sigh	40.2
-give	squeeze	20-1
-give	sting	20-1
-give	stroke	20-1
-give	support	72.1-1
-give	surprise	31.1
-give	tap	18.1-1
-give	test	34.1
-give	testimony	37.11-1
-give	thank	33.1-1
-give	thanks	33.1-1
-give	tickle	20-1
-give	tip	54.5
-give	touch	20-1
-give	try	61.1
-give	tug	20-1
-give	tweak	20-1
-give	update	37.2
-give	warning	37.9-1
-give	welcome	33.1-1
-have	argument	36.1.1-1-1
-have	bath	41.1.1
-have	belief	29.5-1
-have	brawl	36.4
-have	breakfast	39.5
-have	brunch	39.5
-have	call	37.4.2-1
-have	catnap	40.4
-have	chat	37.6
-have	chuckle	40.2
-have	clash	36.4
-have	comment	37.11-1-1
-have	concern	31.1
-have	control	63
-have	conversation	37.5
-have	convo	37.5
-have	craving	32.2-1
-have	cry	40.1.2-1
-have	debate	36.1.1-1-1
-have	dinner	39.5
-have	discussion	37.6-1
-have	dispute	36.4
-have	divorce	36.2
-have	doubt	29.5
-have	doze	40.4
-have	dream	62
-have	drink	39.1-2
-have	effect	31.1
-have	encounter	30.5
-have	end	55.4-1-1
-have	exchange	13.6.1
-have	expectation	62
-have	experience	30.2
-have	explanation	37.1.1
-have	fear	31.3
-have	feeling	34.1
-have	fight	36.4-1
-have	glance	30.3
-have	grumble	37.8
-have	guess	29.5-1
-have	hallucination	31.3
-have	hankering	32.2-1
-have	holiday	56
-have	hope	32.2-1
-have	hunger	32.2-1
-have	influence	59.1
-have	intent	61.2-1-1
-have	intention	61.2-1-1
-have	interaction	36.6
-have	itch	32.2-1
-have	joust	36.4
-have	laugh	40.2
-have	longing	32.2-1
-have	look	30.3
-have	lunch	39.5
-have	luncheon	39.5
-have	marriage	36.2
-have	meeting	36.3-1
-have	nap	40.4-1
-have	need	103-2
-have	objection	37.8
-have	pee	40.1.2
-have	performance	26.7
-have	picnic	39.5
-have	plan	61.2-1-1
-have	poop	40.1.2
-have	quarrel	36.4
-have	question	37.1.3
-have	quibble	36.4
-have	reaction	113
-have	realization	84
-have	recommendation	37.7-1-1-1
-have	respect	31.2
-have	respect	31.2	31.2
-have	response	113
-have	scuffle	36.4
-have	shit	40.1.2
-have	shower	41.1.1
-have	skirmish	36.4
-have	sleep	40.4-1
-have	smoke	39.1-3
-have	snooze	40.4
-have	spat	36.4
-have	squabble	36.4
-have	suggestion	37.7-1-1-1
-have	talk	37.5
-have	taste	30.4
-have	thirst	32.2-1
-have	try	61.1
-have	understanding	87.2-1-1-1
-have	vacation	56
-have	yearning	32.2-1
-hold	meeting	36.3-1
-keep	track	51.6
-lay	ambush	60.1
-lay	emphasis	102
-make	accommodation	26.9
-make	accusation	81
-make	achievement	55.2
-make	adjustment	26.9
-make	admission	37.10
-make	advance	45.6.2-1
-make	agreement	36.1.2-1
-make	announcement	37.7-1-1
-make	appeal	31.4-3
-make	argument	37.6-1
-make	arrangement	55.5-1
-make	arrest	33.2-1
-make	assault	60.1
-make	assertion	29.5
-make	assessment	34.2-1
-make	attack	60.1
-make	attempt	61.1
-make	bet	94
-make	call	37.4.2-1
-make	change	45.4
-make	choice	13.5.1
-make	claim	37.7-1-1
-make	clarification	45.4
-make	collection	13.5.2
-make	comment	37.11-1-1
-make	commitment
-make	complaint	37.8
-make	compliment	33.1-1
-make	compromise	36.1.2
-make	concession	13.3
-make	confession	37.10
-make	contribution	13.2-1-1
-make	copy	25.4
-make	correction	45.7
-make	cough	40.2
-make	cut	10.1
-make	decision	36.1.2-1
-make	declaration	29.4
-make	deduction	97.2
-make	defense	72.3
-make	definition	29.2-1-1
-make	delivery	11.1
-make	demand	58.3
-make	denouncement	33.1-1
-make	dent	21.2-1
-make	deposit	9.1-1
-make	description	29.2-1-1
-make	determination	29.5
-make	discovery	84
-make	distinction	23.5-1
-make	donation	13.2-1-1
-make	enquiry	37.1.2
-make	exit	51.1-1-1
-make	finding	84
-make	gain	45.6.1-1
-make	gamble	94
-make	gesture	40.3.1
-make	guarantee	37.13
-make	guess	29.5-1
-make	impression	31.1
-make	improvement	45.4
-make	innovation	55.5
-make	inquiry	37.1.2
-make	interpretation	29.2
-make	investigation	35.4
-make	investment	13.5.4-1
-make	invitation	58.1-1
-make	joke	37.6
-make	journey	51.3.2-1
-make	judgment	33.1-1-1
-make	justification	37.1.1
-make	landing	9.10-1
-make	leap	51.3.2-1
-make	loan	13.1
-make	modification	45.4
-make	modifications	45.4
-make	move	114-1-1
-make	negotiation	36.1.1
-make	nomination	29.1
-make	objection	37.8
-make	observation	37.7-1-1
-make	offer	13.3
-make	payment	68-1
-make	plan	62
-make	post	11.1
-make	prediction	78
-make	preparation	26.3-1
-make	presentation	48.1.2
-make	profit	72.2
-make	progress	45.5
-make	projection	34.2-1
-make	promise	37.13
-make	proposal	37.7-1-1
-make	protest	71
-make	provocation	31.1
-make	purchase	13.5.2-1
-make	recommendation	33.1-1
-make	recording	25.4
-make	reduction	45.6.2
-make	reference	86.2-2
-make	referral	13.2
-make	refund	13.1
-make	remark	37.11-1
-make	repair	45.7
-make	repayment	68-1
-make	report	37.7-1-1
-make	request	58.2
-make	reservation	13.5.1
-make	response	37.7-1
-make	return	51.1-1
-make	revision	45.7
-make	revolution	51.9.2
-make	sacrifice	13.2-1-1
-make	sale	13.1-1
-make	selection	13.5.2
-make	sense
-make	shift	26.6.2-1
-make	shout	37.3
-make	sign	37.4.1
-make	sound	43.2
-make	speech	37.11-1
-make	statement	37.7-1-1
-make	step	51.3.2
-make	stride	51.3.2-1
-make	suggestion	37.7-1-1-1
-make	switch	13.6.2
-make	trade	13.6.1
-make	transfer	11.1
-make	transformation	26.6.1
-make	turn	51.3.1
-make	use	105.1
-make	visit	36.3-1
-make	vow	37.13
-make	wager	94
-make	war	36.4
-make	wish	62
-offer	explanation	37.1.1
-open	fire	17.1-1
-pay	attention	30.3
-pay	respect	31.2
-pay	visit	36.3-1
-perform	test	34.1
-perform	upgrade	29.1
-place	emphasis	102
-play	trick	59.2
-provide	assistance	72.1-1-1
-put	emphasis	102
-put	limit	76
-put	stop	55.4-1-1
-raise	objection	37.8
-reap	benefit	72.2
-reap	profits	72.2
-run	boycott	52
-suffer	loss	10.1
-take	action	114-1-1
-take	bath	41.1.1
-take	bet	94
-take	bow	40.3.3
-take	breath	40.1.2-1
-take	catnap	40.4
-take	chance	94-1
-take	cruise	51.4.2-1
-take	dive	45.6.1-1
-take	doze	40.4
-take	drive	51.4.2-1
-take	flight	51.4.2-1
-take	gamble	94
-take	glance	30.3
-take	hike	51.3.2
-take	holiday	56
-take	jog	51.3.2-2-1
-take	lead	95.2.2
-take	leap	51.3.2-1
-take	liking	32.1-1-1
-take	listen	30.3
-take	look	30.3
-take	nap	40.4-1
-take	note	25.2
-take	notice	30.1-1-1
-take	pee	40.1.2
-take	peek	30.3
-take	photo	25.4
-take	picture	25.4
-take	plunge	45.6.1-1
-take	poop	40.1.2
-take	ride	51.4.2
-take	risk	94
-take	seat	50
-take	shit	40.1.2
-take	shower	41.1.1
-take	sniff	30.3
-take	snooze	40.4
-take	stroll	51.3.2-1
-take	tour	35.4
-take	vacation	56
-take	walk	51.3.2-2-1
-turn	profit	72.2
-venture	guess	29.5-1
+bring	blessing	33.1-1	bless
+bring	honor	33.1-1	honor
+conduct	assessment	34.2-1	assess
+conduct	audit	34.1	audit
+conduct	exchange	13.6.1	exchange
+conduct	inspection	34.1	inspect
+conduct	repair	45.7	repair
+conduct	trade	13.6.1	trade
+deal	blow	23.2	blow
+engage	development	26.1	develop
+engage	expansion	45.4	expand
+engage	investigation	35.4	investigate
+exercise	control	63	control
+extend	offer	13.3	offer
+get	benefit	72.2	benefit
+get	call	37.4.2-1	call
+get	divorce	36.2	divorce
+get	dressed	41.1.1	dress
+get	ride	51.4.2	ride
+give	advice	37.9	advise
+give	applause	33.1-1	applaud
+give	approval	33.1-1	approve
+give	bath	41.1.1	bathe
+give	birth	28.2-1	birth
+give	blessing	33.1-1	bless
+give	bow	40.3.3	bow
+give	call	37.4.2-1	call
+give	caress	20-1	caress
+give	chase	51.6	chase
+give	command	58.3-1	command
+give	criticism	33.1-1	criticize
+give	curtsey	40.3.3	curtsey
+give	declaration	37.7-1-1	declare
+give	demonstration	37.1.1	demonstrate
+give	description	29.2-1-1	describe
+give	emphasis	102	emphasize
+give	encouragement	37.9	encourage
+give	estimate	34.2-1	estimate
+give	explanation	37.1.1	explain
+give	greeting	33.1-1	greet
+give	guidance	51.7	guide
+give	hint	37.7-1-2	hint
+give	honor	33.1-1	honor
+give	hug	36.2	hug
+give	indication	78	indicate
+give	injection	39.1-3	inject
+give	inspection	34.1	inspect
+give	inspiration	31.1	inspire
+give	instruction	37.9-1	instruct
+give	kiss	20-1	kiss
+give	laugh	40.2	laugh
+give	lick	20-1	lick
+give	look	30.3	look
+give	massage	20-1	massage
+give	notification	37.9	notify
+give	nudge	20-1	nudge
+give	offer	13.3	offer
+give	order	58.3-1	order
+give	pat	20-1	pat
+give	paw	20-1	paw
+give	peck	20-1	peck
+give	permission	64.1-1	permit
+give	pet	20-1	pet
+give	pinch	20-1	pinch
+give	presentation	48.1.2	present
+give	prod	20-1	prod
+give	punishment	33.2-1	punish
+give	push	12-1-1	push
+give	rating	29.9-1	rate
+give	recommendation	33.1-1	recommend
+give	refund	13.1	refund
+give	report	37.7-1-1	report
+give	response	37.7-1	respond
+give	ring	37.4.2-1	ring
+give	rub	20-1	rub
+give	sacrifice	13.2-1-1	sacrifice
+give	salute	40.3.3	salute
+give	shout	37.3	shout
+give	sigh	40.2	sigh
+give	squeeze	20-1	squeeze
+give	sting	20-1	sting
+give	stroke	20-1	stroke
+give	support	72.1-1	support
+give	surprise	31.1	surprise
+give	tap	18.1-1	tap
+give	test	34.1	test
+give	testimony	37.11-1	testify
+give	thank	33.1-1	thank
+give	thanks	33.1-1	thank
+give	tickle	20-1	tickle
+give	tip	54.5	tip
+give	touch	20-1	touch
+give	try	61.1	try
+give	tug	20-1	tug
+give	tweak	20-1	tweak
+give	update	37.2	update
+give	warning	37.9-1	warn
+give	welcome	33.1-1	welcome
+have	argument	36.1.1-1-1	argue
+have	bath	41.1.1	bathe
+have	belief	29.5-1	believe
+have	brawl	36.4	brawl
+have	breakfast	39.5	breakfast
+have	brunch	39.5	brunch
+have	call	37.4.2-1	call
+have	catnap	40.4	catnap
+have	chat	37.6	chat
+have	chuckle	40.2	chuckle
+have	clash	36.4	clash
+have	comment	37.11-1-1	comment
+have	concern	31.1	concern
+have	control	63	control
+have	conversation	37.5	converse
+have	convo	37.5	converse
+have	craving	32.2-1	crave
+have	cry	40.1.2-1	cry
+have	debate	36.1.1-1-1	debate
+have	dinner	39.5	dinner
+have	discussion	37.6-1	discuss
+have	dispute	36.4	dispute
+have	divorce	36.2	divorce
+have	doubt	29.5	doubt
+have	doze	40.4	doze
+have	dream	62	dream
+have	drink	39.1-2	drink
+have	effect	31.1	effect
+have	encounter	30.5	encounter
+have	end	55.4-1-1	end
+have	exchange	13.6.1	exchange
+have	expectation	62	expect
+have	experience	30.2	experience
+have	explanation	37.1.1	explain
+have	fear	31.3	fear
+have	feeling	34.1	feel
+have	fight	36.4-1	fight
+have	glance	30.3	glance
+have	grumble	37.8	grumble
+have	guess	29.5-1	guess
+have	hallucination	31.3	hallucinate
+have	hankering	32.2-1	hanker
+have	holiday	56	holiday
+have	hope	32.2-1	hope
+have	hunger	32.2-1	hunger
+have	influence	59.1	influence
+have	intent	61.2-1-1	intend
+have	intention	61.2-1-1	intend
+have	interaction	36.6	interact
+have	itch	32.2-1	itch
+have	joust	36.4	joust
+have	laugh	40.2	laugh
+have	longing	32.2-1	long
+have	look	30.3	look
+have	lunch	39.5	lunch
+have	luncheon	39.5	luncheon
+have	marriage	36.2	marry
+have	meeting	36.3-1	meeting
+have	nap	40.4-1	nap
+have	need	103-2	need
+have	objection	37.8	object
+have	pee	40.1.2	pee
+have	performance	26.7	perform
+have	picnic	39.5	picnic
+have	plan	61.2-1-1	plan
+have	poop	40.1.2	poop
+have	quarrel	36.4	quarrel
+have	question	37.1.3	question
+have	quibble	36.4	quibble
+have	reaction	113	react
+have	realization	84	realize
+have	recommendation	37.7-1-1-1	recommend
+have	respect	31.2	respect
+have	response	113	respond
+have	scuffle	36.4	scuffle
+have	shit	40.1.2	shit
+have	shower	41.1.1	shower
+have	skirmish	36.4	skirmish
+have	sleep	40.4-1	sleep
+have	smoke	39.1-3	smoke
+have	snooze	40.4	snooze
+have	spat	36.4	spat
+have	squabble	36.4	squabble
+have	suggestion	37.7-1-1-1	suggest
+have	talk	37.5	talk
+have	taste	30.4	taste
+have	thirst	32.2-1	thirst
+have	try	61.1	try
+have	understanding	87.2-1-1-1	understand
+have	vacation	56	vacation
+have	yearning	32.2-1	yearn
+hold	meeting	36.3-1	meet
+keep	track	51.6	track
+lay	ambush	60.1	ambush
+lay	emphasis	102	emphasize
+make	accommodation	26.9	accommodate
+make	accusation	81	accuse
+make	achievement	55.2	achieve
+make	adjustment	26.9	adjust
+make	admission	37.10	admit
+make	advance	45.6.2-1	advance
+make	agreement	36.1.2-1	agree
+make	announcement	37.7-1-1	announce
+make	appeal	31.4-3	appeal
+make	argument	37.6-1	argue
+make	arrangement	55.5-1	arrange
+make	arrest	33.2-1	arrest
+make	assault	60.1	assault
+make	assertion	29.5	assert
+make	assessment	34.2-1	assess
+make	attack	60.1	attack
+make	attempt	61.1	attempt
+make	bet	94	bet
+make	call	37.4.2-1	call
+make	change	45.4	change
+make	choice	13.5.1	choose
+make	claim	37.7-1-1	claim
+make	clarification	45.4	clarify
+make	collection	13.5.2	collect
+make	comment	37.11-1-1	comment
+make	commitment	79	commit
+make	complaint	37.8	complain
+make	compliment	33.1-1	compliment
+make	compromise	36.1.2	compromise
+make	concession	13.3	concede
+make	confession	37.10	confess
+make	contribution	13.2-1-1	contribute
+make	copy	25.4	copy
+make	correction	45.7	correct
+make	cough	40.2	cough
+make	cut	10.1	cut
+make	decision	36.1.2-1	decide
+make	declaration	29.4	declare
+make	deduction	97.2	deduce
+make	defense	72.3	defend
+make	definition	29.2-1-1	define
+make	delivery	11.1	deliver
+make	demand	58.3	demand
+make	denouncement	33.1-1	denounce
+make	dent	21.2-1	dent
+make	deposit	9.1-1	deposit
+make	description	29.2-1-1	describe
+make	determination	29.5	determine
+make	discovery	84	discover
+make	distinction	23.5-1	distinguish
+make	donation	13.2-1-1	donate
+make	enquiry	37.1.2	enquire
+make	exit	51.1-1-1	exit
+make	finding	84	find
+make	gain	45.6.1-1	gain
+make	gamble	94	gamble
+make	gesture	40.3.1	gesture
+make	guarantee	37.13	guarantee
+make	guess	29.5-1	guess
+make	impression	31.1	impress
+make	improvement	45.4	improve
+make	innovation	55.5	innovate
+make	inquiry	37.1.2	inquire
+make	interpretation	29.2	interpret
+make	investigation	35.4	investigate
+make	investment	13.5.4-1	invest
+make	invitation	58.1-1	invite
+make	joke	37.6	joke
+make	journey	51.3.2-1	journey
+make	judgment	33.1-1-1	judge
+make	justification	37.1.1	justify
+make	landing	9.10-1	land
+make	leap	51.3.2-1	leap
+make	loan	13.1	loan
+make	modification	45.4	modify
+make	modifications	45.4	modify
+make	move	114-1-1	move
+make	negotiation	36.1.1	negotiate
+make	nomination	29.1	nominate
+make	objection	37.8	object
+make	observation	37.7-1-1	observe
+make	offer	13.3	offer
+make	payment	68-1	pay
+make	plan	62	plan
+make	post	11.1	post
+make	prediction	78	predict
+make	preparation	26.3-1	prepare
+make	presentation	48.1.2	present
+make	profit	72.2	profit
+make	progress	45.5	progress
+make	projection	34.2-1	project
+make	promise	37.13	promise
+make	proposal	37.7-1-1	propose
+make	protest	71	protest
+make	provocation	31.1	provoke
+make	purchase	13.5.2-1	purchase
+make	recommendation	33.1-1	recommend
+make	recording	25.4	record
+make	reduction	45.6.2	reduce
+make	reference	86.2-2	reference
+make	referral	13.2	refer
+make	refund	13.1	refund
+make	remark	37.11-1	remark
+make	repair	45.7	repair
+make	repayment	68-1	repay
+make	report	37.7-1-1	report
+make	request	58.2	request
+make	reservation	13.5.1	reserve
+make	response	37.7-1	respond
+make	return	51.1-1	return
+make	revision	45.7	revise
+make	revolution	51.9.2	revolve
+make	sacrifice	13.2-1-1	sacrifice
+make	sale	13.1-1	sale
+make	selection	13.5.2	select
+make	shift	26.6.2-1	shift
+make	shout	37.3	shout
+make	sign	37.4.1	sign
+make	sound	43.2	sound
+make	speech	37.11-1	speech
+make	statement	37.7-1-1	statement
+make	step	51.3.2	step
+make	stride	51.3.2-1	stride
+make	suggestion	37.7-1-1-1	suggestion
+make	switch	13.6.2	switch
+make	trade	13.6.1	trade
+make	transfer	11.1	transfer
+make	transformation	26.6.1	transformation
+make	turn	51.3.1	turn
+make	use	105.1	use
+make	visit	36.3-1	visit
+make	vow	37.13	vow
+make	wager	94	wager
+make	war	36.4	war
+make	wish	62	wish
+offer	explanation	37.1.1	explain
+open	fire	17.1-1	fire
+pay	attention	30.3	attend
+pay	respect	31.2	respect
+pay	visit	36.3-1	visit
+perform	test	34.1	test
+perform	upgrade	29.1	upgrade
+place	emphasis	102	emphasize
+play	trick	59.2	trick
+provide	assistance	72.1-1-1	assist
+put	emphasis	102	emphasize
+put	limit	76	limit
+put	stop	55.4-1-1	stop
+raise	objection	37.8	object
+reap	benefit	72.2	benefit
+reap	profits	72.2	profit
+run	boycott	52	boycott
+suffer	loss	10.1	lose
+take	action	114-1-1	act
+take	bath	41.1.1	bathe
+take	bet	94	bet
+take	bow	40.3.3	bow
+take	breath	40.1.2-1	breathe
+take	catnap	40.4	nap
+take	chance	94-1	chance
+take	cruise	51.4.2-1	cruise
+take	dive	45.6.1-1	dive
+take	doze	40.4	doze
+take	drive	51.4.2-1	drive
+take	flight	51.4.2-1	fly
+take	gamble	94	gamble
+take	glance	30.3	glance
+take	hike	51.3.2	hike
+take	holiday	56	holiday
+take	jog	51.3.2-2-1	jog
+take	lead	95.2.2	lead
+take	leap	51.3.2-1	leap
+take	liking	32.1-1-1	like
+take	listen	30.3	listen
+take	look	30.3	look
+take	nap	40.4-1	nap
+take	note	25.2	note
+take	notice	30.1-1-1	notice
+take	pee	40.1.2	pee
+take	peek	30.3	peek
+take	photo	25.4	photo
+take	picture	25.4	photograph
+take	plunge	45.6.1-1	plunge
+take	poop	40.1.2	poop
+take	ride	51.4.2	ride
+take	risk	94	risk
+take	seat	50	sit
+take	shit	40.1.2	shit
+take	shower	41.1.1	shower
+take	sniff	30.3	sniff
+take	snooze	40.4	snooze
+take	stroll	51.3.2-1	stroll
+take	tour	35.4	tour
+take	vacation	56	vacation
+take	walk	51.3.2-2-1	walk
+turn	profit	72.2	profit
+venture	guess	29.5-1	guess
