@@ -42,46 +42,45 @@ const Span = ({
   } = span;
   return (
     <Label basic>
-      <Label.Group>
-        <Label
-          color="black"
-          basic
-          size="large"
-          content={truncate(text)}
-        />
-        {
-            isPredicate && (
+      <Label
+        color="black"
+        basic
+        size="large"
+        content={truncate(text)}
+      />
+      {
+        isPredicate
+          && (
+          <Label
+            color="blue"
+            size="large"
+            content={sense}
+          />
+          )
+      }
+      {
+        showVerbNet && vn && !isPredicate
+          && (
             <Label
               color="blue"
+              basic
               size="large"
-              content={sense}
+              content={vn}
             />
-            )
-          }
-        {
-            showVerbNet && vn && !isPredicate
-              && (
-              <Label
-                color="blue"
-                basic
-                size="large"
-                content={vn}
-              />
-              )
-          }
-        {
-              showPropBank && pb && !isPredicate
-              && (
-              <Label
-                color={isModifier ? 'grey' : 'purple'}
-                basic
-                size="large"
-                content={pb}
-                detail={description || undefined}
-              />
-              )
-          }
-      </Label.Group>
+          )
+      }
+      {
+        showPropBank && pb && !isPredicate
+          && (
+            <Label
+              color={isModifier ? 'grey' : 'purple'}
+              basic
+              size="large"
+              content={pb}
+              detail={description || undefined}
+            />
+          )
+      }
     </Label>
   );
 };
