@@ -78,7 +78,7 @@ public class BertSrlExampleExtractor implements SequenceExampleExtractor {
             splitTokens.addAll(subtokens);
             maskValues.add(1);
             if (subtokens.size() > 0) {
-                maskValues.addAll(Collections.nCopies(subtokens.size() - 1, 1));
+                maskValues.addAll(Collections.nCopies(subtokens.size() - 1, 0));
             }
 
             ++tokenIndex;
