@@ -31,6 +31,8 @@ public class BertSrlExampleExtractor implements SequenceExampleExtractor {
     @Setter
     private String predicateIndexKey = "predicate_index";
     @Setter
+    private String bertSplitIndex = "bert_split_idx";
+    @Setter
     private String wordsKey = "word";
     @Setter
     private String bertIdsKey = "bert";
@@ -88,6 +90,8 @@ public class BertSrlExampleExtractor implements SequenceExampleExtractor {
         splitTokens.add(BERT_SEP);
         maskValues.add(0);
 
+        final int splitIndex = splitTokens.size();
+
         // predicate_subtoken_1, predicate_subtoken2, ..., [SEP]
         splitTokens.addAll(predicateSplitTokens);
         maskValues.addAll(Collections.nCopies(predicateSplitTokens.size(), 0));
@@ -113,6 +117,8 @@ public class BertSrlExampleExtractor implements SequenceExampleExtractor {
         Features.Builder features = Features.newBuilder()
             // index of first predicate subtoken within WordPiece tokens
             .putFeature(predicateIndexKey, int64Feature(predIndex))
+            // index in subtokens of start of predicate sequence (second sequence, not original tokens)
+            .putFeature(bertSplitIndex, int64Feature(splitIndex))
             // boiler plate
             .putFeature(lengthKey, int64Feature(splitTokens.size()))
             .putFeature(sentenceIndexKey, int64Feature(0));
