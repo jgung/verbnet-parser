@@ -17,7 +17,7 @@
 package io.github.semlink.util;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public final class TsvUtils {
 
     public static List<String[]> readTsv(@NonNull String path) throws IOException {
         List<String[]> result = new ArrayList<>();
-        for (String line : Files.readAllLines(Paths.get(path), Charset.defaultCharset())) {
+        for (String line : Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)) {
             line = line.trim();
             if (line.isEmpty()) {
                 continue;
