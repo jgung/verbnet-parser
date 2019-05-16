@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,7 +63,7 @@ public class WordPieceTokenizer {
             Map<String, Integer> vocab = new HashMap<>();
             URL resource = WordPieceTokenizer.class.getClassLoader().getResource(path);
             try (InputStream inputStream = null == resource ? new FileInputStream(path) : resource.openStream()) {
-                new BufferedReader(new InputStreamReader(inputStream, Charset.defaultCharset())).lines()
+                new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines()
                     .filter(line -> !line.isEmpty())
                     .forEach(entry -> vocab.put(entry, vocab.size()));
             }
