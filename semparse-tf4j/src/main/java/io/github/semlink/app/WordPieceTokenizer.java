@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * WordPiece tokenizer to produce inputs to BERT published models. Based on BERT implementation.
@@ -39,6 +40,7 @@ import lombok.NonNull;
  * @see <a href="https://github.com/google-research/bert">https://github.com/google-research/bert</a>
  * @see <a href="https://arxiv.org/abs/1609.08144">https://arxiv.org/abs/1609.08144</a>
  */
+@Slf4j
 @AllArgsConstructor
 public class WordPieceTokenizer {
 
@@ -65,6 +67,7 @@ public class WordPieceTokenizer {
                     .filter(line -> !line.isEmpty())
                     .forEach(entry -> vocab.put(entry, vocab.size()));
             }
+            log.info("Read {}-length vocabulary from {}", vocab.size(), path);
             return vocab;
         } catch (IOException e) {
             throw new RuntimeException("Unable to load vocabulary at path: " + path, e);
