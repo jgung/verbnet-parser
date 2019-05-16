@@ -104,12 +104,14 @@ public enum ThematicRoleType {
         } catch (Exception ignored) {
             if (themRole.equalsIgnoreCase("CAUSE")) {
                 return Optional.of(CAUSER);
-            }
-            if (themRole.equalsIgnoreCase("PATIENT_I")) {
+            } else if (themRole.equalsIgnoreCase("PATIENT_I")) {
                 return Optional.of(PATIENT);
-            }
-            if (themRole.equalsIgnoreCase("PATIENT_J")) {
+            } else if (themRole.equalsIgnoreCase("PATIENT_J")) {
                 return Optional.of(CO_PATIENT);
+            } else if (themRole.equalsIgnoreCase("AGENT_I")) {
+                return Optional.of(AGENT);
+            } else if (themRole.equalsIgnoreCase("AGENT_J")) {
+                return Optional.of(CO_AGENT);
             }
             log.warn("Unrecognized thematic role type: {}", themRole);
         }
