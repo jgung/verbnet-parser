@@ -96,7 +96,7 @@ public final class RoleLabelerUtils {
      * @return shallow semantic parser
      */
     public static ShallowParser shallowSemanticParser(@NonNull String modelDir) {
-        return new ShallowParser(TensorflowModel.fromDirectory(modelDir), RoleLabelerUtils::shallowSemParseFeatures);
+        return new ShallowParser(TensorflowModel.bertFromDirectory(modelDir), RoleLabelerUtils::shallowSemParseFeatures);
     }
 
 }

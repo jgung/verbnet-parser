@@ -16,6 +16,8 @@
 
 package io.github.semlink.app;
 
+import io.github.semlink.extractor.BertSrlExampleExtractor;
+import io.github.semlink.extractor.SequenceExampleExtractor;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.example.SequenceExample;
@@ -27,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.config.ConfigSpec;
 import io.github.semlink.extractor.config.Extractors;
 import io.github.semlink.tensor.TensorList;
@@ -48,12 +49,13 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
 
     private static final String OP_NAME = "input_example_tensor";
     private static final String FETCH_NAME = "gold/labels";
+    private static final String IGNORE_LABEL = "X";
 
     private SequenceExampleExtractor featureExtractor;
     private SavedModelBundle model;
 
-    private String inputName = OP_NAME;
-    private String fetchName = FETCH_NAME;
+    private String inputName;
+    private String fetchName;
 
     public TensorflowModel(@NonNull SequenceExampleExtractor featureExtractor, @NonNull SavedModelBundle model) {
         this(featureExtractor, model, OP_NAME, FETCH_NAME);
@@ -76,7 +78,9 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
                     .feed(inputName, inputTensor)
                     .fetch(fetchName)
                     .run())) {
-                return toStringLists(results.get(0));
+                return toStringLists(results.get(0)).stream()
+                    .map(labels -> labels.stream().filter(l -> !l.equals(IGNORE_LABEL)).collect(Collectors.toList()))
+                    .collect(Collectors.toList());
             }
         }
     }
@@ -86,17 +90,26 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
         model.close();
     }
 
+    public static TensorflowModel fromDirectory(@NonNull String modelDir, @NonNull SequenceExampleExtractor featureExtractor) {
+        SavedModelBundle model = SavedModelBundle.load(Paths.get(modelDir, "model").toString(), "serve");
+        return new TensorflowModel(featureExtractor, model);
+    }
+
     public static TensorflowModel fromDirectory(@NonNull String modelDir) {
         try (FileInputStream in = new FileInputStream(Paths.get(modelDir, "config.json").toString())) {
             ConfigSpec spec = ConfigSpec.fromInputStream(in);
             SequenceExampleExtractor extractor = Extractors.createExtractor(spec.features(),
                     Paths.get(modelDir, "vocab").toString(), true);
 
-            SavedModelBundle model = SavedModelBundle.load(Paths.get(modelDir, "model").toString(), "serve");
-            return new TensorflowModel(extractor, model);
+            return fromDirectory(modelDir, extractor);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static TensorflowModel bertFromDirectory(@NonNull String modelDir) {
+        return fromDirectory(modelDir, new BertSrlExampleExtractor(
+            new WordPieceTokenizer(Paths.get(modelDir, "model", "assets", "vocab.txt").toString())));
     }
 
 }

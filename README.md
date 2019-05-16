@@ -1,4 +1,5 @@
 # SemParse
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 SemParse provides common utilities for interfacing with lexical resources in the [SemLink](https://verbs.colorado.edu/semlink/)
 project, as well as tools for parsing and extraction.
@@ -14,7 +15,7 @@ See a demo of the VerbNet parser in action [here](http://verbnet-semantic-parser
 Provides a VerbNet parser that uses [VerbNet](http://verbs.colorado.edu/~mpalmer/projects/verbnet.html) class predictions and 
 [PropBank](https://propbank.github.io/) semantic roles to align to a VerbNet frame and produce VerbNet semantic representations.
 
-To use the parser, you will need to download and unzip the [pre-trained models and mapping files](https://drive.google.com/open?id=12krafgEoEVKFue9zZxj2zkPxIQH1pLV4).
+To use the parser, you will need to download and unzip the [pre-trained models and mapping files](https://drive.google.com/open?id=1zI8HiaVS85Z3OPAm0w285z8sRj3VuJfX).
 
 The API is a work in progress (as the project itself is not stable), but an overview of current usage is shown here:
 ```java
