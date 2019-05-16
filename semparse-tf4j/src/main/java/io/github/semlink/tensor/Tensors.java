@@ -19,7 +19,7 @@ package io.github.semlink.tensor;
 import org.tensorflow.Tensor;
 import org.tensorflow.example.SequenceExample;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +69,7 @@ public final class Tensors {
     public static List<String> toStringList(@NonNull byte[][] bytes) {
         List<String> result = new ArrayList<>();
         for (byte[] word : bytes) {
-            result.add(new String(word, Charset.defaultCharset()));
+            result.add(new String(word, StandardCharsets.UTF_8));
         }
         return result;
     }

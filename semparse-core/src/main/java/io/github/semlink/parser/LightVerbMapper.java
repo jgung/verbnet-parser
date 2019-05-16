@@ -26,10 +26,11 @@ import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.clearwsd.verbnet.VnIndex;
 import io.github.semlink.app.Span;
-import io.github.semlink.util.TsvUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.github.semlink.util.TsvUtils.readTsv;
 
 /**
  * Check if the given proposition corresponds to a light verb, and map to the corresponding nominal propositional structure
@@ -42,19 +43,21 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class LightVerbMapper implements PredicateMapper<VnClass> {
 
-    private Map<String, Map<String, VnClass>> mappings;
+    private Map<String, Map<String, VnMember>> mappings;
 
     @Override
     public Optional<Span<VnClass>> mapPredicate(@NonNull DepNode rel) {
         String verb = rel.feature(FeatureType.Lemma);
-        Map<String, VnClass> lvMappings = mappings.get(verb);
+        Map<String, VnMember> lvMappings = mappings.get(verb);
         if (null == lvMappings) {
             return Optional.empty();
         }
-        for (Map.Entry<String, VnClass> lemma : lvMappings.entrySet()) {
+        for (Map.Entry<String, VnMember> lemma : lvMappings.entrySet()) {
             for (DepNode child : rel.children()) {
                 if (lemma.getKey().equals(child.feature(FeatureType.Lemma))) {
-                    return Optional.of(new Span<>(lemma.getValue(), child.index(), child.index()));
+                    // TODO: extract out this side effect (or update PropBank mapping logic to support nominal lemmas)
+                    child.addFeature(FeatureType.Lemma, lemma.getValue().lemma);
+                    return Optional.of(new Span<>(lemma.getValue().vnClass, child.index(), child.index()));
                 }
             }
         }
@@ -69,24 +72,36 @@ public class LightVerbMapper implements PredicateMapper<VnClass> {
     public static LightVerbMapper fromMappingsPath(@NonNull String mappingsPath,
                                                    @NonNull VnIndex verbNet) {
         try {
-            Map<String, Map<String, String>> verbNounClassMap = TsvUtils.tsv2Map(mappingsPath, 0, 1, 2);
-            Map<String, Map<String, VnClass>> result = new HashMap<>();
-            for (Map.Entry<String, Map<String, String>> entry : verbNounClassMap.entrySet()) {
-                Map<String, VnClass> clsMap = new HashMap<>();
-                for (Map.Entry<String, String> nounClass : entry.getValue().entrySet()) {
-                    VnClass byId = verbNet.getById(nounClass.getValue());
-                    if (null != byId) {
-                        clsMap.put(nounClass.getKey(), byId);
-                    } else {
-                        log.warn("Missing LV mapping: {}-{}", nounClass.getKey(), nounClass.getValue());
-                    }
+            Map<String, Map<String, VnMember>> result = new HashMap<>();
+            for (String[] fields : readTsv(mappingsPath)) {
+                if (fields.length < 4) {
+                    continue;
                 }
-                result.put(entry.getKey(), clsMap);
+                String lightVerb = fields[0];
+                String heavyNoun = fields[1];
+                String verbClass = fields[2];
+                String verbLemma = fields[3];
+
+
+                VnClass byId = verbNet.getById(verbClass);
+                if (null == byId) {
+                    log.warn("Missing LV mapping: {}-{}", heavyNoun, verbClass);
+                    continue;
+                }
+
+                Map<String, VnMember> nounClass = result.computeIfAbsent(lightVerb, ignored -> new HashMap<>());
+                nounClass.put(heavyNoun, new VnMember(byId, verbLemma));
             }
             return new LightVerbMapper(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @AllArgsConstructor
+    private static class VnMember {
+        private VnClass vnClass;
+        private String lemma;
     }
 
 }
