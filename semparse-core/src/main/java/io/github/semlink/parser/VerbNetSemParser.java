@@ -26,10 +26,13 @@ import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.semlink.app.Span;
+import io.github.semlink.propbank.type.FunctionTag;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import static io.github.semlink.parser.SemanticRoleLabeler.convert;
 
@@ -49,14 +52,19 @@ public class VerbNetSemParser {
     /**
      * Perform a shallow semantic parse on the input dependency parse for a given list of predicates.
      *
+     * <p/> 1. Identify potential light verbs and heavy nouns
+     * <p/> 2. Perform semantic role labeling with respect to identified verbal and nominal predicates
+     * <p/> 3. If resulting roles are correct, prefer heavy noun predicates over light verb predicates
+     *
      * @param parsed dependency parse
      * @param senses predicates with sense predictions
      * @return extracted VerbNet propositions/shallow semantic parse
      */
     public List<VerbNetProp> extractProps(@NonNull DepTree parsed,
                                           @NonNull List<SensePrediction<VnClass>> senses) {
-        List<VnClass> vnClasses = new ArrayList<>();
         List<Integer> predicateIndices = new ArrayList<>();
+        List<VerbAndNoun> lightVerbs = new ArrayList<>();
+
         for (SensePrediction<VnClass> sense : senses) {
             DepNode verb = parsed.get(sense.index());
 
@@ -66,19 +74,51 @@ public class VerbNetSemParser {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .findFirst();
-            if (possibleHeavyNoun.isPresent()) {
-                vnClasses.add(possibleHeavyNoun.get().label());
-                predicateIndices.add(possibleHeavyNoun.get().startIndex());
-            } else {
-                // otherwise just use verbal prop
-                vnClasses.add(sense.sense());
-                predicateIndices.add(sense.index());
-            }
+
+            VerbAndNoun instance = new VerbAndNoun()
+                    .verbIndex(predicateIndices.size())
+                    .verbClass(sense.sense());
+
+            predicateIndices.add(sense.index());
+            lightVerbs.add(instance);
+
+            possibleHeavyNoun.ifPresent(heavyNoun -> {
+                instance.nominalIndex(predicateIndices.size())
+                        .nominalClass(heavyNoun.label());
+                predicateIndices.add(heavyNoun.startIndex());
+            });
         }
 
         List<Proposition<DepNode, PropBankArg>> props = roleLabeler.parse(parsed, predicateIndices);
-        List<DefaultVerbNetProp> vnProps = aligner.align(parsed, convert(props, vnClasses));
+
+        List<Proposition<VnClass, PropBankArg>> filtered = new ArrayList<>();
+        for (VerbAndNoun lv : lightVerbs) {
+            if (lv.nominalClass == null) {
+                filtered.add(convert(props.get(lv.verbIndex), lv.verbClass));
+                continue;
+            }
+
+            Proposition<DepNode, PropBankArg> nominalProp = props.get(lv.nominalIndex);
+            if (nominalProp.arguments().spans().stream().anyMatch(arg -> arg.label().getFunctionTag() == FunctionTag.LVB)) {
+                // exclude any props without LVB annotated–this indicates the role labels were not correct
+                filtered.add(convert(nominalProp, lv.nominalClass));
+            } else {
+                // fallback to verbal proposition if nominal event structure not parsed correctly
+                filtered.add(convert(props.get(lv.verbIndex), lv.verbClass));
+            }
+        }
+
+        List<DefaultVerbNetProp> vnProps = aligner.align(parsed, filtered);
         return vnProps.stream().map(prop -> (VerbNetProp) prop).collect(Collectors.toList());
+    }
+
+    @Setter
+    @Accessors(fluent = true)
+    private static class VerbAndNoun {
+        int verbIndex;
+        int nominalIndex;
+        VnClass verbClass;
+        VnClass nominalClass;
     }
 
 }
