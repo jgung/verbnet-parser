@@ -17,6 +17,8 @@
 package io.github.semlink.app;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -66,6 +68,36 @@ public final class ShallowParserUtils {
         return new DefaultChunking<>(chunking.spans().stream()
                 .map(span -> Span.convert(span, labelMapper.apply(span.label())))
                 .collect(Collectors.toList()));
+    }
+
+    public static <T> List<String> spans2Tags(@NonNull List<Span<T>> spans, Function<T, String> labelMapper, int size) {
+        if (spans.size() == 0) {
+            return Collections.nCopies(size, Tag.OUT.prefix());
+        }
+        List<Span<T>> ordered = spans.stream()
+                .sorted(Comparator.comparing(Span::startIndex))
+                .collect(Collectors.toList());
+
+        List<String> result = new ArrayList<>();
+        int last = 0;
+        for (Span<T> span : ordered) {
+            if (span.startIndex() - last > 0) {
+                result.addAll(Collections.nCopies(span.startIndex() - last, Tag.OUT.prefix()));
+            }
+            int spanLength = span.endIndex() - span.startIndex() + 1;
+            String first = Tag.BEGIN.prefix() + "-" + labelMapper.apply(span.label());
+            if (spanLength == 1) {
+                result.add(first);
+            } else {
+                result.add(first);
+                result.addAll(Collections.nCopies(spanLength - 1, Tag.IN.prefix() + "-" + labelMapper.apply(span.label())));
+            }
+            last = span.endIndex() + 1;
+        }
+        if (size - result.size() > 0) {
+            result.addAll(Collections.nCopies(size - result.size(), Tag.OUT.prefix()));
+        }
+        return result;
     }
 
     public static List<Span<String>> tags2Spans(@NonNull List<String> labels) {
