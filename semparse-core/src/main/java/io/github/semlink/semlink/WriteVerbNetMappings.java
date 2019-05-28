@@ -63,6 +63,19 @@ public final class WriteVerbNetMappings {
         return pb2VerbNet.asMap();
     }
 
+    public static Map<String, Collection<String>> members() {
+        Multimap<String, String> members = LinkedListMultimap.create();
+        VnIndex index = new DefaultVnIndex();
+        for (VnClass root : index.roots()) {
+            for (VnClass cls : root.related()) {
+                for (VnMember member : cls.members()) {
+                    members.put(root.verbNetId().rootId(), member.name());
+                }
+            }
+        }
+        return members.asMap();
+    }
+
     public static void main(String[] args) throws IOException {
         String outputDirectory = args.length > 0 ? args[0] : ".";
 
@@ -73,6 +86,13 @@ public final class WriteVerbNetMappings {
                         .sorted()
                         .collect(Collectors.toList()))));
         om.writeValue(new File(outputDirectory, "pb2vn.json"), pb2VerbNet);
+
+        Map<String, List<String>> memberMap = new TreeMap<>(members().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream()
+                        .distinct()
+                        .sorted()
+                        .collect(Collectors.toList()))));
+        om.writeValue(new File(outputDirectory, "vncls-members.json"), memberMap);
     }
 
 }
