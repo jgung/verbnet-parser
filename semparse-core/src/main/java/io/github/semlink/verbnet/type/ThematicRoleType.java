@@ -44,6 +44,7 @@ public enum ThematicRoleType {
     CO_AGENT,
     CO_PATIENT,
     CO_THEME,
+    CO_TOPIC,
     CONTEXT,
     DESTINATION,
     DURATION,
@@ -72,6 +73,7 @@ public enum ThematicRoleType {
     TIME,
     TOPIC,
     TRAJECTORY,
+    V_FINAL_STATE,
     VALUE,
     NONE,
     VERB,
@@ -82,7 +84,7 @@ public enum ThematicRoleType {
     }
 
     public boolean isEndingPoint() {
-        return EnumSet.of(GOAL, RESULT, PRODUCT, DESTINATION, FINAL_TIME, RECIPIENT, TRAJECTORY).contains(this);
+        return EnumSet.of(GOAL, RESULT, PRODUCT, DESTINATION, FINAL_TIME, RECIPIENT, TRAJECTORY, V_FINAL_STATE).contains(this);
     }
 
     public boolean isAgentive() {
@@ -112,6 +114,10 @@ public enum ThematicRoleType {
                 return Optional.of(AGENT);
             } else if (themRole.equalsIgnoreCase("AGENT_J")) {
                 return Optional.of(CO_AGENT);
+            } else if (themRole.equalsIgnoreCase("TOPIC_I")) {
+                return Optional.of(TOPIC);
+            } else if (themRole.equalsIgnoreCase("TOPIC_J")) {
+                return Optional.of(CO_TOPIC);
             }
             log.warn("Unrecognized thematic role type: {}", themRole);
         }
