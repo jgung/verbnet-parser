@@ -16,10 +16,14 @@
 
 package io.github.semlink.app.api.model;
 
+import com.google.common.collect.Maps;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.github.semlink.app.Chunking;
@@ -43,13 +47,23 @@ import lombok.experimental.Accessors;
 public class PropModel {
 
     private String sense;
+    private EventModel mainEvent;
     private List<EventModel> events = new ArrayList<>();
     private List<SemlinkRoleModel> spans = new ArrayList<>();
 
     public PropModel(DefaultVerbNetProp prop) {
         this.sense = prop.proposition().predicate().verbNetId().toString();
-        this.events = prop.events().stream().map(EventModel::new).collect(Collectors.toList());
+        this.events = prop.subEvents().stream().map(EventModel::new).collect(Collectors.toList());
+        this.mainEvent = prop.mainEvent().map(EventModel::new).orElse(null);
         this.spans = getSpans(prop.proposition().arguments(), prop.tokens(), prop.proposition().relIndex());
+        Map<String, EventModel> modelMap = Maps.uniqueIndex(events, EventModel::name);
+        if (null != mainEvent) {
+            for (SemanticPredicateModel predicate : mainEvent.predicates()) {
+                for (SemanticPredicateModel.SemanticArgumentModel arg : predicate.args()) {
+                    arg.eventIndex(Optional.ofNullable(modelMap.get(arg.value())).map(EventModel::eventIndex).orElse(-1));
+                }
+            }
+        }
     }
 
     private static List<SemlinkRoleModel> getSpans(Chunking<SemlinkRole> chunking, List<String> tokens, int predIndex) {

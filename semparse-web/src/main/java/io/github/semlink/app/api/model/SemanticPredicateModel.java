@@ -54,6 +54,7 @@ public class SemanticPredicateModel {
     private String predicateType;
     private List<SemanticArgumentModel> args = new ArrayList<>();
     private boolean polarity = true;
+    private int eventIndex;
 
     public SemanticPredicateModel(String eventName, SemanticPredicate predicate) {
         this.eventName = eventName;
@@ -80,6 +81,8 @@ public class SemanticPredicateModel {
 
         private String type;
         private String value;
+
+        private int eventIndex = -1;
 
         public SemanticArgumentModel(SemanticArgument argument) {
             this.type = StringUtils.capitalized(argument.type());

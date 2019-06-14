@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.github.clearwsd.verbnet.VnClass;
@@ -60,12 +61,25 @@ public class DefaultVerbNetProp implements VerbNetProp {
     }
 
     @Override
-    public List<Event> events() {
+    public List<Event> subEvents() {
         ListMultimap<EventArgument, SemanticPredicate> predicatesByEvent = Multimaps.index(predicates, SemanticPredicate::event);
-        return predicatesByEvent.keySet().stream()
-                .map(entry -> new Event(entry, predicatesByEvent.get(entry)))
-                .sorted(Comparator.comparing(e -> e.event.id()))
+        List<Event> subEvents = new ArrayList<>();
+        predicatesByEvent.keySet().stream()
+                .filter(e -> !e.mainEvent())
+                .sorted(Comparator.comparing(EventArgument::id))
+                .forEach(entry -> subEvents.add(new Event(subEvents.size(), entry, predicatesByEvent.get(entry))));
+        return subEvents;
+    }
+
+    @Override
+    public Optional<Event> mainEvent() {
+        List<SemanticPredicate> mainEventPredicates = predicates.stream()
+                .filter(pred -> pred.event().mainEvent())
                 .collect(Collectors.toList());
+        if (mainEventPredicates.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(new Event(-1, mainEventPredicates.get(0).event(), mainEventPredicates));
     }
 
     @Override

@@ -8,7 +8,7 @@ import RoleLabels from './RoleLabels';
 import Semantics from './Semantics';
 
 const Proposition = ({
-  sense, spans, events, showVerbNet, showPropBank,
+  sense, spans, mainEvent, events, showVerbNet, showPropBank,
 }) => (
   <div>
     { spans && (
@@ -20,7 +20,7 @@ const Proposition = ({
     />
     ) }
     { spans && <Divider hidden /> }
-    { events && <Semantics events={events} /> }
+    { events && <Semantics events={events} mainEvent={mainEvent} /> }
   </div>
 );
 
@@ -41,7 +41,7 @@ const Propositions = ({
 }) => {
   const propPanes = propositions.map((prop, index) => {
     const {
-      sense, spans, events,
+      sense, spans, events, mainEvent,
     } = prop;
     return {
       menuItem: sense + (' '.repeat(index)),
@@ -52,6 +52,7 @@ const Propositions = ({
           spans={spans}
           events={showSemantics && events}
           sense={sense}
+          mainEvent={mainEvent}
         />
       ),
     };
@@ -59,7 +60,7 @@ const Propositions = ({
 
   return (
     <Tab
-      menu={{ stackable: true, secondary: true, pointing: true }}
+      menu={{ color: 'blue', stackable: true, secondary: true, pointing: true }}
       activeIndex={propIndex}
       onTabChange={handleTabChange}
       panes={propPanes}

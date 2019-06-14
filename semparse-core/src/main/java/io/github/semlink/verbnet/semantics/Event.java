@@ -16,8 +16,10 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class Event {
 
-    public EventArgument event;
+    private int eventIndex;
 
-    public List<SemanticPredicate> predicates;
+    private EventArgument event;
+
+    private List<SemanticPredicate> predicates;
 
 }

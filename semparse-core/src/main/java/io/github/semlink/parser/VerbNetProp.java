@@ -19,6 +19,7 @@ package io.github.semlink.parser;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.github.clearwsd.verbnet.VnClass;
 import io.github.semlink.app.Span;
@@ -43,7 +44,12 @@ public interface VerbNetProp {
     /**
      * Ordered list of {@link Event events} for this proposition, each with associated semantic representations.
      */
-    List<Event> events();
+    List<Event> subEvents();
+
+    /**
+     * Provides semantic representations associated with the main event.
+     */
+    Optional<Event> mainEvent();
 
     /**
      * Return thematic roles organized by type.

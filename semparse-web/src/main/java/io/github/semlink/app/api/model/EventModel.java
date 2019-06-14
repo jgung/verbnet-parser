@@ -40,14 +40,17 @@ import lombok.experimental.Accessors;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class EventModel {
 
+    private int eventIndex;
+
     private String name;
 
     private List<SemanticPredicateModel> predicates;
 
     public EventModel(@NonNull Event event) {
-        this.name = event.event.id();
+        this.eventIndex = event.eventIndex();
+        this.name = event.event().id();
         this.predicates = event.predicates().stream()
-                .map(pred -> new SemanticPredicateModel(name, pred))
+                .map(pred -> new SemanticPredicateModel(name, pred).eventIndex(event.eventIndex()))
                 .collect(Collectors.toList());
     }
 

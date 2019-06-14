@@ -52,7 +52,9 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
             }
             id = matcher.group(2).toUpperCase();
             if (id.equals("E")) {
-                id = "E1";
+                mainEvent = true;
+            } else {
+                id = id.toLowerCase();
             }
         } else {
             log.warn("Failed to parse event argument: {}", value);
@@ -69,6 +71,7 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
 
     private EventRelation relation = EventRelation.EVENT;
     private String id = "E1";
+    private boolean mainEvent = false;
 
     @Override
     public String toString() {

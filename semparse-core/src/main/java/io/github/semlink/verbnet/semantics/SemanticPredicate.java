@@ -16,8 +16,10 @@
 
 package io.github.semlink.verbnet.semantics;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.github.clearwsd.verbnet.semantics.VnPredicatePolarity;
@@ -43,7 +45,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public class SemanticPredicate {
 
-    public static final String DEFAULT_EVENT = "E0";
+    public static final String DEFAULT_EVENT = "E";
 
     private SemanticPredicateType type;
     private List<SemanticArgument> arguments;
@@ -68,7 +70,13 @@ public class SemanticPredicate {
                 .map(SemanticPredicate::of)
                 .collect(Collectors.toList());
 
-        return new SemanticPredicate(type, arguments, desc.polarity() == VnPredicatePolarity.TRUE);
+        List<SemanticArgument> result = new ArrayList<>();
+        if (arguments.stream().filter(arg -> arg.type == SemanticArgumentType.EVENT).count() > 1) {
+            result.add(new EventArgument<>("E"));
+        }
+        result.addAll(arguments);
+
+        return new SemanticPredicate(type, result, desc.polarity() == VnPredicatePolarity.TRUE);
     }
 
     public static SemanticArgument of(@NonNull VnSemanticArgument argType) {
@@ -85,6 +93,19 @@ public class SemanticPredicate {
             case VERBSPECIFIC:
                 return new VerbSpecificArgument<>(argType.value());
         }
+    }
+
+    public Optional<String> description() {
+        if (type == SemanticPredicateType.CAUSE) {
+            List<EventArgument> args = arguments.stream().filter(a -> a.type == SemanticArgumentType.EVENT)
+                    .map(a -> (EventArgument) a)
+                    .filter(a -> !a.mainEvent())
+                    .collect(Collectors.toList());
+            if (args.size() == 2) {
+                return Optional.of(String.format("%s causes %s", args.get(0).id(), args.get(1).id()));
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
