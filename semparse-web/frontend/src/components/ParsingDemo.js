@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import {
   Accordion,
-  Button,
+  Button, Checkbox,
   Form,
   Icon,
   Label,
@@ -48,6 +48,7 @@ class ParsingDemo extends Component {
       showPropBank: true,
       showVerbNet: true,
       showSemantics: true,
+      functionalSemantics: true,
     };
 
     handleTabChange = (e, { activeIndex }) => {
@@ -68,6 +69,10 @@ class ParsingDemo extends Component {
 
     toggleSemantics = () => {
       this.setState(prevState => ({ showSemantics: !prevState.showSemantics }));
+    };
+
+    toggleFunctionalSemantics = () => {
+      this.setState(prevState => ({ functionalSemantics: !prevState.functionalSemantics }));
     };
 
     toggleOptions = () => {
@@ -129,7 +134,8 @@ class ParsingDemo extends Component {
 
     renderResult() {
       const {
-        showPropBank, showVerbNet, showSemantics, showOptions, message, activeIndex,
+        showPropBank, showVerbNet, showSemantics, functionalSemantics, showOptions, message,
+        activeIndex,
       } = this.state;
       const { mobile } = this.props;
 
@@ -174,6 +180,7 @@ class ParsingDemo extends Component {
             showVerbNet={showVerbNet}
             showSemantics={showSemantics}
             showTabs={mobile}
+            functionalSemantics={functionalSemantics}
           />
           <Accordion fluid>
             <Accordion.Title active={showOptions} index={0} onClick={this.toggleOptions}>
@@ -182,11 +189,28 @@ class ParsingDemo extends Component {
               View options
             </Accordion.Title>
             <Accordion.Content active={showOptions}>
-              <Button.Group>
-                <Button primary={showPropBank} content="PropBank" onClick={this.togglePropBank} />
-                <Button primary={showVerbNet} content="VerbNet" onClick={this.toggleVerbNet} />
-                <Button primary={showSemantics} content="Semantics" onClick={this.toggleSemantics} />
-              </Button.Group>
+              <Form>
+                <Form.Group>
+                  <Form.Field>
+                    <Checkbox checked={showPropBank} toggle label="PropBank" onChange={this.togglePropBank} />
+                  </Form.Field>
+                  <Form.Field>
+                    <Checkbox checked={showVerbNet} toggle label="VerbNet" onChange={this.toggleVerbNet} />
+                  </Form.Field>
+                  <Form.Field>
+                    <Checkbox checked={showSemantics} toggle label="Semantics" onChange={this.toggleSemantics} />
+                  </Form.Field>
+                  <Form.Field>
+                    <Checkbox
+                      disabled={!showSemantics}
+                      checked={functionalSemantics}
+                      toggle
+                      label="Semantics as Functions"
+                      onChange={this.toggleFunctionalSemantics}
+                    />
+                  </Form.Field>
+                </Form.Group>
+              </Form>
             </Accordion.Content>
           </Accordion>
         </Segment>

@@ -5,45 +5,106 @@ import {
   Icon,
   List,
   Tab,
-  Grid, Button,
+  Grid, Button, Segment,
 } from 'semantic-ui-react';
 
 const PREDICATE_TYPE_MAP = {
-  Cause: 'causes',
-  'Co Temporal': 'occurs with',
+  Cause: { nl: 'causes', functional: 'cause' },
+  'Co Temporal': { nl: 'occurs with', functional: 'co temporal' },
 };
 
 const Predicate = ({
-  predicateType, args, polarity, handleTabChange,
+  predicateType, args, polarity, handleTabChange, functionalView,
 }) => {
   let descr;
   if (PREDICATE_TYPE_MAP[predicateType]) {
     if (args.length === 2) {
-      descr = (
-        <span>
-          <Button
-            compact
-            basic
-            color="blue"
-            onClick={() => handleTabChange(args[0].eventIndex)}
-          >
-            {args[0].value}
-          </Button>
-          {' '}
-          {PREDICATE_TYPE_MAP[predicateType]}
-          {' '}
-          <Button
-            compact
-            basic
-            color="blue"
-            onClick={() => handleTabChange(args[1].eventIndex)}
-          >
-            {args[1].value}
-          </Button>
-        </span>
-      );
+      if (functionalView) {
+        descr = (
+          <span>
+            <b>
+              {PREDICATE_TYPE_MAP[predicateType].functional.toUpperCase().replace(' ', '_')}
+            </b>
+                    (
+            {' '}
+            <Button
+              compact
+              primary
+              basic
+              onClick={() => handleTabChange(args[0].eventIndex)}
+            >
+              {args[0].value}
+            </Button>
+            {', '}
+            <Button
+              compact
+              primary
+              basic
+              onClick={() => handleTabChange(args[1].eventIndex)}
+            >
+              {args[1].value}
+            </Button>
+          )
+          </span>
+        );
+      } else {
+        descr = (
+          <span>
+            <Button
+              compact
+              basic
+              color="blue"
+              onClick={() => handleTabChange(args[0].eventIndex)}
+            >
+              {args[0].value}
+            </Button>
+            {' '}
+            {PREDICATE_TYPE_MAP[predicateType].nl}
+            {' '}
+            <Button
+              compact
+              basic
+              color="blue"
+              onClick={() => handleTabChange(args[1].eventIndex)}
+            >
+              {args[1].value}
+            </Button>
+          </span>
+        );
+      }
     }
   }
+
+  if (functionalView) {
+    return (
+      <Segment style={{ fontSize: '1.2rem' }}>
+        {
+                  descr || (
+                  <span>
+                    <b>
+                      {!polarity && '¬'}
+                      {predicateType.toUpperCase().replace(' ', '_')}
+                    </b>
+                  (
+                    {' '}
+                    {args
+                      .map(a => (
+                        <span>
+                          {a.value ? <i style={{ fontSize: '1.1rem' }}>{a.value}</i> : <Icon name="question circle outline" />}
+                          {' '}
+                          <sub><b>{a.type.replace(' ', '_')}</b></sub>
+                        </span>
+                      ))
+                      .reduce((prev, curr) => [prev, ' ,  ', curr])}
+                    {' '}
+                          )
+                  </span>
+                  )
+              }
+      </Segment>
+    );
+  }
+
   return (
     <Card>
       <Card.Content>
@@ -82,6 +143,7 @@ const predicateShape = {
 const predicateWithFunc = {
   ...predicateShape,
   handleTabChange: PropTypes.func.isRequired,
+  functionalView: PropTypes.bool.isRequired,
 };
 
 Predicate.propTypes = predicateWithFunc;
@@ -97,26 +159,36 @@ class Semantics extends Component {
   setTab = activeIndex => this.setState({ activeIndex });
 
   render() {
-    const { events, mainEvent } = this.props;
+    const { events, mainEvent, functionalView } = this.props;
     const { activeIndex } = this.state;
     const panes = events.map(event => ({
       menuItem: event.name,
-      render: () => (
-        <Card.Group>
-          {
-              event.predicates.map(pred => (
-                <Predicate
-                  handleTabChange={this.setTab}
-                  key={pred.predicate + pred.predicateType}
-                  polarity={pred.polarity}
-                  args={pred.args}
-                  predicateType={pred.predicateType}
-                />
-              ))
-            }
-        </Card.Group>
-      ),
+      render: () => {
+        const predicates = event.predicates.map(pred => (
+          <Predicate
+            handleTabChange={this.setTab}
+            key={pred.predicate + pred.predicateType}
+            polarity={pred.polarity}
+            args={pred.args}
+            predicateType={pred.predicateType}
+            functionalView={functionalView}
+          />
+        ));
+        return functionalView ? <div>{predicates}</div> : <Card.Group>{predicates}</Card.Group>;
+      }
+      ,
     }));
+
+    const predicates = mainEvent && mainEvent.predicates.map(pred => (
+      <Predicate
+        handleTabChange={this.setTab}
+        key={pred.predicate + pred.predicateType}
+        polarity={pred.polarity}
+        args={pred.args}
+        predicateType={pred.predicateType}
+        functionalView={functionalView}
+      />
+    ));
     return (
       <Grid columns="equal" stackable>
         <Grid.Row>
@@ -133,6 +205,7 @@ class Semantics extends Component {
               </Grid.Column>
               )
             }
+          {!mainEvent && <Grid.Column />}
           {
               mainEvent
               && (
@@ -143,19 +216,11 @@ class Semantics extends Component {
                     {
                       menuItem: 'E',
                       render: () => (
-                        <Card.Group>
-                          {
-                                    mainEvent.predicates.map(pred => (
-                                      <Predicate
-                                        handleTabChange={this.setTab}
-                                        key={pred.predicate + pred.predicateType}
-                                        polarity={pred.polarity}
-                                        args={pred.args}
-                                        predicateType={pred.predicateType}
-                                      />
-                                    ))
-                                  }
-                        </Card.Group>
+                        functionalView ? <div>{predicates}</div> : (
+                          <Card.Group>
+                            { predicates }
+                          </Card.Group>
+                        )
                       ),
                     },
                   ]}
@@ -163,6 +228,8 @@ class Semantics extends Component {
               </Grid.Column>
               )
             }
+          {panes.length === 0 && <Grid.Column />}
+
         </Grid.Row>
       </Grid>
     );
@@ -182,6 +249,7 @@ Semantics.propTypes = {
       predicates: PropTypes.arrayOf(PropTypes.shape(predicateShape)),
     },
   ),
+  functionalView: PropTypes.bool.isRequired,
 };
 
 Semantics.defaultProps = {

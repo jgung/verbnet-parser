@@ -8,7 +8,7 @@ import RoleLabels from './RoleLabels';
 import Semantics from './Semantics';
 
 const Proposition = ({
-  sense, spans, mainEvent, events, showVerbNet, showPropBank,
+  sense, spans, mainEvent, events, showVerbNet, showPropBank, functionalSemantics,
 }) => (
   <div>
     { spans && (
@@ -20,7 +20,13 @@ const Proposition = ({
     />
     ) }
     { spans && <Divider hidden /> }
-    { events && <Semantics events={events} mainEvent={mainEvent} /> }
+    { events && (
+    <Semantics
+      functionalView={functionalSemantics}
+      events={events}
+      mainEvent={mainEvent}
+    />
+    ) }
   </div>
 );
 
@@ -34,11 +40,12 @@ Proposition.propTypes = {
   ...propositionTypes,
   showVerbNet: PropTypes.bool.isRequired,
   showPropBank: PropTypes.bool.isRequired,
+  functionalSemantics: PropTypes.bool.isRequired,
 };
 
 const Propositions = ({
   propositions, propIndex, handleTabChange, showPropBank, showVerbNet, showSemantics,
-  showTabs = false,
+  functionalSemantics, showTabs = false,
 }) => {
   if (showTabs) {
     if (propositions.length >= propIndex) {
@@ -69,6 +76,7 @@ const Propositions = ({
         <Proposition
           showPropBank={showPropBank}
           showVerbNet={showVerbNet}
+          functionalSemantics={functionalSemantics}
           spans={spans}
           events={showSemantics && events}
           sense={sense}
@@ -97,11 +105,13 @@ Propositions.propTypes = {
   showVerbNet: PropTypes.bool.isRequired,
   showSemantics: PropTypes.bool.isRequired,
   handleTabChange: PropTypes.func.isRequired,
+  functionalSemantics: PropTypes.bool,
   showTabs: PropTypes.bool,
 };
 
 Propositions.defaultProps = {
   showTabs: false,
+  functionalSemantics: false,
 };
 
 export default Propositions;
