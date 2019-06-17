@@ -118,7 +118,7 @@ class Semantics extends Component {
       ),
     }));
     return (
-      <Grid columns="equal">
+      <Grid columns="equal" stackable>
         <Grid.Row>
           {
               panes.length > 0

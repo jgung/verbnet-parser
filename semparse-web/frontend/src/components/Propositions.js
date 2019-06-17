@@ -38,7 +38,27 @@ Proposition.propTypes = {
 
 const Propositions = ({
   propositions, propIndex, handleTabChange, showPropBank, showVerbNet, showSemantics,
+  showTabs = false,
 }) => {
+  if (showTabs) {
+    if (propositions.length >= propIndex) {
+      const {
+        sense, spans, events, mainEvent,
+      } = propositions[propIndex];
+      return (
+        <Proposition
+          showPropBank={showPropBank}
+          showVerbNet={showVerbNet}
+          spans={spans}
+          events={showSemantics && events}
+          sense={sense}
+          mainEvent={mainEvent}
+        />
+      );
+    }
+    return '';
+  }
+
   const propPanes = propositions.map((prop, index) => {
     const {
       sense, spans, events, mainEvent,
@@ -60,7 +80,9 @@ const Propositions = ({
 
   return (
     <Tab
-      menu={{ color: 'blue', stackable: true, secondary: true, pointing: true }}
+      menu={{
+        color: 'blue', stackable: true, secondary: true, pointing: true,
+      }}
       activeIndex={propIndex}
       onTabChange={handleTabChange}
       panes={propPanes}
@@ -75,7 +97,11 @@ Propositions.propTypes = {
   showVerbNet: PropTypes.bool.isRequired,
   showSemantics: PropTypes.bool.isRequired,
   handleTabChange: PropTypes.func.isRequired,
+  showTabs: PropTypes.bool,
 };
 
+Propositions.defaultProps = {
+  showTabs: false,
+};
 
 export default Propositions;

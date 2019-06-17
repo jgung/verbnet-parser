@@ -131,6 +131,7 @@ class ParsingDemo extends Component {
       const {
         showPropBank, showVerbNet, showSemantics, showOptions, message, activeIndex,
       } = this.state;
+      const { mobile } = this.props;
 
       const { tokens, props } = message;
       if (!props) {
@@ -161,7 +162,7 @@ class ParsingDemo extends Component {
       });
 
       return (
-        <Segment>
+        <Segment textAlign="left">
           <Message style={{ flexDirection: 'row' }}>
             {sentence}
           </Message>
@@ -172,6 +173,7 @@ class ParsingDemo extends Component {
             showPropBank={showPropBank}
             showVerbNet={showVerbNet}
             showSemantics={showSemantics}
+            showTabs={mobile}
           />
           <Accordion fluid>
             <Accordion.Title active={showOptions} index={0} onClick={this.toggleOptions}>
@@ -218,7 +220,7 @@ class ParsingDemo extends Component {
                   primary
                   size={mobile ? 'small' : 'huge'}
                   onClick={this.submitUtterance}
-                  content={mobile ? 'Try it out!' : 'Try it out!'}
+                  content="Try it out!"
                 />
                         )}
               onChange={this.updateUtterance}
