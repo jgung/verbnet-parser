@@ -205,7 +205,7 @@ class ParsingDemo extends Component {
                       disabled={!showSemantics}
                       checked={functionalSemantics}
                       toggle
-                      label="Semantics as Functions"
+                      label="VN Index View"
                       onChange={this.toggleFunctionalSemantics}
                     />
                   </Form.Field>

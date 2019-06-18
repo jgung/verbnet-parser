@@ -11,6 +11,10 @@ import {
 const PREDICATE_TYPE_MAP = {
   Cause: { nl: 'causes', functional: 'cause' },
   'Co Temporal': { nl: 'occurs with', functional: 'co temporal' },
+  Overlaps: { nl: 'overlaps with', functional: 'overlaps' },
+  Meets: { nl: 'meets', functional: 'meets' },
+  'Repeated Sequence': { nl: 'repeats with', functional: 'repeated sequence' },
+  'Repeat Sequence': { nl: 'repeats with', functional: 'repeated sequence' },
 };
 
 const Predicate = ({
@@ -18,60 +22,54 @@ const Predicate = ({
 }) => {
   let descr;
   if (PREDICATE_TYPE_MAP[predicateType]) {
-    if (args.length === 2) {
-      if (functionalView) {
-        descr = (
-          <span>
-            <b>
-              {PREDICATE_TYPE_MAP[predicateType].functional.toUpperCase().replace(' ', '_')}
-            </b>
-                    (
-            {' '}
-            <Button
-              compact
-              primary
-              basic
-              onClick={() => handleTabChange(args[0].eventIndex)}
-            >
-              {args[0].value}
-            </Button>
-            {', '}
-            <Button
-              compact
-              primary
-              basic
-              onClick={() => handleTabChange(args[1].eventIndex)}
-            >
-              {args[1].value}
-            </Button>
-          )
-          </span>
-        );
-      } else {
-        descr = (
-          <span>
-            <Button
-              compact
-              basic
-              color="blue"
-              onClick={() => handleTabChange(args[0].eventIndex)}
-            >
-              {args[0].value}
-            </Button>
-            {' '}
-            {PREDICATE_TYPE_MAP[predicateType].nl}
-            {' '}
-            <Button
-              compact
-              basic
-              color="blue"
-              onClick={() => handleTabChange(args[1].eventIndex)}
-            >
-              {args[1].value}
-            </Button>
-          </span>
-        );
-      }
+    if (args.length === 2 && !functionalView) {
+      descr = (
+        <span>
+          <Button
+            compact
+            basic
+            color="blue"
+            onClick={() => handleTabChange(args[0].eventIndex)}
+          >
+            {args[0].value}
+          </Button>
+          {' '}
+          {PREDICATE_TYPE_MAP[predicateType].nl}
+          {' '}
+          <Button
+            compact
+            basic
+            color="blue"
+            onClick={() => handleTabChange(args[1].eventIndex)}
+          >
+            {args[1].value}
+          </Button>
+        </span>
+      );
+    } else if (functionalView) {
+      descr = (
+        <span>
+          <b>
+            {PREDICATE_TYPE_MAP[predicateType].functional.toUpperCase().replace(' ', '_')}
+          </b>
+            (
+          {
+                args
+                  .map(a => (
+                    <Button
+                      compact
+                      primary
+                      basic
+                      onClick={() => handleTabChange(a.eventIndex)}
+                    >
+                      {a.value}
+                    </Button>
+                  ))
+                  .reduce((prev, curr) => [prev, ', ', curr])
+            }
+            )
+        </span>
+      );
     }
   }
 
