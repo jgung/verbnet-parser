@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
-  Divider,
   Tab,
 } from 'semantic-ui-react';
 import RoleLabels from './RoleLabels';
@@ -19,7 +18,6 @@ const Proposition = ({
       sense={sense}
     />
     ) }
-    { spans && <Divider hidden /> }
     { events && (
     <Semantics
       functionalView={functionalSemantics}
