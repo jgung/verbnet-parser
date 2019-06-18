@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Label, Message } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import { getDemoState } from '../redux/selectors';
-import * as actions from '../redux/actions';
 
 const Labels = ({ propIndex, tokens, setTabIndex }) => {
   const sentence = tokens.map((token) => {
@@ -39,21 +36,4 @@ Labels.propTypes = {
   setTabIndex: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  const demoState = getDemoState(state);
-  const { tokens, props } = demoState.message;
-  return {
-    propIndex: Math.min(demoState.activeIndex, props.length - 1),
-    tokens,
-  };
-};
-
-const mapDispatchToProps = dispatch => (
-  {
-    setTabIndex: (activeIndex) => {
-      dispatch(actions.setTabIndex(activeIndex));
-    },
-  }
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Labels);
+export default Labels;

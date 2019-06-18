@@ -1,7 +1,7 @@
 import { Container, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ParsingDemo from './ParsingDemo';
+import ParsingDemoContainer from '../redux/containers/ParsingDemoContainer';
 
 const HomepageHeading = ({ mobile }) => (
   <Container text>
@@ -17,7 +17,7 @@ const HomepageHeading = ({ mobile }) => (
         marginTop: mobile ? '1.5em' : '3em',
       }}
     />
-    <ParsingDemo mobile={mobile} />
+    <ParsingDemoContainer mobile={mobile} />
   </Container>
 );
 
