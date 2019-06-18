@@ -16,6 +16,7 @@
 
 package io.github.semlink.semlink.aligner;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultiset;
@@ -52,6 +53,7 @@ import static io.github.semlink.verbnet.type.ThematicRoleType.INITIAL_LOCATION;
 import static io.github.semlink.verbnet.type.ThematicRoleType.INITIAL_STATE;
 import static io.github.semlink.verbnet.type.ThematicRoleType.INSTRUMENT;
 import static io.github.semlink.verbnet.type.ThematicRoleType.LOCATION;
+import static io.github.semlink.verbnet.type.ThematicRoleType.MANNER;
 import static io.github.semlink.verbnet.type.ThematicRoleType.MATERIAL;
 import static io.github.semlink.verbnet.type.ThematicRoleType.PATH;
 import static io.github.semlink.verbnet.type.ThematicRoleType.PREDICATE;
@@ -114,10 +116,12 @@ public class SelResAligner implements PbVnAligner {
     public static Multiset<ThematicRoleType> getThematicRolesGreedy(@NonNull PropBankPhrase phrase) {
         Multiset<ThematicRoleType> themRoles = getThematicRolesStrict(phrase);
         Optional<PrepType> prep = getPrep(phrase.tokens());
+
+        boolean possibleLocation = !ImmutableSet.of(FunctionTag.PRP, FunctionTag.MNR).contains(phrase.argument().getFunctionTag());
         if (prep.isPresent()) {
             PrepType type = prep.get();
             if (type.maybeDestination()) {
-                if (phrase.argument().getFunctionTag() != FunctionTag.PRP) {
+                if (possibleLocation) {
                     themRoles.add(DESTINATION);
                 }
                 themRoles.add(GOAL);
@@ -127,10 +131,10 @@ public class SelResAligner implements PbVnAligner {
                 themRoles.add(RESULT);
                 themRoles.add(PREDICATE);
             }
-            if (type.maybeLocation() && phrase.argument().getFunctionTag() != FunctionTag.TMP) {
+            if (possibleLocation && type.maybeLocation() && phrase.argument().getFunctionTag() != FunctionTag.TMP) {
                 themRoles.add(LOCATION);
             }
-            if (type.isTrajectory() || type == PrepType.FROM) {
+            if (possibleLocation && (type.isTrajectory() || type == PrepType.FROM)) {
                 themRoles.add(DIRECTION);
                 themRoles.add(TRAJECTORY);
             }
@@ -223,6 +227,10 @@ public class SelResAligner implements PbVnAligner {
 
         if (phrase.getNumber() == ArgNumber.A0) {
             themRoles.add(AGENT);
+        }
+
+        if (phrase.getFunctionTag() == FunctionTag.MNR) {
+            themRoles.add(MANNER);
         }
 
         return themRoles;
