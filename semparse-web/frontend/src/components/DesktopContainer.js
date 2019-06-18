@@ -68,4 +68,3 @@ DesktopContainer.propTypes = {
 };
 
 export default DesktopContainer;
-

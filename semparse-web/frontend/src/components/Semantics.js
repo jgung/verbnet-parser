@@ -57,6 +57,7 @@ const Predicate = ({
                 args
                   .map(a => (
                     <Button
+                      key={a.type + a.value}
                       compact
                       primary
                       basic
@@ -87,7 +88,7 @@ const Predicate = ({
                     {' '}
                     {args
                       .map(a => (
-                        <span>
+                        <span key={a.type + a.value}>
                           {a.value ? <i style={{ fontSize: '1.1rem' }}>{a.value}</i> : <Icon name="question circle outline" />}
                           {' '}
                           <sub><b>{a.type.replace(' ', '_')}</b></sub>

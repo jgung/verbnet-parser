@@ -5,12 +5,15 @@ import {
   Button, Checkbox,
   Form,
   Icon,
-  Label,
   Message,
   Segment,
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Propositions from './Propositions';
+import * as actions from '../redux/actions';
+import { getDemoState } from '../redux/selectors';
+import Labels from './Labels';
 
 const MAX_LENGTH = 512;
 
@@ -35,193 +38,67 @@ function randomExample() {
 }
 
 class ParsingDemo extends Component {
-    state = {
-      utterance: '',
-      message: '',
-      success: false,
-      failure: false,
-      loading: false,
-      errorMessage: '',
-
-      activeIndex: 0,
-      showOptions: false,
-      showPropBank: true,
-      showVerbNet: true,
-      showSemantics: true,
-      functionalSemantics: true,
-    };
-
-    handleTabChange = (e, { activeIndex }) => {
-      this.setState({ activeIndex });
-    };
-
-    setTabIndex = (activeIndex) => {
-      this.setState({ activeIndex });
-    };
-
-    togglePropBank = () => {
-      this.setState(prevState => ({ showPropBank: !prevState.showPropBank }));
-    };
-
-    toggleVerbNet = () => {
-      this.setState(prevState => ({ showVerbNet: !prevState.showVerbNet }));
-    };
-
-    toggleSemantics = () => {
-      this.setState(prevState => ({ showSemantics: !prevState.showSemantics }));
-    };
-
-    toggleFunctionalSemantics = () => {
-      this.setState(prevState => ({ functionalSemantics: !prevState.functionalSemantics }));
-    };
-
-    toggleOptions = () => {
-      this.setState(prevState => ({ showOptions: !prevState.showOptions }));
-    };
-
     submitUtterance = () => {
-      const { utterance } = this.state;
-      const inputUtterance = !utterance ? randomExample() : utterance;
-
-      if (inputUtterance.length > MAX_LENGTH) {
-        this.setState({
-          failure: true,
-          errorMessage: `Sorry, the maximum utterance length is ${MAX_LENGTH} characters. Please try a shorter sentence.`,
-          message: '',
-          success: false,
-        });
-      } else {
-        this.setState({
-          success: false, failure: false, loading: true, activeIndex: 0,
-        });
-        fetch(`/predict/semantics?utterance=${encodeURIComponent(inputUtterance)}`)
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error('Something went wrong');
-          },
-          () => {
-            this.setState({
-              success: false,
-              failure: true,
-              loading: false,
-              message: '',
-              errorMessage: "Sorry, we're unable to make predictions at this time.",
-            });
-          })
-          .then((message) => {
-            this.setState({
-              success: true, failure: false, loading: false, message,
-            });
-          })
-          .catch(() => {
-            this.setState({
-              success: false,
-              failure: true,
-              loading: false,
-              message: '',
-              errorMessage: 'Sorry, something went wrong and we were unable to handle your request.',
-            });
-          });
-      }
+      const { utterance, submitUtterance } = this.props;
+      submitUtterance(utterance);
     };
 
-    updateUtterance = (e) => {
-      const { value } = e.target;
-      this.setState(prevState => ({ ...prevState, utterance: value }));
-    };
+    renderToggles() {
+      const {
+        showPropBank, showVerbNet, showSemantics, functionalSemantics, showOptions,
+        togglePropBank, toggleVerbNet, toggleSemantics, toggleFunctionalSemantics, toggleOptions,
+      } = this.props;
+      return (
+        <Accordion fluid>
+          <Accordion.Title active={showOptions} index={0} onClick={toggleOptions}>
+            <Icon name="dropdown" />
+            {' '}
+                    View options
+          </Accordion.Title>
+          <Accordion.Content active={showOptions}>
+            <Form>
+              <Form.Group>
+                <Form.Field>
+                  <Checkbox checked={showPropBank} toggle label="PropBank" onChange={togglePropBank} />
+                </Form.Field>
+                <Form.Field>
+                  <Checkbox checked={showVerbNet} toggle label="VerbNet" onChange={toggleVerbNet} />
+                </Form.Field>
+                <Form.Field>
+                  <Checkbox checked={showSemantics} toggle label="Semantics" onChange={toggleSemantics} />
+                </Form.Field>
+                <Form.Field>
+                  <Checkbox
+                    disabled={!showSemantics}
+                    checked={functionalSemantics}
+                    toggle
+                    label="VN Index View"
+                    onChange={toggleFunctionalSemantics}
+                  />
+                </Form.Field>
+              </Form.Group>
+            </Form>
+          </Accordion.Content>
+        </Accordion>
+      );
+    }
 
     renderResult() {
-      const {
-        showPropBank, showVerbNet, showSemantics, functionalSemantics, showOptions, message,
-        activeIndex,
-      } = this.state;
       const { mobile } = this.props;
-
-      const { tokens, props } = message;
-      if (!props) {
-        return '';
-      }
-
-      const propIndex = Math.min(activeIndex, props.length - 1);
-
-      const sentence = tokens.map((token) => {
-        const {
-          text, label, isPredicate, index,
-        } = token;
-        if (isPredicate) {
-          return (
-            <Label
-              key={index}
-              as="a"
-              size="medium"
-              color="blue"
-              basic={index !== propIndex}
-              content={text}
-              detail={label}
-              onClick={() => this.setTabIndex(index)}
-            />
-          );
-        }
-        return ` ${text} `;
-      });
 
       return (
         <Segment textAlign="left">
-          <Message style={{ flexDirection: 'row' }}>
-            {sentence}
-          </Message>
-          <Propositions
-            propIndex={propIndex}
-            handleTabChange={this.handleTabChange}
-            propositions={props}
-            showPropBank={showPropBank}
-            showVerbNet={showVerbNet}
-            showSemantics={showSemantics}
-            showTabs={mobile}
-            functionalSemantics={functionalSemantics}
-          />
-          <Accordion fluid>
-            <Accordion.Title active={showOptions} index={0} onClick={this.toggleOptions}>
-              <Icon name="dropdown" />
-              {' '}
-              View options
-            </Accordion.Title>
-            <Accordion.Content active={showOptions}>
-              <Form>
-                <Form.Group>
-                  <Form.Field>
-                    <Checkbox checked={showPropBank} toggle label="PropBank" onChange={this.togglePropBank} />
-                  </Form.Field>
-                  <Form.Field>
-                    <Checkbox checked={showVerbNet} toggle label="VerbNet" onChange={this.toggleVerbNet} />
-                  </Form.Field>
-                  <Form.Field>
-                    <Checkbox checked={showSemantics} toggle label="Semantics" onChange={this.toggleSemantics} />
-                  </Form.Field>
-                  <Form.Field>
-                    <Checkbox
-                      disabled={!showSemantics}
-                      checked={functionalSemantics}
-                      toggle
-                      label="VN Index View"
-                      onChange={this.toggleFunctionalSemantics}
-                    />
-                  </Form.Field>
-                </Form.Group>
-              </Form>
-            </Accordion.Content>
-          </Accordion>
+          <Labels />
+          <Propositions showTabs={mobile} />
+          { this.renderToggles() }
         </Segment>
       );
     }
 
     render() {
-      const { mobile } = this.props;
       const {
-        loading, success, failure, errorMessage,
-      } = this.state;
+        mobile, loading, success, failure, errorMessage, setUtterance,
+      } = this.props;
 
       let predictionResult = '';
       if (!success) {
@@ -247,7 +124,7 @@ class ParsingDemo extends Component {
                   content="Try it out!"
                 />
                         )}
-              onChange={this.updateUtterance}
+              onChange={setUtterance}
             />
           </Form>
           {
@@ -260,10 +137,78 @@ class ParsingDemo extends Component {
 
 ParsingDemo.propTypes = {
   mobile: PropTypes.bool,
+
+  utterance: PropTypes.string.isRequired,
+  errorMessage: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  success: PropTypes.bool.isRequired,
+  failure: PropTypes.bool.isRequired,
+  setUtterance: PropTypes.func.isRequired,
+  submitUtterance: PropTypes.func.isRequired,
+
+  showPropBank: PropTypes.bool.isRequired,
+  showVerbNet: PropTypes.bool.isRequired,
+  showSemantics: PropTypes.bool.isRequired,
+  functionalSemantics: PropTypes.bool.isRequired,
+  showOptions: PropTypes.bool.isRequired,
+  togglePropBank: PropTypes.func.isRequired,
+  toggleVerbNet: PropTypes.func.isRequired,
+  toggleSemantics: PropTypes.func.isRequired,
+  toggleFunctionalSemantics: PropTypes.func.isRequired,
+  toggleOptions: PropTypes.func.isRequired,
+
 };
 
 ParsingDemo.defaultProps = {
   mobile: false,
 };
 
-export default ParsingDemo;
+const mapStateToProps = state => ({
+  ...getDemoState(state),
+});
+
+const mapDispatchToProps = dispatch => (
+  {
+    setUtterance: (e) => {
+      const { value } = e.target;
+      dispatch(actions.setUtterance(value));
+    },
+    handleTabChange: (e, { activeIndex }) => {
+      dispatch(actions.setTabIndex(activeIndex));
+    },
+    submitUtterance: (utterance) => {
+      const inputUtterance = !utterance ? randomExample() : utterance;
+
+      if (inputUtterance.length > MAX_LENGTH) {
+        dispatch(actions.submitUtteranceFailure(
+          `Sorry, the maximum utterance length is ${MAX_LENGTH} characters. Please try a shorter sentence.`,
+        ));
+      } else {
+        dispatch(actions.submitUtteranceRequest(utterance));
+        fetch(`/predict/semantics?utterance=${encodeURIComponent(inputUtterance)}`)
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Something went wrong');
+          },
+          () => {
+            dispatch(actions.submitUtteranceFailure("Sorry, we're unable to make predictions at this time."));
+          })
+          .then((message) => {
+            dispatch(actions.submitUtteranceSuccess(message));
+          })
+          .catch(() => {
+            dispatch(actions.submitUtteranceFailure('Sorry, something went wrong and we were unable to handle your request.'));
+          });
+      }
+    },
+    togglePropBank: () => dispatch(actions.togglePropbank()),
+    toggleVerbNet: () => dispatch(actions.toggleVerbnet()),
+    toggleSemantics: () => dispatch(actions.toggleSemantics()),
+    toggleFunctionalSemantics: () => dispatch(actions.toggleIndexView()),
+    toggleOptions: () => dispatch(actions.toggleViewOptions()),
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ParsingDemo);

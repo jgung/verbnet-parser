@@ -4,8 +4,11 @@ import {
   Divider,
   Tab,
 } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import RoleLabels from './RoleLabels';
 import Semantics from './Semantics';
+import { getDemoState } from '../redux/selectors';
+import * as actions from '../redux/actions';
 
 const Proposition = ({
   sense, spans, mainEvent, events, showVerbNet, showPropBank, functionalSemantics,
@@ -60,6 +63,7 @@ const Propositions = ({
           events={showSemantics && events}
           sense={sense}
           mainEvent={mainEvent}
+          functionalSemantics={functionalSemantics}
         />
       );
     }
@@ -114,4 +118,25 @@ Propositions.defaultProps = {
   functionalSemantics: false,
 };
 
-export default Propositions;
+const mapStateToProps = (state) => {
+  const demoState = getDemoState(state);
+  const { props } = demoState.message;
+  return {
+    propIndex: Math.min(demoState.activeIndex, props.length - 1),
+    showPropBank: demoState.showPropBank,
+    showVerbNet: demoState.showVerbNet,
+    showSemantics: demoState.showSemantics,
+    functionalSemantics: demoState.functionalSemantics,
+    propositions: props,
+  };
+};
+
+const mapDispatchToProps = dispatch => (
+  {
+    handleTabChange: (e, { activeIndex }) => {
+      dispatch(actions.setTabIndex(activeIndex));
+    },
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Propositions);
