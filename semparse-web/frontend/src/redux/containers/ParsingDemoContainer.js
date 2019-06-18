@@ -6,7 +6,7 @@ import * as actions from '../actions';
 import ParsingDemo from '../../components/ParsingDemo';
 
 
-const MAX_LENGTH = 512;
+const MAX_LENGTH = 256;
 
 let examplesIndex = 0;
 
@@ -47,7 +47,7 @@ const mapDispatchToProps = dispatch => (
 
       if (inputUtterance.length > MAX_LENGTH) {
         dispatch(actions.submitUtteranceFailure(
-          `Sorry, the maximum utterance length is ${MAX_LENGTH} characters. Please try a shorter sentence.`,
+          `Sorry, the maximum sentence length is currently ${MAX_LENGTH} characters. Please try a shorter sentence.`,
         ));
       } else {
         dispatch(actions.submitUtteranceRequest(utterance));
@@ -65,7 +65,7 @@ const mapDispatchToProps = dispatch => (
             dispatch(actions.submitUtteranceSuccess(message));
           })
           .catch(() => {
-            dispatch(actions.submitUtteranceFailure('Sorry, something went wrong and we were unable to handle your request.'));
+            dispatch(actions.submitUtteranceFailure('Sorry, something went wrong and we were unable to handle your request. Please try again later.'));
           });
       }
     },

@@ -38,7 +38,7 @@ export default function (state = initialState, action) {
 
     case t.SUBMIT_UTTERANCE_REQUEST:
       return {
-        ...state, success: false, failure: false, loading: true, message: initialState.message,
+        ...state, success: false, failure: false, loading: true,
       };
     case t.SUBMIT_UTTERANCE_SUCCESS:
       return {
