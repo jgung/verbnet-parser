@@ -236,7 +236,7 @@ public class SelResAligner implements PbVnAligner {
         return themRoles;
     }
 
-    private static boolean containsNumber(PropBankPhrase phrase) {
+    public static boolean containsNumber(PropBankPhrase phrase) {
         for (DepNode node : phrase.tokens()) {
             if ("CD".equalsIgnoreCase(node.feature(FeatureType.Pos))) {
                 return true;

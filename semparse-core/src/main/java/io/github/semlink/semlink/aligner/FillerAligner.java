@@ -25,6 +25,8 @@ import io.github.semlink.verbnet.type.NounPhrase;
 import io.github.semlink.verbnet.type.ThematicRoleType;
 import lombok.NonNull;
 
+import static io.github.semlink.semlink.aligner.SelResAligner.containsNumber;
+
 /**
  * Just map remaining numbered args to any remaining valid frame roles.
  *
@@ -72,6 +74,9 @@ public class FillerAligner implements PbVnAligner {
                     }
                 }
             } else if (phrase.getNumber() == ArgNumber.A3) {
+                if (containsNumber(phrase)) {
+                    continue;
+                }
                 for (NounPhrase unalignedPhrase : unaligned) {
                     if (unalignedPhrase.thematicRoleType().isStartingPoint()) {
                         alignment.add(phrase, unalignedPhrase);
@@ -79,6 +84,9 @@ public class FillerAligner implements PbVnAligner {
                     }
                 }
             } else if (phrase.getNumber() == ArgNumber.A4) {
+                if (containsNumber(phrase)) {
+                    continue;
+                }
                 for (NounPhrase unalignedPhrase : unaligned) {
                     if (unalignedPhrase.thematicRoleType().isEndingPoint()) {
                         alignment.add(phrase, unalignedPhrase);

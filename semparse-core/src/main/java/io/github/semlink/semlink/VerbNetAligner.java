@@ -75,7 +75,8 @@ public class VerbNetAligner {
                         new SynResAligner(),
                         new SelResAligner(),
                         new FillerAligner(),
-                        new SelResAligner(SelResAligner::getThematicRolesGreedy)),
+                        new SelResAligner(SelResAligner::getThematicRolesGreedy),
+                        new SynResAligner()),
                 new VnPredicateExtractor()
         );
     }
@@ -163,7 +164,7 @@ public class VerbNetAligner {
                 .collect(Collectors.toList());
 
         // enumerate VerbNet frames
-        for (VnClass cls : prop.predicate().related()) {
+        for (VnClass cls : prop.predicate().ancestors(true)) {
 
             // iterate over individual frames
             for (VnFrame frame : cls.frames()) {
