@@ -74,6 +74,7 @@ const mapDispatchToProps = dispatch => (
     toggleSemantics: () => dispatch(actions.toggleSemantics()),
     toggleFunctionalSemantics: () => dispatch(actions.toggleIndexView()),
     toggleOptions: () => dispatch(actions.toggleViewOptions()),
+    toggleModifiers: () => dispatch(actions.toggleModifiers()),
   }
 );
 

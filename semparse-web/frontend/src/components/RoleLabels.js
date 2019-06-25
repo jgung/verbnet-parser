@@ -35,7 +35,7 @@ function truncate(fullStr, strLen, separator) {
 }
 
 const Span = ({
-  sense, span, showVerbNet, showPropBank,
+  sense, span, showVerbNet, showPropBank, showModifiers,
 }) => {
   const {
     vn, pb, description, text, isPredicate, isModifier,
@@ -70,10 +70,21 @@ const Span = ({
           )
       }
       {
-        showPropBank && pb && !isPredicate
+        isModifier && showModifiers && pb && (
+        <Label
+          color="grey"
+          basic
+          size="large"
+          content={pb}
+          detail={description || undefined}
+        />
+        )
+      }
+      {
+        showPropBank && !isModifier && pb && !isPredicate
           && (
             <Label
-              color={isModifier ? 'grey' : 'purple'}
+              color="purple"
               basic
               size="large"
               content={pb}
@@ -90,16 +101,17 @@ Span.propTypes = {
   span: spanType.isRequired,
   showVerbNet: PropTypes.bool.isRequired,
   showPropBank: PropTypes.bool.isRequired,
+  showModifiers: PropTypes.bool.isRequired,
 };
 
 const RoleLabels = ({
-  sense, roles, showVerbNet, showPropBank,
+  sense, roles, showVerbNet, showPropBank, showModifiers,
 }) => {
   const spans = roles.map((span) => {
     const { start } = span;
     return (
       <List.Item key={start}>
-        <Span showVerbNet={showVerbNet} showPropBank={showPropBank} sense={sense} span={span} color="black" />
+        <Span showVerbNet={showVerbNet} showPropBank={showPropBank} showModifiers={showModifiers} sense={sense} span={span} color="black" />
       </List.Item>
     );
   });
@@ -115,6 +127,7 @@ RoleLabels.propTypes = {
   roles: PropTypes.arrayOf(spanType).isRequired,
   showVerbNet: PropTypes.bool.isRequired,
   showPropBank: PropTypes.bool.isRequired,
+  showModifiers: PropTypes.bool.isRequired,
 };
 
 export default RoleLabels;

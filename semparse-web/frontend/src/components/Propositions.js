@@ -7,13 +7,14 @@ import RoleLabels from './RoleLabels';
 import Semantics from './Semantics';
 
 const Proposition = ({
-  sense, spans, mainEvent, events, showVerbNet, showPropBank, functionalSemantics,
+  sense, spans, mainEvent, events, showVerbNet, showPropBank, showModifiers, functionalSemantics,
 }) => (
   <div>
     { spans && (
     <RoleLabels
       showVerbNet={showVerbNet}
       showPropBank={showPropBank}
+      showModifiers={showModifiers}
       roles={spans}
       sense={sense}
     />
@@ -42,7 +43,7 @@ Proposition.propTypes = {
 };
 
 const Propositions = ({
-  propositions, propIndex, handleTabChange, showPropBank, showVerbNet, showSemantics,
+  propositions, propIndex, handleTabChange, showPropBank, showVerbNet, showModifiers, showSemantics,
   functionalSemantics, showTabs = false,
 }) => {
   if (showTabs) {
@@ -54,6 +55,7 @@ const Propositions = ({
         <Proposition
           showPropBank={showPropBank}
           showVerbNet={showVerbNet}
+          showModifiers={showModifiers}
           spans={spans}
           events={showSemantics && events}
           sense={sense}
@@ -75,6 +77,7 @@ const Propositions = ({
         <Proposition
           showPropBank={showPropBank}
           showVerbNet={showVerbNet}
+          showModifiers={showModifiers}
           functionalSemantics={functionalSemantics}
           spans={spans}
           events={showSemantics && events}
@@ -102,6 +105,7 @@ Propositions.propTypes = {
   propIndex: PropTypes.number.isRequired,
   showPropBank: PropTypes.bool.isRequired,
   showVerbNet: PropTypes.bool.isRequired,
+  showModifiers: PropTypes.bool.isRequired,
   showSemantics: PropTypes.bool.isRequired,
   handleTabChange: PropTypes.func.isRequired,
   functionalSemantics: PropTypes.bool,

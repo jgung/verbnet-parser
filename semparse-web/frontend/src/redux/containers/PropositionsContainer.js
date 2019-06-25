@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
     propIndex: Math.min(demoState.activeIndex, props.length - 1),
     showPropBank: demoState.showPropBank,
     showVerbNet: demoState.showVerbNet,
+    showModifiers: demoState.showModifiers,
     showSemantics: demoState.showSemantics,
     functionalSemantics: demoState.functionalSemantics,
     propositions: props,

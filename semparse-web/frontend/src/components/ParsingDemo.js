@@ -19,8 +19,9 @@ class ParsingDemo extends Component {
 
     renderToggles() {
       const {
-        showPropBank, showVerbNet, showSemantics, functionalSemantics, showOptions,
-        togglePropBank, toggleVerbNet, toggleSemantics, toggleFunctionalSemantics, toggleOptions,
+        showPropBank, showVerbNet, showModifiers, showSemantics, functionalSemantics, showOptions,
+        togglePropBank, toggleVerbNet, toggleModifiers, toggleSemantics, toggleFunctionalSemantics,
+        toggleOptions,
       } = this.props;
       return (
         <Accordion fluid>
@@ -37,6 +38,9 @@ class ParsingDemo extends Component {
                 </Form.Field>
                 <Form.Field>
                   <Checkbox checked={showVerbNet} toggle label="VerbNet" onChange={toggleVerbNet} />
+                </Form.Field>
+                <Form.Field>
+                  <Checkbox checked={showModifiers} toggle label="Modifiers" onChange={toggleModifiers} />
                 </Form.Field>
                 <Form.Field>
                   <Checkbox checked={showSemantics} toggle label="Semantics" onChange={toggleSemantics} />
@@ -120,11 +124,13 @@ ParsingDemo.propTypes = {
 
   showPropBank: PropTypes.bool.isRequired,
   showVerbNet: PropTypes.bool.isRequired,
+  showModifiers: PropTypes.bool.isRequired,
   showSemantics: PropTypes.bool.isRequired,
   functionalSemantics: PropTypes.bool.isRequired,
   showOptions: PropTypes.bool.isRequired,
   togglePropBank: PropTypes.func.isRequired,
   toggleVerbNet: PropTypes.func.isRequired,
+  toggleModifiers: PropTypes.func.isRequired,
   toggleSemantics: PropTypes.func.isRequired,
   toggleFunctionalSemantics: PropTypes.func.isRequired,
   toggleOptions: PropTypes.func.isRequired,

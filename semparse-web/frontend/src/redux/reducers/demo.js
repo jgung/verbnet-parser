@@ -15,6 +15,7 @@ const initialState = {
   showOptions: false,
   showPropBank: true,
   showVerbNet: true,
+  showModifiers: true,
   showSemantics: true,
   functionalSemantics: true,
 };
@@ -31,6 +32,8 @@ export default function (state = initialState, action) {
       return { ...state, showPropBank: !state.showPropBank };
     case t.TOGGLE_VERBNET:
       return { ...state, showVerbNet: !state.showVerbNet };
+    case t.TOGGLE_MODIFIERS:
+      return { ...state, showModifiers: !state.showModifiers };
     case t.TOGGLE_SEMANTICS:
       return { ...state, showSemantics: !state.showSemantics };
     case t.TOGGLE_INDEX_VIEW:
