@@ -50,7 +50,7 @@ public class SynResAligner implements PbVnAligner {
             for (FramePhrase phrase : alignment.alignedPhrases(pbPhrase)) {
                 if (phrase instanceof NounPhrase && ((NounPhrase) phrase).preposition().isPresent()) {
                     Preposition preposition = ((NounPhrase) phrase).preposition().get();
-                    if (!preposition.valid().contains(prep.get())) {
+                    if (!preposition.valid().isEmpty() && !preposition.valid().contains(prep.get())) {
                         alignment.remove(pbPhrase, phrase);
                     }
                 }
