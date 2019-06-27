@@ -66,7 +66,7 @@ public class DefaultVerbNetProp implements VerbNetProp {
         List<Event> subEvents = new ArrayList<>();
         predicatesByEvent.keySet().stream()
                 .filter(e -> !e.mainEvent())
-                .sorted(Comparator.comparing(EventArgument::id))
+                .sorted(Comparator.comparing(EventArgument::index))
                 .forEach(entry -> subEvents.add(new Event(subEvents.size(), entry, predicatesByEvent.get(entry))));
         return subEvents;
     }

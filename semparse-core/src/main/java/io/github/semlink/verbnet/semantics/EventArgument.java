@@ -28,6 +28,8 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import static io.github.semlink.verbnet.semantics.SemanticPredicate.DEFAULT_EVENT;
+
 /**
  * Event argument.
  *
@@ -39,7 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class EventArgument<T> extends VariableSemanticArgument<T> {
 
-    public static final Pattern EVENT_PATTERN = Pattern.compile("(during|end|start|result)?(\\(E\\d?\\)|E\\d?)",
+    public static final Pattern EVENT_PATTERN = Pattern.compile(
+            "(during|end|start|result)?(\\([EËeë](?<index1>\\d?)\\)|[EËeë](?<index2>\\d?))",
             Pattern.CASE_INSENSITIVE);
 
     public EventArgument(@NonNull String value) {
@@ -51,10 +54,21 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
                 relation = EventRelation.valueOf(matcher.group(1).toUpperCase());
             }
             id = matcher.group(2).toUpperCase();
-            if (id.equals("E")) {
+            if (id.startsWith("Ë") || id.startsWith("ë")) {
+                process = true;
+            }
+            if (id.equals(DEFAULT_EVENT) || id.equals("Ë")) {
                 mainEvent = true;
             } else {
+                if (id.startsWith("Ë")) {
+                    id = "ë" + id.substring(1);
+                }
                 id = id.toLowerCase();
+            }
+            String index1 = matcher.group("index1");
+            String index2 = matcher.group("index2");
+            if (!(Strings.isNullOrEmpty(index1) && Strings.isNullOrEmpty(index2))) {
+                index = Integer.parseInt(Strings.isNullOrEmpty(index1) ? index2 : index1);
             }
         } else {
             log.warn("Failed to parse event argument: {}", value);
@@ -70,8 +84,10 @@ public class EventArgument<T> extends VariableSemanticArgument<T> {
     }
 
     private EventRelation relation = EventRelation.EVENT;
-    private String id = "E1";
+    private String id = DEFAULT_EVENT;
     private boolean mainEvent = false;
+    private boolean process = false;
+    private int index = 0;
 
     @Override
     public String toString() {

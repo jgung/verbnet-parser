@@ -54,7 +54,7 @@ public class SemanticPredicate {
     public EventArgument event() {
         return arguments.stream()
                 .filter(arg -> arg.type == SemanticArgumentType.EVENT)
-                .map(arg -> (EventArgument) arg).min(Comparator.comparing(EventArgument::id)).orElse(new EventArgument(DEFAULT_EVENT));
+                .map(arg -> (EventArgument) arg).min(Comparator.comparing(EventArgument::index)).orElse(new EventArgument(DEFAULT_EVENT));
     }
 
     public <T> List<T> get(@NonNull SemanticArgumentType type) {
@@ -72,7 +72,7 @@ public class SemanticPredicate {
 
         List<SemanticArgument> result = new ArrayList<>();
         if (arguments.stream().filter(arg -> arg.type == SemanticArgumentType.EVENT).count() > 1) {
-            result.add(new EventArgument<>("E"));
+            result.add(new EventArgument<>(DEFAULT_EVENT));
         }
         result.addAll(arguments);
 
