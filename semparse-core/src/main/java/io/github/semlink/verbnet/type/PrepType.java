@@ -86,6 +86,10 @@ public enum PrepType {
         return EnumSet.of(FOR, TO, INTO, TOWARDS, ONTO, ON, AT).contains(this);
     }
 
+    public static EnumSet<PrepType> to() {
+        return EnumSet.of(INTO, TO, ONTO);
+    }
+
     public static PrepType fromString(@NonNull String string) {
         try {
             return PrepType.valueOf(string.trim().toUpperCase());

@@ -42,7 +42,11 @@ public class Preposition extends FramePhrase {
      * Return valid prepositions for this phrase.
      */
     public Set<PrepType> valid() {
-        return prep.types().stream().map(PrepType::fromString).collect(Collectors.toSet());
+        Set<PrepType> types = prep.types().stream().map(PrepType::fromString).collect(Collectors.toSet());
+        if (types.contains(PrepType.TO)) {
+            types.addAll(PrepType.to());
+        }
+        return types;
     }
 
     /**

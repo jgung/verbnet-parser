@@ -70257,6 +70257,37 @@
     ]
   },
   {
+    "lemma": "payment",
+    "mappings": [
+      {
+        "id": "pay.01",
+        "mappings": [
+          {
+            "vncls": "68-1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Asset"
+              },
+              {
+                "number": "A2",
+                "vntheta": "Recipient"
+              },
+              {
+                "number": "A3",
+                "vntheta": "Theme"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "lemma": "peal",
     "mappings": [
       {
