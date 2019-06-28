@@ -116657,5 +116657,74 @@
         ]
       }
     ]
+  },
+  {
+    "lemma": "list",
+    "mappings": [
+      {
+        "id": "list.01",
+        "mappings": [
+          {
+            "vncls": "37.1.1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Topic"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "enumerate",
+    "mappings": [
+      {
+        "id": "enumerate.01",
+        "mappings": [
+          {
+            "vncls": "37.1.1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Topic"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "itemize",
+    "mappings": [
+      {
+        "id": "itemize.01",
+        "mappings": [
+          {
+            "vncls": "37.1.1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Topic"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]

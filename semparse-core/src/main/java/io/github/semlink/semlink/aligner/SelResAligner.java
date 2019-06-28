@@ -125,6 +125,7 @@ public class SelResAligner implements PbVnAligner {
                     themRoles.add(DESTINATION);
                 }
                 themRoles.add(GOAL);
+                themRoles.add(RECIPIENT);
             }
             if (type == PrepType.TO) {
                 themRoles.add(PRODUCT);
@@ -182,6 +183,8 @@ public class SelResAligner implements PbVnAligner {
                     themRoles.add(ASSET);
                 } else {
                     themRoles.add(BENEFICIARY);
+                    themRoles.add(GOAL);
+                    themRoles.add(RECIPIENT);
                 }
             } else if (type == PrepType.AS) {
                 themRoles.add(ATTRIBUTE);
