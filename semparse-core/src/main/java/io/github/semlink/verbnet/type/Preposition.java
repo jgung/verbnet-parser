@@ -19,9 +19,9 @@ package io.github.semlink.verbnet.type;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
-import io.github.clearwsd.verbnet.restrictions.VnRestrictions;
-import io.github.clearwsd.verbnet.syntax.VnPrep;
+import io.github.semlink.verbnet.restrictions.DefaultVnRestrictions;
+import io.github.semlink.verbnet.restrictions.VnRestrictions;
+import io.github.semlink.verbnet.syntax.VnPrep;
 import lombok.NonNull;
 
 /**

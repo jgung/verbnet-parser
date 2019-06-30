@@ -27,8 +27,8 @@ import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.parser.NlpParser;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
-import io.github.clearwsd.verbnet.VnClass;
-import io.github.clearwsd.verbnet.VnIndex;
+import io.github.semlink.verbnet.VnClass;
+import io.github.semlink.verbnet.VnIndex;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 

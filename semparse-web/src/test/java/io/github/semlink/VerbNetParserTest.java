@@ -18,8 +18,8 @@ package io.github.semlink;
 
 import io.github.clearwsd.parser.Nlp4jDependencyParser;
 import io.github.clearwsd.parser.NlpParser;
-import io.github.clearwsd.verbnet.DefaultVnIndex;
-import io.github.clearwsd.verbnet.VnIndex;
+import io.github.semlink.verbnet.DefaultVnIndex;
+import io.github.semlink.verbnet.VnIndex;
 import io.github.semlink.parser.LightVerbMapper;
 import io.github.semlink.parser.SemanticRoleLabeler;
 import io.github.semlink.parser.VerbNetParse;

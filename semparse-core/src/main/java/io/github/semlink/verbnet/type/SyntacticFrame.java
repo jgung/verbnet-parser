@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import io.github.clearwsd.verbnet.VnFrame;
-import io.github.clearwsd.verbnet.syntax.VnSyntax;
-import io.github.clearwsd.verbnet.syntax.VnSyntaxType;
+import io.github.semlink.verbnet.VnFrame;
+import io.github.semlink.verbnet.syntax.VnSyntax;
+import io.github.semlink.verbnet.syntax.VnSyntaxType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

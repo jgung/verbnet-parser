@@ -20,9 +20,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.github.clearwsd.verbnet.restrictions.DefaultVnRestrictions;
-import io.github.clearwsd.verbnet.restrictions.VnRestrictions;
-import io.github.clearwsd.verbnet.syntax.VnNounPhrase;
+import io.github.semlink.verbnet.restrictions.DefaultVnRestrictions;
+import io.github.semlink.verbnet.restrictions.VnRestrictions;
+import io.github.semlink.verbnet.syntax.VnNounPhrase;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;

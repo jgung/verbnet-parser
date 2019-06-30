@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.github.clearwsd.verbnet.VnClass;
+import io.github.semlink.verbnet.VnClass;
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.FunctionTag;
 import io.github.semlink.propbank.type.PropBankArg;

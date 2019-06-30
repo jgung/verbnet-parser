@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.github.clearwsd.verbnet.VnClass;
-import io.github.clearwsd.verbnet.VnFrame;
+import io.github.semlink.verbnet.VnClass;
+import io.github.semlink.verbnet.VnFrame;
 import io.github.semlink.parser.Proposition;
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;

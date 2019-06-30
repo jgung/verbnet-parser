@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
-import io.github.clearwsd.verbnet.VnClass;
-import io.github.clearwsd.verbnet.VnFrame;
+import io.github.semlink.verbnet.VnClass;
+import io.github.semlink.verbnet.VnFrame;
 import io.github.semlink.app.Span;
 import io.github.semlink.parser.DefaultVerbNetProp;
 import io.github.semlink.parser.Proposition;

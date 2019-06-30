@@ -42,9 +42,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.github.clearwsd.verbnet.DefaultVnIndex;
-import io.github.clearwsd.verbnet.VnClass;
-import io.github.clearwsd.verbnet.VnIndex;
+import io.github.semlink.verbnet.DefaultVnIndex;
+import io.github.semlink.verbnet.VnClass;
+import io.github.semlink.verbnet.VnIndex;
 import io.github.semlink.propbank.DefaultPbIndex;
 import io.github.semlink.propbank.frames.Frameset;
 import io.github.semlink.propbank.frames.PbRole;

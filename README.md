@@ -20,7 +20,7 @@ To use the parser, you will need to download and unzip the [pre-trained models a
 The API is a work in progress (as the project itself is not stable), but an overview of current usage is shown here:
 ```java
 import io.github.clearwsd.parser.*;
-import io.github.clearwsd.verbnet.*;
+import io.github.semlink.verbnet.*;
 import io.github.semlink.parser.*;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;

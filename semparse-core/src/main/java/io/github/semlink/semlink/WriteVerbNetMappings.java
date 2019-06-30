@@ -30,10 +30,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import io.github.clearwsd.verbnet.DefaultVnIndex;
-import io.github.clearwsd.verbnet.VnClass;
-import io.github.clearwsd.verbnet.VnIndex;
-import io.github.clearwsd.verbnet.VnMember;
+import io.github.semlink.verbnet.DefaultVnIndex;
+import io.github.semlink.verbnet.VnClass;
+import io.github.semlink.verbnet.VnIndex;
+import io.github.semlink.verbnet.VnMember;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

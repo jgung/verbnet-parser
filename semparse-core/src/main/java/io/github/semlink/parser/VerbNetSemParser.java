@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
-import io.github.clearwsd.verbnet.VnClass;
+import io.github.semlink.verbnet.VnClass;
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.FunctionTag;
 import io.github.semlink.propbank.type.PropBankArg;

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import io.github.clearwsd.verbnet.VnIndex;
+import io.github.semlink.verbnet.VnIndex;
 import io.github.semlink.app.api.model.SentenceModel;
 import io.github.semlink.parser.DefaultSentenceNormalizer;
 import io.github.semlink.parser.VerbNetParse;

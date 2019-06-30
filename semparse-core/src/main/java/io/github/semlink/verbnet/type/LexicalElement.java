@@ -18,7 +18,7 @@ package io.github.semlink.verbnet.type;
 
 import java.util.Optional;
 
-import io.github.clearwsd.verbnet.syntax.VnLex;
+import io.github.semlink.verbnet.syntax.VnLex;
 import lombok.NonNull;
 
 /**
