@@ -2,11 +2,15 @@ bring	blessing	33.1-1	bless
 bring	honor	33.1-1	honor
 conduct	assessment	34.2-1	assess
 conduct	audit	34.1	audit
+conduct	deposit	9.1-1	deposit
 conduct	exchange	13.6.1	exchange
 conduct	inspection	34.1	inspect
 conduct	repair	45.7	repair
 conduct	trade	13.6.1	trade
+conduct	withdrawal	10.1	withdraw
 deal	blow	23.2	blow
+do	deposit	9.1-1	deposit
+do	withdrawal	10.1	withdraw
 engage	development	26.1	develop
 engage	expansion	45.4	expand
 engage	investigation	35.4	investigate
@@ -326,6 +330,7 @@ make	vow	37.13	vow
 make	wager	94	wager
 make	war	36.4	war
 make	wish	62	wish
+make	withdrawal	10.1	withdraw
 offer	explanation	37.1.1	explain
 open	fire	17.1-1	fire
 pay	attention	30.3	attend
