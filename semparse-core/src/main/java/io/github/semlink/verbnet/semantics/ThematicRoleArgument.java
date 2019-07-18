@@ -44,9 +44,11 @@ public class ThematicRoleArgument<T> extends VariableSemanticArgument<T> {
             type = Optional.of(ThematicRoleType.NONE);
         }
         this.thematicRoleType = type.get();
+        this.implicit = value.startsWith("?");
     }
 
     private ThematicRoleType thematicRoleType;
+    private boolean implicit;
 
     @Override
     public String toString() {
