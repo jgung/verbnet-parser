@@ -23,14 +23,18 @@ import org.springframework.context.annotation.Configuration;
 
 import io.github.clearwsd.parser.Nlp4jDependencyParser;
 import io.github.clearwsd.parser.NlpParser;
-import io.github.semlink.verbnet.DefaultVnIndex;
-import io.github.semlink.verbnet.VnIndex;
+import io.github.semlink.parser.DefaultVnPredicateDetector;
 import io.github.semlink.parser.LightVerbMapper;
+import io.github.semlink.parser.NominalMapper;
 import io.github.semlink.parser.SemanticRoleLabeler;
 import io.github.semlink.parser.VerbNetParser;
+import io.github.semlink.parser.VerbNetSemParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
+import io.github.semlink.parser.VnPredicateDetector;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;
+import io.github.semlink.verbnet.DefaultVnIndex;
+import io.github.semlink.verbnet.VnIndex;
 
 import static io.github.semlink.app.util.JarExtractionUtil.resolveDirectory;
 import static io.github.semlink.app.util.JarExtractionUtil.resolveFile;
@@ -54,6 +58,8 @@ public class PredictionConfiguration {
     private String srlModelDir;
     @Value("${verbnet.demo.lvm-path:mappings/lvm.tsv}")
     private String lvmPath;
+    @Value("${verbnet.demo.noun-mappings-path:mappings/nominal-mappings.tsv}")
+    private String nounsPath;
 
     @Bean
     public VnIndex verbNet() {
@@ -78,14 +84,19 @@ public class PredictionConfiguration {
         String modelDir = resolveDirectory(this.srlModelDir);
         String lvmPath = resolveFile(this.lvmPath);
         String pbPath = resolveFile(this.pbPath);
+        String nounsPath = resolveFile(this.nounsPath);
 
         SemanticRoleLabeler<PropBankArg> roleLabeler = pbRoleLabeler(modelDir);
 
         VerbNetAligner aligner = VerbNetAligner.of(mappingsPath, pbPath);
 
         LightVerbMapper mapper = LightVerbMapper.fromMappingsPath(lvmPath, verbNet);
+        NominalMapper nominalMapper = NominalMapper.fromMappingsPath(nounsPath, verbNet);
+        VnPredicateDetector predicateDetector = new DefaultVnPredicateDetector(verbNetSenseClassifier, mapper, nominalMapper);
 
-        return new VerbNetParser(verbNetSenseClassifier, roleLabeler, aligner, mapper);
+        VerbNetSemParser parser = new VerbNetSemParser(roleLabeler, aligner);
+
+        return new VerbNetParser(predicateDetector, verbNetSenseClassifier, parser);
     }
 
 }
