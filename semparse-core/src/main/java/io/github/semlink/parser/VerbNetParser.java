@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
 import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
-import io.github.semlink.verbnet.VnClass;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;
+import io.github.semlink.verbnet.VnClass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
@@ -70,7 +70,7 @@ public class VerbNetParser {
                         .map(node -> (String) node.feature(FeatureType.Text))
                         .collect(Collectors.toList()))
                 .tree(parsed)
-                .props(vnProps.stream().map(prop -> (DefaultVerbNetProp) prop).collect(Collectors.toList()));
+                .props(vnProps);
     }
 
     /**

@@ -19,16 +19,15 @@ package io.github.semlink.parser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
-import io.github.semlink.verbnet.VnClass;
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.FunctionTag;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;
+import io.github.semlink.verbnet.VnClass;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
@@ -108,8 +107,7 @@ public class VerbNetSemParser {
             }
         }
 
-        List<DefaultVerbNetProp> vnProps = aligner.align(parsed, filtered);
-        return vnProps.stream().map(prop -> (VerbNetProp) prop).collect(Collectors.toList());
+        return aligner.align(parsed, filtered);
     }
 
     @Setter

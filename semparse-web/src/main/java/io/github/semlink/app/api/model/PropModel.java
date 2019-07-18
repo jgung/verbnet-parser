@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.github.semlink.app.Chunking;
-import io.github.semlink.parser.DefaultVerbNetProp;
+import io.github.semlink.parser.VerbNetProp;
 import io.github.semlink.semlink.SemlinkRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,7 +51,7 @@ public class PropModel {
     private List<EventModel> events = new ArrayList<>();
     private List<SemlinkRoleModel> spans = new ArrayList<>();
 
-    public PropModel(DefaultVerbNetProp prop) {
+    public PropModel(VerbNetProp prop) {
         this.sense = prop.proposition().predicate().verbNetId().toString();
         this.events = prop.subEvents().stream().map(EventModel::new).collect(Collectors.toList());
         this.mainEvent = prop.mainEvent().map(EventModel::new).orElse(null);
