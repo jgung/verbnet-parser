@@ -58,6 +58,8 @@ public class DefaultVnPredicateDetector implements VnPredicateDetector {
         List<SensePrediction<VnClass>> senses = verbNetClassifier.predict(depTree);
 
         Map<Integer, SensePrediction<VnClass>> predictions = senses.stream()
+                // TODO: VerbNet classifier should ideally have this kind of check
+                .filter(sense -> !depTree.get(sense.index()).feature(FeatureType.Dep).toString().equalsIgnoreCase("nmod"))
                 .collect(Collectors.toMap(SensePrediction::index, Function.identity()));
 
         for (SensePrediction<VnClass> sense : senses) {

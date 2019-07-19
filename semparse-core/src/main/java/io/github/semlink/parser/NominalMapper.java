@@ -47,11 +47,13 @@ public class NominalMapper implements PredicateMapper<VnClass> {
 
     @Override
     public Optional<Span<VnClass>> mapPredicate(@NonNull DepNode child) {
-        String lemma = child.feature(FeatureType.Lemma);
-        VnMember member = mappings.get(lemma);
-        if (!child.feature(FeatureType.Pos).toString().toUpperCase().startsWith("N")) {
+        if (!child.feature(FeatureType.Pos).toString().toUpperCase().startsWith("N")
+                || child.feature(FeatureType.Dep).toString().toUpperCase().equals("COMPOUND")) {
             return Optional.empty();
         }
+
+        String lemma = child.feature(FeatureType.Lemma);
+        VnMember member = mappings.get(lemma);
         if (null != member) {
             child.addFeature(FeatureType.Lemma, member.lemma);
             return Optional.of(new Span<>(member.vnClass, child.index(), child.index()));
