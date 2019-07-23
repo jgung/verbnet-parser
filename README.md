@@ -44,9 +44,10 @@ public class VerbNetParserTest {
         LightVerbMapper verbMapper = LightVerbMapper.fromMappingsPath("semparse/lvm.tsv", verbNet);
         // aligner that uses PropBank VerbNet mappings and heuristics to align PropBank roles with VerbNet thematic roles
         VerbNetAligner aligner = VerbNetAligner.of("semparse/pbvn-mappings.json", "semparse/unified-frames.bin");
+        VnPredicateDetector predicateDetector = new DefaultVnPredicateDetector(classifier, verbMapper);
 
         // simplifying facade over the above components
-        VerbNetParser parser = new VerbNetParser(classifier, roleLabeler, aligner, verbMapper);
+        VerbNetParser parser = new VerbNetParser(predicateDetector, classifier, roleLabeler, aligner);
 
         VerbNetParse parse = parser.parse("John ate an apple");
         System.out.println(parse); // Take In[EVENT(E1 = VnClassXml(verbNetId=eat-39.1)), Agent(A0[John]), Patient(A1[an apple])]

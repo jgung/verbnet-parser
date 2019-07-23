@@ -1751,7 +1751,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -1759,7 +1759,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -20838,7 +20838,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -20846,7 +20846,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -22782,7 +22782,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -28843,7 +28843,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -28851,7 +28851,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           },
@@ -31556,7 +31556,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -31564,7 +31564,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -38215,7 +38215,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -39481,7 +39481,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -39489,7 +39489,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -39637,7 +39637,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -39645,7 +39645,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -53680,7 +53680,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -53688,7 +53688,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -54241,7 +54241,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -54249,7 +54249,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -74092,7 +74092,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -75394,7 +75394,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -75402,7 +75402,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           },
@@ -78118,7 +78118,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -82367,7 +82367,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -82375,7 +82375,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           },
@@ -85487,7 +85487,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -85495,7 +85495,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           }
@@ -90088,7 +90088,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -90096,7 +90096,7 @@
               },
               {
                 "number": "A2",
-                "vntheta": "Recipient"
+                "vntheta": "Experiencer"
               }
             ]
           },
@@ -111419,7 +111419,7 @@
             "roles": [
               {
                 "number": "A0",
-                "vntheta": "Causer"
+                "vntheta": "Pivot"
               },
               {
                 "number": "A1",
@@ -116751,6 +116751,210 @@
               {
                 "number": "A1",
                 "vntheta": "Topic"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "schedule",
+    "mappings": [
+      {
+        "id": "schedule.01",
+        "mappings": [
+          {
+            "vncls": "26.4",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Result"
+              },
+              {
+                "number": "A2",
+                "vntheta": "Beneficiary"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+    {
+    "lemma": "program",
+    "mappings": [
+      {
+        "id": "program.01",
+        "mappings": [
+          {
+            "vncls": "26.4",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Result"
+              },
+              {
+                "number": "A2",
+                "vntheta": "Beneficiary"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "finance",
+    "mappings": [
+      {
+        "id": "finance.01",
+        "mappings": [
+          {
+            "vncls": "13.4.2-1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Recipient"
+              },
+              {
+                "number": "A2",
+                "vntheta": "Theme"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "fund",
+    "mappings": [
+      {
+        "id": "fund.01",
+        "mappings": [
+          {
+            "vncls": "13.4.2-1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Recipient"
+              },
+              {
+                "number": "A2",
+                "vntheta": "Theme"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "postpone",
+    "mappings": [
+      {
+        "id": "postpone.01",
+        "mappings": [
+          {
+            "vncls": "53.1-1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Theme"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "enable",
+    "mappings": [
+      {
+        "id": "enable.01",
+        "mappings": [
+          {
+            "vncls": "45.4",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Patient"
+              },
+              {
+                "number": "A2",
+                "vntheta": "Result"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "practise",
+    "mappings": [
+      {
+        "id": "practice.01",
+        "mappings": [
+          {
+            "vncls": "26.8-1",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Theme"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lemma": "subscribe",
+    "mappings": [
+      {
+        "id": "subscribe.01",
+        "mappings": [
+          {
+            "vncls": "115",
+            "roles": [
+              {
+                "number": "A0",
+                "vntheta": "Agent"
+              },
+              {
+                "number": "A1",
+                "vntheta": "Source"
               }
             ]
           }

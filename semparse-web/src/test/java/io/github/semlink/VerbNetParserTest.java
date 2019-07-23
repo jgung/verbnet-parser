@@ -18,15 +18,17 @@ package io.github.semlink;
 
 import io.github.clearwsd.parser.Nlp4jDependencyParser;
 import io.github.clearwsd.parser.NlpParser;
-import io.github.semlink.verbnet.DefaultVnIndex;
-import io.github.semlink.verbnet.VnIndex;
+import io.github.semlink.parser.DefaultVnPredicateDetector;
 import io.github.semlink.parser.LightVerbMapper;
 import io.github.semlink.parser.SemanticRoleLabeler;
 import io.github.semlink.parser.VerbNetParse;
 import io.github.semlink.parser.VerbNetParser;
 import io.github.semlink.parser.VerbNetSenseClassifier;
+import io.github.semlink.parser.VnPredicateDetector;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.VerbNetAligner;
+import io.github.semlink.verbnet.DefaultVnIndex;
+import io.github.semlink.verbnet.VnIndex;
 
 import static io.github.semlink.parser.VerbNetParser.pbRoleLabeler;
 
@@ -52,9 +54,10 @@ public class VerbNetParserTest {
         LightVerbMapper verbMapper = LightVerbMapper.fromMappingsPath("semparse/lvm.tsv", verbNet);
         // aligner that uses PropBank VerbNet mappings and heuristics to align PropBank roles with VerbNet thematic roles
         VerbNetAligner aligner = VerbNetAligner.of("semparse/pbvn-mappings.json", "semparse/unified-frames.bin");
+        VnPredicateDetector predicateDetector = new DefaultVnPredicateDetector(classifier, verbMapper);
 
         // simplifying facade over the above components
-        VerbNetParser parser = new VerbNetParser(classifier, roleLabeler, aligner, verbMapper);
+        VerbNetParser parser = new VerbNetParser(predicateDetector, classifier, roleLabeler, aligner);
 
         VerbNetParse parse = parser.parse("John ate an apple");
         System.out.println(parse); // Take In[EVENT(E1 = VnClassXml(verbNetId=eat-39.1)), Agent(A0[John]), Patient(A1[an apple])]

@@ -31,11 +31,10 @@ import java.util.stream.Collectors;
 
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
-import io.github.semlink.verbnet.VnClass;
-import io.github.semlink.verbnet.VnFrame;
 import io.github.semlink.app.Span;
 import io.github.semlink.parser.DefaultVerbNetProp;
 import io.github.semlink.parser.Proposition;
+import io.github.semlink.parser.VerbNetProp;
 import io.github.semlink.propbank.DefaultPbIndex;
 import io.github.semlink.propbank.frames.PbRole;
 import io.github.semlink.propbank.frames.Roleset;
@@ -49,6 +48,8 @@ import io.github.semlink.semlink.aligner.RelAligner;
 import io.github.semlink.semlink.aligner.RoleMappingAligner;
 import io.github.semlink.semlink.aligner.SelResAligner;
 import io.github.semlink.semlink.aligner.SynResAligner;
+import io.github.semlink.verbnet.VnClass;
+import io.github.semlink.verbnet.VnFrame;
 import io.github.semlink.verbnet.type.NounPhrase;
 import io.github.semlink.verbnet.type.SyntacticFrame;
 import io.github.semlink.verbnet.type.ThematicRoleType;
@@ -81,19 +82,20 @@ public class VerbNetAligner {
         );
     }
 
-    public List<DefaultVerbNetProp> align(@NonNull DepTree parsed,
-                                          @NonNull List<Proposition<VnClass, PropBankArg>> props) {
-        List<String> tokens = parsed.stream().map(node -> (String) node.feature(FeatureType.Text)).collect(Collectors.toList());
-
+    public List<VerbNetProp> align(@NonNull DepTree parsed,
+                                   @NonNull List<Proposition<VnClass, PropBankArg>> props) {
         return props.stream()
                 .filter(prop -> null != prop.predicate())
-                .map(prop -> alignProp(prop, parsed).tokens(tokens))
+                .map(prop -> alignProp(prop, parsed))
                 .collect(Collectors.toList());
     }
 
-    private DefaultVerbNetProp alignProp(Proposition<VnClass, PropBankArg> prop, DepTree parsed) {
+    private VerbNetProp alignProp(Proposition<VnClass, PropBankArg> prop, DepTree parsed) {
+        List<String> tokens = parsed.stream().map(node -> (String) node.feature(FeatureType.Text)).collect(Collectors.toList());
+
         DefaultVerbNetProp vnProp = new DefaultVerbNetProp()
-                .proposition(SemlinkRole.convert(prop));
+                .proposition(SemlinkRole.convert(prop))
+                .tokens(tokens);
 
         align(prop, parsed).ifPresent(aligned -> {
             // get thematic role alignment

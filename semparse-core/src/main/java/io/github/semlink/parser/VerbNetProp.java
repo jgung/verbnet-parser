@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import io.github.semlink.verbnet.VnClass;
 import io.github.semlink.app.Span;
 import io.github.semlink.propbank.type.FunctionTag;
 import io.github.semlink.propbank.type.PropBankArg;
+import io.github.semlink.semlink.SemlinkRole;
+import io.github.semlink.verbnet.VnClass;
 import io.github.semlink.verbnet.semantics.Event;
+import io.github.semlink.verbnet.semantics.SemanticPredicate;
 import io.github.semlink.verbnet.type.ThematicRoleType;
 import lombok.NonNull;
 
@@ -35,6 +37,21 @@ import lombok.NonNull;
  * @author jamesgung
  */
 public interface VerbNetProp {
+
+    /**
+     * Original list of tokens from which this proposition was extracted.
+     */
+    List<String> tokens();
+
+    /**
+     * All VerbNet semantic predicates extracted for this proposition.
+     */
+    List<SemanticPredicate> predicates();
+
+    /**
+     * Proposition containing spans over text with associated {@link SemlinkRole roles}.
+     */
+    Proposition<VnClass, SemlinkRole> proposition();
 
     /**
      * Return the {@link VnClass} for this proposition.

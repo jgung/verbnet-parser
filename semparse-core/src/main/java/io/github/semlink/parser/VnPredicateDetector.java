@@ -16,33 +16,26 @@
 
 package io.github.semlink.parser;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import io.github.clearwsd.SensePrediction;
 import io.github.clearwsd.type.DepTree;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import io.github.semlink.verbnet.VnClass;
+import lombok.NonNull;
 
 /**
- * Aggregate of data output during semantic parsing.
+ * VerbNet predicate detector.
  *
  * @author jgung
  */
-@Getter
-@Setter
-@Accessors(fluent = true)
-public class VerbNetParse {
+public interface VnPredicateDetector {
 
-    private DepTree tree;
-    private List<String> tokens;
-    private List<VerbNetProp> props = new ArrayList<>();
+    /**
+     * Identify VerbNet sense-tagged predicates from a dependency parse.
+     *
+     * @param depTree dependency parsed sentence
+     * @return predicated predicates and their sense tags
+     */
+    List<SensePrediction<VnClass>> detectPredicates(@NonNull DepTree depTree);
 
-    @Override
-    public String toString() {
-        return props.stream()
-                .map(Object::toString)
-                .collect(Collectors.joining("\n\n"));
-    }
 }

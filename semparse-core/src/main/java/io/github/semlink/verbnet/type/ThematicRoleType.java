@@ -45,6 +45,7 @@ public enum ThematicRoleType {
     CO_PATIENT,
     CO_THEME,
     CO_TOPIC,
+    CO_LOCATION,
     CONTEXT,
     DESTINATION,
     DURATION,
@@ -118,6 +119,14 @@ public enum ThematicRoleType {
                 return Optional.of(TOPIC);
             } else if (themRole.equalsIgnoreCase("TOPIC_J")) {
                 return Optional.of(CO_TOPIC);
+            } else if (themRole.equalsIgnoreCase("THEME_I")) {
+                return Optional.of(THEME);
+            } else if (themRole.equalsIgnoreCase("THEME_J")) {
+                return Optional.of(CO_THEME);
+            } else if (themRole.equalsIgnoreCase("LOCATION_I")) {
+                return Optional.of(LOCATION);
+            } else if (themRole.equalsIgnoreCase("LOCATION_J")) {
+                return Optional.of(CO_LOCATION);
             }
             log.warn("Unrecognized thematic role type: {}", themRole);
         }
