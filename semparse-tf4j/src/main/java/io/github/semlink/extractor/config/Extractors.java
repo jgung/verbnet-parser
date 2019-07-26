@@ -17,7 +17,6 @@
 package io.github.semlink.extractor.config;
 
 
-import io.github.semlink.extractor.SequenceExampleExtractor;
 import org.tensorflow.example.Feature;
 import org.tensorflow.example.FeatureList;
 
@@ -29,11 +28,12 @@ import java.util.stream.Collectors;
 
 import io.github.semlink.extractor.CharacterFeatureExtractor;
 import io.github.semlink.extractor.ConstantFeatureExtractor;
+import io.github.semlink.extractor.DefaultSequenceExampleExtractor;
 import io.github.semlink.extractor.Extractor;
 import io.github.semlink.extractor.KeyFeatureListExtractor;
 import io.github.semlink.extractor.LengthExtractor;
 import io.github.semlink.extractor.ScalarExtractor;
-import io.github.semlink.extractor.DefaultSequenceExampleExtractor;
+import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.TextExtractor;
 import io.github.semlink.extractor.Vocabulary;
 
@@ -101,6 +101,8 @@ public final class Extractors {
 
     private static Function<String, String> getStringFunction(String functionName) {
         switch (functionName) {
+            case "chars":
+                return Function.identity();
             case "lower":
                 return String::toLowerCase;
             case "digit_norm":

@@ -17,9 +17,11 @@
 package io.github.semlink.extractor;
 
 
+import com.google.protobuf.ByteString;
+
+import org.tensorflow.example.BytesList;
 import org.tensorflow.example.Feature;
 import org.tensorflow.example.FeatureList;
-import org.tensorflow.example.Int64List;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,29 +65,30 @@ public class CharacterFeatureExtractor extends BaseFeatureExtractor<FeatureList>
         FeatureList.Builder builder = FeatureList.newBuilder();
         getValues(seq).stream()
                 .map(this::mapToChars)
-                .map(this::featToIndex)
-                .map(chars -> Feature.newBuilder().setInt64List(
-                        Int64List.newBuilder().addAllValue(chars)))
+                .map(this::padAndTruncate)
+                .map(text -> Feature.newBuilder().setBytesList(
+                        BytesList.newBuilder().addAllValue(text.stream()
+                                .map(ByteString::copyFromUtf8)
+                                .collect(Collectors.toList()))))
                 .forEach(builder::addFeature);
         return builder.build();
     }
 
-    private List<Long> featToIndex(List<String> chars) {
+    private List<String> padAndTruncate(List<String> chars) {
         // add start padding
-        List<Integer> result = new ArrayList<>(nCopies(leftPadding, vocabulary.featToIndex(startWord)));
+        List<String> result = new ArrayList<>(nCopies(leftPadding, startWord));
         // add characters
-        chars.stream().map(vocabulary::featToIndex).forEach(result::add);
+        result.addAll(chars);
         // add end padding
-        result.addAll(nCopies(rightPadding, vocabulary.featToIndex(endWord)));
+        result.addAll(nCopies(rightPadding, endWord));
 
         // trim or pad resulting sequence
         if (result.size() < maxLength) {
-            result.addAll(nCopies(maxLength - result.size(), vocabulary.featToIndex(padWord)));
+            result.addAll(nCopies(maxLength - result.size(), padWord));
         } else {
             result = result.subList(0, maxLength);
         }
-
-        return result.stream().mapToLong(i -> i).boxed().collect(Collectors.toList());
+        return result;
     }
 
     private List<String> mapToChars(String original) {

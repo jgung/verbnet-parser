@@ -23,6 +23,8 @@ import org.tensorflow.example.BytesList;
 import org.tensorflow.example.Feature;
 import org.tensorflow.example.FeatureList;
 
+import java.util.List;
+
 import io.github.semlink.extractor.config.FeatureSpec;
 import io.github.semlink.type.HasFields;
 import lombok.experimental.Accessors;
@@ -42,6 +44,10 @@ public class KeyFeatureListExtractor extends BaseFeatureExtractor<FeatureList> {
     @Override
     public FeatureList extract(HasFields seq) {
         FeatureList.Builder builder = FeatureList.newBuilder();
+        List<String> values = getValues(seq);
+        if (null == values) {
+            throw new IllegalArgumentException(String.format("Missing field \"%s\" in input sequence", key()));
+        }
         getValues(seq).stream()
                 .map(this::map)
                 .map(text -> Feature.newBuilder().setBytesList(BytesList.newBuilder().addValue(ByteString.copyFromUtf8(text))))
