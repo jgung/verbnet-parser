@@ -22,7 +22,9 @@ import org.tensorflow.example.FeatureList;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,21 +52,24 @@ public final class Extractors {
 
         List<Extractor<Feature>> featureExtractors = new ArrayList<>();
         List<Extractor<FeatureList>> featureListExtractors = new ArrayList<>();
+        Map<String, Vocabulary> vocabularyMap = new HashMap<>();
 
-        extractFeatures(extractorSpec.features(), featureExtractors, featureListExtractors, vocabPath);
-        if (includeTargets) {
-            extractFeatures(extractorSpec.targets(), featureExtractors, featureListExtractors, vocabPath);
-        }
+        extractFeatures(extractorSpec.features(), featureExtractors, featureListExtractors, vocabularyMap, vocabPath);
+        extractFeatures(extractorSpec.targets(), includeTargets ? featureExtractors : new ArrayList<>(),
+                includeTargets ? featureListExtractors : new ArrayList<>(),
+                vocabularyMap,
+                vocabPath);
 
         featureExtractors.add(new ConstantFeatureExtractor("sentence_idx", 0));
         featureExtractors.add(new LengthExtractor(extractorSpec.seqFeat()));
 
-        return new DefaultSequenceExampleExtractor(featureListExtractors, featureExtractors);
+        return new DefaultSequenceExampleExtractor(featureListExtractors, featureExtractors, vocabularyMap);
     }
 
     private static void extractFeatures(List<FeatureSpec> features,
                                         List<Extractor<Feature>> featureExtractors,
                                         List<Extractor<FeatureList>> featureListExtractors,
+                                        Map<String, Vocabulary> vocabularyMap,
                                         String vocabPath) {
         for (FeatureSpec feature : features) {
 
@@ -79,6 +84,7 @@ public final class Extractors {
                 Vocabulary vocabulary = Vocabulary.read(Paths.get(vocabPath, feature.name()).toString(), feature.unknownWord());
                 featureListExtractors.add(new CharacterFeatureExtractor(feature, vocabulary)
                         .mappingFunctions(stringFunctions));
+                vocabularyMap.put(feature.name(), vocabulary);
             } else if (feature.rank() == 2) {
                 if (feature.numeric()) {
                     // list extractor
@@ -86,6 +92,7 @@ public final class Extractors {
                     Vocabulary vocabulary = Vocabulary.read(Paths.get(vocabPath, feature.name()).toString(), feature.unknownWord());
                     featureListExtractors.add(new KeyFeatureListExtractor(feature, vocabulary)
                             .mappingFunctions(stringFunctions));
+                    vocabularyMap.put(feature.name(), vocabulary);
                 }
             } else if (feature.rank() == 1) {
                 // extractor if numeric

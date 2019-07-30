@@ -108,7 +108,7 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
         try (FileInputStream in = new FileInputStream(Paths.get(modelDir, "config.json").toString())) {
             ConfigSpec spec = ConfigSpec.fromInputStream(in);
             SequenceExampleExtractor extractor = Extractors.createExtractor(spec.features(),
-                    Paths.get(modelDir, "vocab").toString(), true);
+                    Paths.get(modelDir, "vocab").toString(), false);
 
             return fromDirectory(modelDir, extractor);
         } catch (IOException e) {

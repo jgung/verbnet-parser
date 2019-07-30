@@ -21,6 +21,7 @@ import org.tensorflow.example.SequenceExample;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.NonNull;
@@ -64,6 +65,39 @@ public final class Tensors {
         }
 
         return results;
+    }
+
+    public static List<float[][]> toArcProbs(@NonNull Tensor<?> tensor) {
+        long[] shape = tensor.shape();
+
+        float[][][] arcProbs;
+        if (shape.length == 3) {
+            int batchSize = (int) shape[0];
+            int depDim = (int) shape[1];
+            int parDim = (int) shape[2];
+            arcProbs = tensor.copyTo(new float[batchSize][depDim][parDim]);
+        } else {
+            throw new IllegalArgumentException("Tensor rank is " + shape.length + ", was expecting 3.");
+        }
+
+        return new ArrayList<>(Arrays.asList(arcProbs));
+    }
+
+    public static List<float[][][]> toRelProbs(@NonNull Tensor<?> tensor) {
+        long[] shape = tensor.shape();
+
+        float[][][][] arcProbs;
+        if (shape.length == 4) {
+            int batchSize = (int) shape[0];
+            int depDim = (int) shape[1];
+            int relDim = (int) shape[2];
+            int parDim = (int) shape[3];
+            arcProbs = tensor.copyTo(new float[batchSize][depDim][relDim][parDim]);
+        } else {
+            throw new IllegalArgumentException("Tensor rank is " + shape.length + ", was expecting 4.");
+        }
+
+        return new ArrayList<>(Arrays.asList(arcProbs));
     }
 
     public static List<String> toStringList(@NonNull byte[][] bytes) {

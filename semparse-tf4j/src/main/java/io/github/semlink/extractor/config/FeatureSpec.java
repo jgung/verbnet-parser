@@ -54,7 +54,7 @@ public class FeatureSpec {
 
     /** padding functions applied during extraction. */
     @JsonProperty("padding_funcs")
-    private List<String> paddingFuncs = new ArrayList<>();
+    private List<PaddingFunc> paddingFuncs = new ArrayList<>();
 
     /** 2 most common feature rank for our NLP applications (word/token-level features). */
     private int rank = 2;
@@ -92,5 +92,16 @@ public class FeatureSpec {
 
     /** pre-initialized vocabulary. */
     private Map<String, Integer> indices;
+
+    @Getter
+    @Setter
+    @Accessors(fluent = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+    public static class PaddingFunc {
+        private int count;
+        private String type;
+        private Object value;
+    }
 
 }

@@ -16,9 +16,12 @@
 
 package io.github.semlink.extractor;
 
+import org.tensorflow.example.SequenceExample;
+
+import java.util.Optional;
+
 import io.github.semlink.type.HasFields;
 import lombok.NonNull;
-import org.tensorflow.example.SequenceExample;
 
 /**
  * {@link SequenceExample extractor}
@@ -34,4 +37,7 @@ public interface SequenceExampleExtractor {
      * @return TF sequence example proto
      */
     SequenceExample extractSequence(@NonNull HasFields sequence);
+
+    Optional<Vocabulary> vocabulary(@NonNull String key);
+
 }

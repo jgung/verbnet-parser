@@ -1,17 +1,20 @@
 package io.github.semlink.extractor;
 
-import io.github.semlink.app.WordPieceTokenizer;
-import io.github.semlink.type.HasFields;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import lombok.NonNull;
-import lombok.Setter;
 import org.tensorflow.example.FeatureLists;
 import org.tensorflow.example.Features;
 import org.tensorflow.example.SequenceExample;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import io.github.semlink.app.WordPieceTokenizer;
+import io.github.semlink.type.HasFields;
+import lombok.NonNull;
+import lombok.Setter;
 
 import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Feature;
 import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Features;
@@ -127,6 +130,11 @@ public class BertSrlExampleExtractor implements SequenceExampleExtractor {
             .setContext(features)
             .setFeatureLists(featureLists)
             .build();
+    }
+
+    @Override
+    public Optional<Vocabulary> vocabulary(@NonNull String key) {
+        return Optional.empty();
     }
 
 }
