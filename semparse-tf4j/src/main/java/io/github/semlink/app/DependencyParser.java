@@ -29,9 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.Vocabulary;
@@ -47,9 +45,11 @@ import io.github.semlink.type.TokenSequence;
 import lombok.NonNull;
 import lombok.Setter;
 
+import static io.github.semlink.app.ParsingUtils.fixCycles;
+import static io.github.semlink.app.ParsingUtils.getLabels;
+import static io.github.semlink.app.ParsingUtils.toArcProbs;
+import static io.github.semlink.app.ParsingUtils.toRelProbs;
 import static io.github.semlink.tensor.Tensors.batchExamples;
-import static io.github.semlink.tensor.Tensors.toArcProbs;
-import static io.github.semlink.tensor.Tensors.toRelProbs;
 import static io.github.semlink.tensor.Tensors.toStringLists;
 
 /**
@@ -112,8 +112,8 @@ public class DependencyParser implements AutoCloseable {
                 float[][] arcs = arcProbs.get(i);
                 float[][][] rels = relProbs.get(i);
                 List<String> tags = posResults.get(i);
-                List<Integer> edges = nonprojective(arcs);
-                List<String> labels = getLabels(rels, edges);
+                List<Integer> edges = fixCycles(arcs);
+                List<String> labels = getLabels(rels, edges, word -> relVocabulary.indexToFeat(word));
                 List<String> words = inputs.get(i).field("word");
                 for (int idx = 1; idx < edges.size(); ++idx) {
                     String tag = tags.get(idx - 1);
@@ -136,258 +136,6 @@ public class DependencyParser implements AutoCloseable {
         }
     }
 
-    private List<String> getLabels(float[][][] rels, List<Integer> edges) {
-        List<String> labels = new ArrayList<>();
-        for (int t = 0; t < edges.size(); ++t) {
-            int edgeIndex = edges.get(t);
-            int argmax = 0;
-            float max = -Float.MAX_VALUE;
-            int index = 0;
-            for (float[] probs : rels[t]) {
-                float val = probs[edgeIndex];
-                if (val > max) {
-                    argmax = index;
-                    max = val;
-                }
-                ++index;
-            }
-            labels.add(relVocabulary.indexToFeat(argmax));
-        }
-        return labels;
-    }
-
-    private static List<Integer> nonprojective(float[][] probs) {
-        // tokens should not point to themselves, set their scores to 0
-        int index = 0;
-        for (float[] edgeProbs : probs) {
-            edgeProbs[index++] = 0;
-        }
-
-        // ensure sentinel is assigned to itself as a head
-        for (int i = 1; i < probs[0].length; ++i) {
-            probs[0][i] = 0;
-        }
-        probs[0][0] = 1;
-
-        // re-normalize to probabilities
-        for (float[] headProbs : probs) {
-            float sum = 0;
-            for (float val : headProbs) {
-                sum += val;
-            }
-            for (int i = 0; i < headProbs.length; ++i) {
-                headProbs[i] /= sum;
-            }
-        }
-
-        List<Integer> edges = greedy(probs);
-        List<Integer> roots = findRoots(edges);
-        List<Integer> bestEdges = edges;
-        float bestScore = -Float.MAX_VALUE;
-        if (roots.size() > 1) {
-            for (int root : roots) {
-                float[][] candidateProbs = makeRoot(probs, root);
-                List<Integer> candidateEdges = greedy(candidateProbs);
-                float score = scoreEdges(candidateProbs, candidateEdges);
-                if (score > bestScore) {
-                    bestEdges = candidateEdges;
-                    bestScore = score;
-                }
-            }
-        }
-        return bestEdges;
-    }
-
-    private static float scoreEdges(float[][] probs, List<Integer> edges) {
-        float sum = 0;
-        for (int v = 1; v < probs.length; ++v) {
-            sum += Math.log(probs[v][edges.get(v)]);
-        }
-        return sum;
-    }
-
-    private static float[][] makeRoot(float[][] probs, int root) {
-        float[][] result = new float[probs.length][];
-        int index = 0;
-        for (float[] val : probs) {
-            if (index == root) {
-                result[index] = new float[val.length];
-                result[index][0] = 1;
-            } else {
-                result[index] = Arrays.copyOf(val, val.length);
-            }
-
-            if (index != 0 && index != root) {
-                result[index][0] = 0;
-            }
-
-            normalizeInPlace(result[index]);
-
-            ++index;
-        }
-        return result;
-    }
-
-    private static List<Integer> findRoots(List<Integer> edges) {
-        return IntStream.range(0, edges.size())
-                .filter(i -> i > 0 && edges.get(i) == 0)
-                .boxed()
-                .collect(Collectors.toList());
-    }
-
-    private static List<Integer> greedy(float[][] probs) {
-
-        // argmax
-        int[] edges = new int[probs.length];
-        int tokenIndex = 0;
-        for (float[] headProbs : probs) {
-            edges[tokenIndex++] = argmax(headProbs);
-        }
-
-        List<List<Integer>> cycles;
-        do {
-            // try to fix cycles
-            cycles = findCycles(edges);
-            for (List<Integer> cycleVertices : cycles) {
-                // get the best heads and their probabilities
-                List<Integer> cycleEdges = cycleVertices.stream()
-                        .map(v -> edges[v])
-                        .collect(Collectors.toList());
-
-                List<Float> cycleProbs = new ArrayList<>();
-                for (int i = 0; i < cycleVertices.size(); ++i) {
-                    cycleProbs.add(probs[cycleVertices.get(i)][cycleEdges.get(i)]);
-                }
-                // get the second-best edges and their probabilities
-                for (int i = 0; i < cycleVertices.size(); ++i) {
-                    probs[cycleVertices.get(i)][cycleEdges.get(i)] = 0;
-                }
-                List<Integer> backoffEdges = new ArrayList<>();
-                for (int v : cycleVertices) {
-                    backoffEdges.add(argmax(probs[v]));
-                }
-                List<Float> backoffProbs = new ArrayList<>();
-                for (int i = 0; i < cycleVertices.size(); ++i) {
-                    backoffProbs.add(probs[cycleVertices.get(i)][backoffEdges.get(i)]);
-                }
-                for (int i = 0; i < cycleVertices.size(); ++i) {
-                    probs[cycleVertices.get(i)][cycleEdges.get(i)] = cycleProbs.get(i);
-                }
-
-                // Find the node in the cycle that the model is the least confident about and its probability
-                int index = 0;
-                float max = -Float.MAX_VALUE;
-                int newRootInCycle = 0;
-                for (float backoffProb : backoffProbs) {
-                    float val = backoffProb / cycleProbs.get(index);
-                    if (val > max) {
-                        newRootInCycle = index;
-                        max = val;
-                    }
-                    ++index;
-                }
-                int newCycleRoot = cycleVertices.get(newRootInCycle);
-
-                // set the new root
-                probs[newCycleRoot][cycleEdges.get(newRootInCycle)] = 0;
-                edges[newCycleRoot] = backoffEdges.get(newRootInCycle);
-            }
-        } while (!cycles.isEmpty());
-
-        return IntStream.of(edges).boxed().collect(Collectors.toList());
-    }
-
-    private static void normalizeInPlace(float[] values) {
-        float sum = 0;
-        for (float val : values) {
-            sum += val;
-        }
-        for (int i = 0; i < values.length; ++i) {
-            values[i] /= sum;
-        }
-    }
-
-    private static int argmax(float[] values) {
-        float max = -Float.MAX_VALUE;
-        int argmax = 0;
-        for (int i = 0; i < values.length; ++i) {
-            if (values[i] > max) {
-                max = values[i];
-                argmax = i;
-            }
-        }
-        return argmax;
-    }
-
-    private static class CycleFinder {
-
-        int[] edges;
-        List<Integer> vertices;
-        List<Integer> indices;
-        List<Integer> lowlinks;
-        Stack<Integer> stack;
-        List<Boolean> onstack;
-        int currentIndex;
-        List<List<Integer>> cycles;
-
-        CycleFinder(int[] edges) {
-            this.edges = edges;
-            vertices = IntStream.range(0, edges.length).boxed().collect(Collectors.toList());
-            indices = new ArrayList<>(Collections.nCopies(edges.length, -1));
-            lowlinks = new ArrayList<>(Collections.nCopies(edges.length, -1));
-            stack = new Stack<>();
-            onstack = new ArrayList<>(Collections.nCopies(edges.length, false));
-            currentIndex = 0;
-            cycles = new ArrayList<>();
-        }
-
-        private int strongConnect(int vertex, int currentIndex) {
-            indices.set(vertex, currentIndex);
-            lowlinks.set(vertex, currentIndex);
-            stack.push(vertex);
-            currentIndex += 1;
-            onstack.set(vertex, true);
-
-            for (int vert : IntStream.range(0, edges.length)
-                    .filter(i -> edges[i] == vertex).toArray()) {
-                if (indices.get(vert) == -1) {
-                    currentIndex = strongConnect(vert, currentIndex);
-                    lowlinks.set(vertex, Math.min(lowlinks.get(vertex), lowlinks.get(vert)));
-                } else if (onstack.get(vert)) {
-                    lowlinks.set(vertex, Math.min(lowlinks.get(vertex), indices.get(vert)));
-                }
-            }
-
-            if (lowlinks.get(vertex).equals(indices.get(vertex))) {
-                List<Integer> cycle = new ArrayList<>();
-                int vert = -1;
-                while (vert != vertex) {
-                    vert = stack.pop();
-                    onstack.set(vert, false);
-                    cycle.add(vert);
-                }
-                if (cycle.size() > 1) {
-                    cycles.add(cycle);
-                }
-
-            }
-            return currentIndex;
-        }
-
-        private List<List<Integer>> findCycles() {
-            for (int vertex : vertices) {
-                if (indices.get(vertex) == -1) {
-                    currentIndex = strongConnect(vertex, currentIndex);
-                }
-            }
-            return cycles;
-        }
-
-    }
-
-    private static List<List<Integer>> findCycles(int[] edges) {
-        return new CycleFinder(edges).findCycles();
-    }
 
     public static DependencyParser fromDirectory(@NonNull String modelDir) {
         try (FileInputStream in = new FileInputStream(Paths.get(modelDir, "config.json").toString())) {
