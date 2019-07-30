@@ -23,9 +23,10 @@ import org.springframework.context.annotation.Configuration;
 
 import io.github.clearwsd.parser.Nlp4jDependencyParser;
 import io.github.clearwsd.parser.NlpParser;
+import io.github.clearwsd.type.FeatureType;
 import io.github.semlink.parser.DefaultVnPredicateDetector;
+import io.github.semlink.parser.FilteredPredicateMapper;
 import io.github.semlink.parser.LightVerbMapper;
-import io.github.semlink.parser.NominalMapper;
 import io.github.semlink.parser.SemanticRoleLabeler;
 import io.github.semlink.parser.VerbNetParser;
 import io.github.semlink.parser.VerbNetSemParser;
@@ -60,7 +61,8 @@ public class PredictionConfiguration {
     private String lvmPath;
     @Value("${verbnet.demo.noun-mappings-path:mappings/nominal-mappings.tsv}")
     private String nounsPath;
-
+    @Value("${verbnet.demo.adjective-mappings-path:mappings/adjectival-mappings.tsv}")
+    private String adjectivesPath;
     @Bean
     public VnIndex verbNet() {
         return new DefaultVnIndex();
@@ -85,14 +87,23 @@ public class PredictionConfiguration {
         String lvmPath = resolveFile(this.lvmPath);
         String pbPath = resolveFile(this.pbPath);
         String nounsPath = resolveFile(this.nounsPath);
+        String adjPath = resolveFile(this.adjectivesPath);
 
         SemanticRoleLabeler<PropBankArg> roleLabeler = pbRoleLabeler(modelDir);
 
         VerbNetAligner aligner = VerbNetAligner.of(mappingsPath, pbPath);
 
         LightVerbMapper mapper = LightVerbMapper.fromMappingsPath(lvmPath, verbNet);
-        NominalMapper nominalMapper = NominalMapper.fromMappingsPath(nounsPath, verbNet);
-        VnPredicateDetector predicateDetector = new DefaultVnPredicateDetector(verbNetSenseClassifier, mapper, nominalMapper);
+        FilteredPredicateMapper nominalMapper = FilteredPredicateMapper.fromMappingsPath(nounsPath, verbNet,
+                child -> child.feature(FeatureType.Pos).toString().toUpperCase().startsWith("N")
+                        && !child.feature(FeatureType.Dep).toString().toUpperCase().equals("COMPOUND"));
+
+
+        FilteredPredicateMapper adjectivalMapper = FilteredPredicateMapper.fromMappingsPath(adjPath, verbNet,
+                child -> child.feature(FeatureType.Pos).toString().toUpperCase().startsWith("JJ"));
+        VnPredicateDetector predicateDetector = new DefaultVnPredicateDetector(verbNetSenseClassifier, mapper,
+                nominalMapper,
+                adjectivalMapper);
 
         VerbNetSemParser parser = new VerbNetSemParser(roleLabeler, aligner);
 

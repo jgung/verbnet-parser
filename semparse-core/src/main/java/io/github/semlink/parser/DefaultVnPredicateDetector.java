@@ -47,10 +47,10 @@ public class DefaultVnPredicateDetector implements VnPredicateDetector {
 
     @SafeVarargs
     public DefaultVnPredicateDetector(VerbNetSenseClassifier verbNetClassifier, PredicateMapper<VnClass> lightVerbMapper,
-                                      PredicateMapper<VnClass>... nominalMappers) {
+                                      PredicateMapper<VnClass>... predicateMappers) {
         this.verbNetClassifier = verbNetClassifier;
         this.lightVerbMapper = lightVerbMapper;
-        this.tokenMappers = Arrays.stream(nominalMappers).collect(Collectors.toList());
+        this.tokenMappers = Arrays.stream(predicateMappers).collect(Collectors.toList());
     }
 
     @Override
