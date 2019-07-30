@@ -115,7 +115,7 @@ public class DependencyParser implements AutoCloseable {
                 List<Integer> edges = fixCycles(arcs);
                 List<String> labels = getLabels(rels, edges, word -> relVocabulary.indexToFeat(word));
                 List<String> words = inputs.get(i).field("word");
-                for (int idx = 1; idx < edges.size(); ++idx) {
+                for (int idx = 1, len = words.size() + 1; idx < len; ++idx) {
                     String tag = tags.get(idx - 1);
                     int head = edges.get(idx);
                     String label = labels.get(idx);
