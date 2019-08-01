@@ -177,7 +177,9 @@ public class DependencyParser implements AutoCloseable {
                 ITokenSequence result = model.predictBatch(Collections.singletonList(seq)).get(0);
                 List<String> lines = new ArrayList<>();
                 for (IToken token : result) {
-                    lines.add(String.format("%s\t%s\t%s\t%s", token.field(Fields.DefaultFields.TEXT), token.field("pos"),
+                    lines.add(String.format("%d\t%10s\t%10s\t%10s\t%10s",
+                            token.index() + 1,
+                            token.field(Fields.DefaultFields.TEXT), token.field("pos"),
                             token.field("dep"), token.field("head")));
                 }
                 System.out.println("\n" + String.join("\n", lines) + "\n");
