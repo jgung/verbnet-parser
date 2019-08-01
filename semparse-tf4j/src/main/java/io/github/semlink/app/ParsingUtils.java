@@ -91,6 +91,34 @@ public class ParsingUtils {
         return labels;
     }
 
+    public static float[][] trimToLength(float[][] squareMatrix, int length) {
+        float[][] newMatrix = new float[length][];
+        for (int i = 0; i < length; ++i) {
+            float[] newRow = new float[length];
+            System.arraycopy(squareMatrix[i], 0, newRow, 0, length);
+            newMatrix[i] = newRow;
+        }
+        return newMatrix;
+    }
+
+    public static float[][][] trimToLength(float[][][] tensor, int length) {
+        float[][][] newTensor = new float[length][][];
+
+        for (int i = 0; i < length; ++i) {
+            float[][] matrix = tensor[i];
+            float[][] newMatrix = new float[matrix.length][];
+            int rowIndex = 0;
+            for (float[] row : matrix) {
+                float[] newRow = new float[length];
+                System.arraycopy(row, 0, newRow, 0, length);
+                newMatrix[rowIndex++] = newRow;
+            }
+            newTensor[i] = newMatrix;
+        }
+
+        return newTensor;
+    }
+
     public static List<Integer> fixCycles(float[][] probs) {
         // tokens should not point to themselves, set their scores to 0
         int index = 0;

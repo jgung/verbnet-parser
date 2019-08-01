@@ -49,6 +49,7 @@ import static io.github.semlink.app.ParsingUtils.fixCycles;
 import static io.github.semlink.app.ParsingUtils.getLabels;
 import static io.github.semlink.app.ParsingUtils.toArcProbs;
 import static io.github.semlink.app.ParsingUtils.toRelProbs;
+import static io.github.semlink.app.ParsingUtils.trimToLength;
 import static io.github.semlink.tensor.Tensors.batchExamples;
 import static io.github.semlink.tensor.Tensors.toStringLists;
 
@@ -107,14 +108,16 @@ public class DependencyParser implements AutoCloseable {
             List<ITokenSequence> output = new ArrayList<>();
 
             for (int i = 0; i < inputs.size(); ++i) {
+                List<String> words = inputs.get(i).field("word");
+
                 List<IToken> tokens = new ArrayList<>();
 
-                float[][] arcs = arcProbs.get(i);
-                float[][][] rels = relProbs.get(i);
+                float[][] arcs = trimToLength(arcProbs.get(i), words.size() + 1);
+                float[][][] rels = trimToLength(relProbs.get(i), words.size() + 1);
                 List<String> tags = posResults.get(i);
                 List<Integer> edges = fixCycles(arcs);
                 List<String> labels = getLabels(rels, edges, word -> relVocabulary.indexToFeat(word));
-                List<String> words = inputs.get(i).field("word");
+
                 for (int idx = 1, len = words.size() + 1; idx < len; ++idx) {
                     String tag = tags.get(idx - 1);
                     int head = edges.get(idx);
@@ -155,7 +158,9 @@ public class DependencyParser implements AutoCloseable {
     }
 
     public static void main(String[] args) {
-        try (DependencyParser model = DependencyParser.fromDirectory("semparse-tf4j/src/main/resources/dep-model")) {
+        String path = args[0];
+
+        try (DependencyParser model = DependencyParser.fromDirectory(path)) {
 
             Scanner scanner = new Scanner(System.in);
             while (true) {
