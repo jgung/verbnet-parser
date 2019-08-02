@@ -41,6 +41,7 @@ import io.github.semlink.propbank.frames.Roleset;
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
+import io.github.semlink.semlink.aligner.AdjustInvalidRoles;
 import io.github.semlink.semlink.aligner.FillerAligner;
 import io.github.semlink.semlink.aligner.PbVnAligner;
 import io.github.semlink.semlink.aligner.PbVnAlignment;
@@ -77,7 +78,8 @@ public class VerbNetAligner {
                         new SelResAligner(),
                         new FillerAligner(),
                         new SelResAligner(SelResAligner::getThematicRolesGreedy),
-                        new SynResAligner()),
+                        new SynResAligner(),
+                        new AdjustInvalidRoles()),
                 new VnPredicateExtractor()
         );
     }
