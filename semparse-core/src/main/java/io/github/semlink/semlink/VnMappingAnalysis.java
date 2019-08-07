@@ -324,8 +324,7 @@ public final class VnMappingAnalysis {
 
         Roleset roleset;
         VnClass vnClass;
-
-        Map<ArgNumber, RoleMapping> roleMappings = new HashMap<>();
+        List<RoleMapping> roleMappings = new ArrayList<>();
 
         public RolesetMapping(Roleset roleset, VnClass vnClass) {
             this.roleset = roleset;
@@ -333,32 +332,37 @@ public final class VnMappingAnalysis {
             this.roleMappings = roleset.roles().roles().stream()
                     .filter(r -> r.number().isNumber())
                     .map(role -> new RoleMapping(roleset, vnClass, role))
-                    // TODO: handle modifiers
-                    .collect(Collectors.toMap(r -> r.pbRole.number(), r -> r));
+                    .collect(Collectors.toList());
         }
 
         public RolesetMapping add(ArgNumber number, ThematicRoleType vnRole, MappingType mappingType) {
-            roleMappings.get(number)
-                    .mappingType(mappingType)
-                    .vnRole(vnRole);
+            roleMappings.stream()
+                    .filter(arg -> arg.pbRole.number() == number)
+                    .findFirst()
+                    .ifPresent(m -> m
+                            .mappingType(mappingType)
+                            .vnRole(vnRole));
             return this;
         }
 
         public RolesetMapping addNote(ArgNumber number, String note) {
-            roleMappings.get(number)
-                    .notes().add(note);
+            roleMappings.stream()
+                    .filter(arg -> arg.pbRole.number() == number)
+                    .findFirst()
+                    .ifPresent(m -> m
+                            .notes().add(note));
             return this;
         }
 
         public Set<ThematicRoleType> usedVnRoles() {
-            return roleMappings.values().stream()
+            return roleMappings.stream()
                     .filter(v -> v.vnRole != ThematicRoleType.NONE)
                     .map(v -> v.vnRole)
                     .collect(Collectors.toSet());
         }
 
         public Set<PbRole> missingPbRoles() {
-            return roleMappings.values().stream()
+            return roleMappings.stream()
                     .filter(v -> v.vnRole == ThematicRoleType.NONE)
                     .map(v -> v.pbRole)
                     .sorted(Comparator.comparing(v -> v.number().ordinal()))
@@ -367,9 +371,9 @@ public final class VnMappingAnalysis {
 
         @Override
         public String toString() {
-            return roleMappings.entrySet().stream()
-                    .sorted(Comparator.comparing(v -> v.getKey().ordinal()))
-                    .map(v -> v.getValue().toString())
+            return roleMappings.stream()
+                    .sorted(Comparator.comparing(v -> v.pbRole.number().ordinal()))
+                    .map(RoleMapping::toString)
                     .collect(Collectors.joining("\n"));
         }
 
@@ -385,7 +389,7 @@ public final class VnMappingAnalysis {
 
         Roleset roleset;
         VnClass vnClass;
-        PbRole pbRole;
+        PbRole pbRole = new PbRole().number(ArgNumber.AM).functionTag(FunctionTag.VSP);
 
         ThematicRoleType vnRole = ThematicRoleType.NONE;
         MappingType mappingType = MappingType.UNMAPPED;
@@ -397,14 +401,22 @@ public final class VnMappingAnalysis {
             this.pbRole = pbRole;
         }
 
+        public RoleMapping(Roleset roleset, VnClass vnClass, ThematicRoleType vnRole) {
+            this.roleset = roleset;
+            this.vnClass = vnClass;
+            this.vnRole = vnRole;
+        }
+
         @Override
         public String toString() {
             return String.join("\t", Arrays.asList(roleset.id(),
                     vnClass.verbNetId().classId(),
-                    pbRole.number().name(),
+                    // TODO: consider mapping modifiers if they appear in roleset
+                    pbRole.number().isModifier() ? "NM" : pbRole.number().name(),
                     vnRole.name(),
+                    pbRole.number().isModifier() ? "" : pbRole.functionTag().name(),
                     mappingType.name(),
-                    pbRole.description(),
+                    Optional.ofNullable(pbRole.description()).orElse(""),
                     notes.size() > 0 ? "NOTES: " + String.join(", ", notes) : ""));
         }
     }
@@ -553,11 +565,15 @@ public final class VnMappingAnalysis {
             for (PbRole role : mapping.missingPbRoles()) {
                 String possible = validRoles.stream().filter(r -> !mapping.usedVnRoles().contains(r))
                         .map(Enum::name)
+                        .sorted()
                         .collect(Collectors.joining(", "));
                 if (possible.length() > 0) {
                     mapping.addNote(role.number(), "remaining=[" + possible + "]");
                 }
             }
+            validRoles.stream().filter(v -> !mapping.usedVnRoles().contains(v)).forEach(v -> {
+                mapping.roleMappings.add(new RoleMapping(mapping.roleset, mapping.vnClass, v));
+            });
         }
     }
 
@@ -592,7 +608,7 @@ public final class VnMappingAnalysis {
         applyHeuristicMappings(rolesetMappings, ftThemRoleMappings);
         addPossibleRoles(rolesetMappings);
         try (PrintWriter printWriter = new PrintWriter(new File(new File(mappingsPath).getParentFile(), "role-mappings.tsv"))) {
-            printWriter.println(String.join("\t", Arrays.asList("PB", "VN", "PB Role", "VN Role", "Mapping Type",
+            printWriter.println(String.join("\t", Arrays.asList("PB", "VN", "PB Role", "VN Role", "PB FT", "Mapping Type",
                     "PB Description", "Notes")));
             rolesetMappings.forEach(printWriter::println);
         } catch (FileNotFoundException e) {
