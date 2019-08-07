@@ -31,10 +31,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import io.github.semlink.extractor.BertDepExampleExtractor;
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.Vocabulary;
-import io.github.semlink.extractor.config.ConfigSpec;
-import io.github.semlink.extractor.config.Extractors;
 import io.github.semlink.tensor.TensorList;
 import io.github.semlink.type.Fields;
 import io.github.semlink.type.HasFields;
@@ -75,11 +74,11 @@ public class DependencyParser implements AutoCloseable {
     private Vocabulary relVocabulary;
 
     public DependencyParser(@NonNull SequenceExampleExtractor featureExtractor,
-                            @NonNull SavedModelBundle model) {
+                            @NonNull SavedModelBundle model,
+                            @NonNull Vocabulary vocabulary) {
         this.featureExtractor = featureExtractor;
         this.model = model;
-        this.relVocabulary = featureExtractor.vocabulary("deprel")
-                .orElseThrow(IllegalArgumentException::new);
+        this.relVocabulary = vocabulary;
     }
 
     public List<ITokenSequence> predictBatch(@NonNull List<HasFields> inputs) {
@@ -141,12 +140,11 @@ public class DependencyParser implements AutoCloseable {
 
 
     public static DependencyParser fromDirectory(@NonNull String modelDir) {
-        try (FileInputStream in = new FileInputStream(Paths.get(modelDir, "config.json").toString())) {
-            ConfigSpec spec = ConfigSpec.fromInputStream(in);
-            SequenceExampleExtractor extractor = Extractors.createExtractor(spec.features(),
-                    Paths.get(modelDir, "vocab").toString(), false);
-            SavedModelBundle model = SavedModelBundle.load(Paths.get(modelDir, "model").toString(), "serve");
-            return new DependencyParser(extractor, model);
+        SequenceExampleExtractor extractor = new BertDepExampleExtractor(
+                new WordPieceTokenizer(Paths.get(modelDir, "model", "assets", "vocab.txt").toString()));
+        SavedModelBundle model = SavedModelBundle.load(Paths.get(modelDir, "model").toString(), "serve");
+        try (FileInputStream vocabStream = new FileInputStream(Paths.get(modelDir, "vocab", "deprel").toString())) {
+            return new DependencyParser(extractor, model, Vocabulary.read(vocabStream, "dep"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
