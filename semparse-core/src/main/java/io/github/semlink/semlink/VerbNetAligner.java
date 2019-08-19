@@ -183,16 +183,25 @@ public class VerbNetAligner {
         }
 
         if (alignments.size() > 0) {
-            return Optional.of(Collections.max(alignments, alignmentComparator()));
+            return Optional.of(Collections.max(alignments, new AlignmentComparator()));
         }
         return Optional.empty();
     }
 
-    private static Comparator<PbVnAlignment> alignmentComparator() {
-        Comparator<PbVnAlignment> comparing = Comparator.comparing(al
-                -> al.sourcePhrases(true).size());
-        comparing.thenComparing(al -> al.targetPhrases().size() - al.targetPhrases(false).size());
-        return comparing;
+    private static class AlignmentComparator implements Comparator<PbVnAlignment> {
+        @Override
+        public int compare(PbVnAlignment first, PbVnAlignment second) {
+            int aligned = first.sourcePhrases(true).size();
+            int otherAligned = second.sourcePhrases(true).size();
+            if (aligned != otherAligned) {
+                return aligned - otherAligned;
+            }
+
+            int unaligned = first.targetPhrases(false).size();
+            int otherUnaligned = second.targetPhrases(false).size();
+
+            return otherUnaligned - unaligned;
+        }
     }
 
     public static VerbNetAligner of(@NonNull String mappingsPath, @NonNull String pbIndexPath) {
