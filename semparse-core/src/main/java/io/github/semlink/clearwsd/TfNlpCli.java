@@ -4,6 +4,7 @@ import io.github.clearwsd.app.WordSenseCLI;
 import io.github.clearwsd.parser.NlpParser;
 import io.github.semlink.app.DependencyParser;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * TF-NLP {@link WordSenseCLI}.
@@ -13,7 +14,8 @@ import lombok.Setter;
 public class TfNlpCli extends WordSenseCLI {
 
     @Setter
-    private String parserPath = "/home/jamesgung/Downloads/dep-model";
+    @Accessors(fluent = true)
+    private String parserPath;
 
     public TfNlpCli(String[] args) {
         super(args);
@@ -25,7 +27,9 @@ public class TfNlpCli extends WordSenseCLI {
     }
 
     public static void main(String[] args) {
-        new TfNlpCli(args).run();
+        new TfNlpCli(args)
+            .parserPath(args[0])
+            .run();
     }
 
 }

@@ -23,11 +23,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.github.semlink.verbnet.VnFrame;
 import io.github.semlink.verbnet.syntax.VnSyntax;
 import io.github.semlink.verbnet.syntax.VnSyntaxType;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -100,5 +102,8 @@ public class SyntacticFrame {
         preposition.ifPresent(elements::add);
     }
 
-
+    @Override
+    public String toString() {
+        return elements.stream().map(Objects::toString).collect(Collectors.joining("\t"));
+    }
 }

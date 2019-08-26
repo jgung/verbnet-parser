@@ -93,7 +93,6 @@ public class TfNlpParser implements NlpParser {
         return new DefaultDepTree(0, tokens, root);
     }
 
-    @Override
     public List<DepTree> parseBatch(List<List<String>> sentences) {
         List<DepTree> result = new ArrayList<>();
 

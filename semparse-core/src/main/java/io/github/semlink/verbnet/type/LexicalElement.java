@@ -74,4 +74,8 @@ public class LexicalElement extends FramePhrase {
         }
     }
 
+    @Override
+    public String toString() {
+        return type() + "[" + value() + "]";
+    }
 }

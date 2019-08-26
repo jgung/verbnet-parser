@@ -16,6 +16,7 @@
 
 package io.github.semlink.verbnet.type;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -87,7 +88,16 @@ public class NounPhrase extends FramePhrase {
 
     @Override
     public String toString() {
-        String result = type() + "[" + thematicRoleType().name() + "]";
+        String result = type() + "[" + thematicRoleType().name();
+        Set<NpSynRes> plus = syntacticRes(true);
+        Set<NpSynRes> minus = syntacticRes(false);
+        if (plus.size() > 0) {
+            result += "+" + plus.stream().sorted().map(Objects::toString).collect(Collectors.joining(", "));
+        }
+        if (minus.size() > 0) {
+            result += "-" + minus.stream().sorted().map(Objects::toString).collect(Collectors.joining(", "));
+        }
+        result += "]";
         if (preposition().isPresent()) {
             result = preposition.toString() + " " + result;
         }

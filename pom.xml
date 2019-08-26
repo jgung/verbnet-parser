@@ -65,6 +65,7 @@
         <module>semparse-tf4j</module>
         <module>semparse-core</module>
         <module>semparse-web</module>
+        <module>semparse-sense</module>
     </modules>
 
     <dependencies>
