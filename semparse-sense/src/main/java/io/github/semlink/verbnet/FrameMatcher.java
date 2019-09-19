@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class FrameMatcher {
 
     public static void main(String[] args) {
-        DependencyParser model = DependencyParser.fromDirectory(args[0]);
+        DependencyParser model = DependencyParser.fromDirectory("/home/jamesgung/Downloads/dep-model");
         TfNlpParser parser = new TfNlpParser(model);
 
         VnIndex vnIndex = new DefaultVnIndex();
@@ -66,6 +66,7 @@ public class FrameMatcher {
             if (!restrictions.isEmpty()) {
                 System.out.println(
                     child.feature(FeatureType.Text).toString() + "\t"
+                        + analyzer.argumentPosition(child) + "\t"
                         + restrictions.stream().map(Objects::toString).collect(Collectors.joining(", ")));
             }
         }

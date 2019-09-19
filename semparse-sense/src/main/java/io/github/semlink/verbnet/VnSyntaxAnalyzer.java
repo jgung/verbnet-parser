@@ -34,10 +34,10 @@ public class VnSyntaxAnalyzer {
     }
 
     public static boolean isWh(DepNode depNode) {
-        return matchesLemmaPosDep(depNode, "if", "IN", "mark")
+        return matchesLemmaPosDep(depNode, "if", "IN", UdDep.MARK)
             || matchesPos(depNode, "WP")
             || matchesPos(depNode, "WRB")
-            || matchesLemmaPosDep(depNode, "whether", "IN", "mark");
+            || matchesLemmaPosDep(depNode, "whether", "IN", UdDep.MARK);
     }
 
     public static boolean isReflexive(DepNode node) {
@@ -72,27 +72,37 @@ public class VnSyntaxAnalyzer {
         return node.feature(FeatureType.Lemma).toString().equalsIgnoreCase(lemma) && matchesPos(node, pos);
     }
 
-    public static boolean matchesPosDep(DepNode node, String pos, String dep) {
-        return node.dep().equalsIgnoreCase(dep) && matchesPos(node, pos);
+    public static boolean matchesPosDep(DepNode node, String pos, UdDep dep) {
+        return UdDep.of(node.dep()) == dep && matchesPos(node, pos);
     }
 
     public static boolean matchesPos(DepNode node, String pos) {
         return node.feature(FeatureType.Pos).toString().equalsIgnoreCase(pos);
     }
 
-    public static boolean matchesLemmaPosDep(DepNode node, String lemma, String pos, String dep) {
+    public static boolean matchesLemmaPosDep(DepNode node, String lemma, String pos, UdDep dep) {
         return node.feature(FeatureType.Lemma).toString().equalsIgnoreCase(lemma)
-            && matchesPos(node, pos) && node.dep().equalsIgnoreCase(dep);
+            && matchesPos(node, pos) && UdDep.of(node.dep()) == dep;
     }
 
     public static boolean adjectiveOrPastParticiple(DepNode node) {
-        return matchesPos(node, "VBN") || matchesPosDep(node, "JJ", "xcomp");
+        return matchesPos(node, "VBN") || matchesPosDep(node, "JJ", UdDep.XCOMP);
     }
 
     public static boolean hasSubject(DepNode node) {
-        return node.children().stream().anyMatch(c -> c.dep().equalsIgnoreCase("nsubj"));
+        return node.children().stream().anyMatch(c -> UdDep.of(c.dep()) == UdDep.NSUBJ);
     }
 
+    public ArgPos argumentPosition(DepNode argument) {
+        UdDep dep = UdDep.of(argument.dep());
+        if (dep == UdDep.NSUBJ) {
+            return ArgPos.SUBJ;
+        }
+        if (dep == UdDep.OBJ || dep == UdDep.NSUBJPASS) {
+            return ArgPos.DOBJ;
+        }
+        return ArgPos.OBL;
+    }
 
     public Set<Restriction<NpSynRes>> analyzeNp(DepNode argument) {
         if (argument.isRoot()) {
@@ -104,15 +114,15 @@ public class VnSyntaxAnalyzer {
         final String argDep = argument.dep();
         final List<DepNode> children = argument.children();
 
-        if (isClause(argument) && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", "mark"))
-            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "be", "VB", "cop"))
+        if (isClause(argument) && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", UdDep.MARK))
+            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "be", "VB", UdDep.COP))
             && argument.head().children().stream().anyMatch(c -> c.dep().equalsIgnoreCase("obj"))) {
             // I wished [him to be a good doctor]
             restrictions.add(Restriction.of(true, NpSynRes.TO_BE));
         }
 
         if (argDep.equalsIgnoreCase("ccomp")
-            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "that", "IN", "mark"))) {
+            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "that", "IN", UdDep.MARK))) {
             // I wished [that she would come immediately]
             restrictions.add(Restriction.of(true, NpSynRes.THAT_COMP));
             if (matchesPos(argument, "VB")) {
@@ -123,7 +133,7 @@ public class VnSyntaxAnalyzer {
         }
 
         if (argDep.equalsIgnoreCase("xcomp")
-            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", "mark"))) {
+            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", UdDep.MARK))) {
             // I wished [to move up the corporate ladder]
             restrictions.add(Restriction.of(true, NpSynRes.SC_TO_INF));
             restrictions.add(Restriction.of(true, NpSynRes.AC_TO_INF));
@@ -134,7 +144,7 @@ public class VnSyntaxAnalyzer {
             restrictions.add(Restriction.of(true, NpSynRes.RS_TO_INF));
         }
 
-        if (matchesPosDep(argument, "VBG", "xcomp") || matchesPosDep(argument, "VBG", "advcl")) {
+        if (matchesPosDep(argument, "VBG", UdDep.XCOMP) || matchesPosDep(argument, "VBG", UdDep.ADVCL)) {
             // He described [going to work], I helped [with finishing the homework]
             restrictions.add(Restriction.of(true, NpSynRes.AC_ING));
             // John professed [loving the miscreants]
@@ -147,7 +157,7 @@ public class VnSyntaxAnalyzer {
             }
         }
 
-        if (matchesPosDep(argument, "RB", "advmod")) {
+        if (matchesPosDep(argument, "RB", UdDep.ADVMOD)) {
             //  We camped there
             restrictions.add(Restriction.of(true, NpSynRes.ADV_LOC));
         }
@@ -160,7 +170,7 @@ public class VnSyntaxAnalyzer {
             }
         }
 
-        if (isClause(argument) && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "for", "IN", "mark"))) {
+        if (isClause(argument) && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "for", "IN", UdDep.MARK))) {
             // I wished [for John to leave]
             restrictions.add(Restriction.of(true, NpSynRes.FOR_COMP));
         }
@@ -181,7 +191,7 @@ public class VnSyntaxAnalyzer {
         }
 
         if (argDep.equalsIgnoreCase("advcl") && argument.children().stream()
-            .anyMatch(c -> matchesLemmaPosDep(c, "be", "VBG", "cop"))) {
+            .anyMatch(c -> matchesLemmaPosDep(c, "be", "VBG", UdDep.COP))) {
             // They considered him [as being stupid]
             restrictions.add(Restriction.of(true, NpSynRes.NP_P_ING));
         }
@@ -192,19 +202,19 @@ public class VnSyntaxAnalyzer {
             restrictions.add(Restriction.of(true, NpSynRes.NP_PPART));
         }
 
-        if (matchesPosDep(argument, "VB", "ccomp")) {
+        if (matchesPosDep(argument, "VB", UdDep.CCOMP)) {
             // I watched her bake the cake
             restrictions.add(Restriction.of(true, NpSynRes.OC_BARE_INF));
         }
 
-        if ((matchesPosDep(argument, "VBG", "dep") || matchesPosDep(argument, "VBG", "ccomp"))
+        if ((matchesPosDep(argument, "VBG", UdDep.DEP) || matchesPosDep(argument, "VBG", UdDep.CCOMP))
             && hasSubject(argument)) {
             // I saw her crying
             restrictions.add(Restriction.of(true, NpSynRes.OC_ING));
         }
 
         if ((argDep.equalsIgnoreCase("xcomp") || argDep.equalsIgnoreCase("advcl"))
-            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", "mark"))) {
+            && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", UdDep.MARK))) {
             // The Senate ordered him to disband his army .
             restrictions.add(Restriction.of(true, NpSynRes.OC_TO_INF));
         }
@@ -245,7 +255,7 @@ public class VnSyntaxAnalyzer {
         }
 
         if (argDep.equalsIgnoreCase("advcl") && argument.children().stream()
-            .anyMatch(c -> matchesLemmaPosDep(c, "be", "VB", "cop"))) {
+            .anyMatch(c -> matchesLemmaPosDep(c, "be", "VB", UdDep.COP))) {
             // They considered him [as being stupid]
             // TODO: not really technically small clause
             restrictions.add(Restriction.of(true, NpSynRes.SMALL_CLAUSE));
@@ -261,13 +271,13 @@ public class VnSyntaxAnalyzer {
             boolean what = children.stream().anyMatch(c -> matchesLemmaPos(c, "what", "WP"));
 
             if (matchesPos(argument, "VB")
-                && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", "mark"))) {
+                && children.stream().anyMatch(c -> matchesLemmaPosDep(c, "to", "TO", UdDep.MARK))) {
                 restrictions.add(Restriction.of(true, NpSynRes.WH_INF));
                 restrictions.add(Restriction.of(true, NpSynRes.WH_ING)); // TODO: looks like a VerbNet error
                 if (what) {
                     // The president declared what we should do
                     restrictions.add(Restriction.of(true, NpSynRes.WHAT_INF));
-                } else if (argument.children().stream().anyMatch(c -> matchesLemmaPosDep(c, "whether", "IN", "mark"))) {
+                } else if (argument.children().stream().anyMatch(c -> matchesLemmaPosDep(c, "whether", "IN", UdDep.MARK))) {
                     // I asked of him about whether to go
                     restrictions.add(Restriction.of(true, NpSynRes.WHETH_INF));
                 }
