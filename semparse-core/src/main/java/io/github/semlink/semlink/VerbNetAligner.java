@@ -43,6 +43,7 @@ import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
 import io.github.semlink.semlink.aligner.AdjustInvalidRoles;
 import io.github.semlink.semlink.aligner.FillerAligner;
+import io.github.semlink.semlink.aligner.FilterReferenceAligner;
 import io.github.semlink.semlink.aligner.PbVnAligner;
 import io.github.semlink.semlink.aligner.PbVnAlignment;
 import io.github.semlink.semlink.aligner.RelAligner;
@@ -72,6 +73,7 @@ public class VerbNetAligner {
     public VerbNetAligner(@NonNull PbVnMappings mappings) {
         this(mappings,
                 ImmutableList.of(
+                        new FilterReferenceAligner(),
                         new RelAligner(),
                         new RoleMappingAligner(),
                         new SynResAligner(),

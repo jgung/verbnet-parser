@@ -1,6 +1,16 @@
 package io.github.semlink.clearwsd;
 
 import com.google.common.base.Stopwatch;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import io.github.clearwsd.parser.NlpParser;
 import io.github.clearwsd.type.DefaultDepNode;
 import io.github.clearwsd.type.DefaultDepTree;
@@ -12,14 +22,6 @@ import io.github.semlink.type.Fields;
 import io.github.semlink.type.HasFields;
 import io.github.semlink.type.IToken;
 import io.github.semlink.type.ITokenSequence;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,7 +95,6 @@ public class TfNlpParser implements NlpParser {
         return new DefaultDepTree(0, tokens, root);
     }
 
-    @Override
     public List<DepTree> parseBatch(List<List<String>> sentences) {
         List<DepTree> result = new ArrayList<>();
 
