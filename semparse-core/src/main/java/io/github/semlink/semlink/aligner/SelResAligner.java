@@ -120,10 +120,8 @@ public class SelResAligner implements PbVnAligner {
         boolean possibleLocation = !ImmutableSet.of(FunctionTag.PRP, FunctionTag.MNR).contains(phrase.argument().getFunctionTag());
         if (prep.isPresent()) {
             PrepType type = prep.get();
-            if (type.maybeDestination()) {
-                if (possibleLocation) {
-                    themRoles.add(DESTINATION);
-                }
+            if (possibleLocation && type.maybeDestination()) {
+                themRoles.add(DESTINATION);
                 themRoles.add(GOAL);
                 themRoles.add(RECIPIENT);
             }
