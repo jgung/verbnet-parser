@@ -202,7 +202,11 @@ public class VerbNetAligner {
             int unaligned = first.targetPhrases(false).size();
             int otherUnaligned = second.targetPhrases(false).size();
 
-            return otherUnaligned - unaligned;
+            if (otherUnaligned != unaligned) {
+                return otherUnaligned - unaligned;
+            }
+
+            return second.frame().frame().descriptionNumber().compareTo(first.frame().frame().descriptionNumber());
         }
     }
 

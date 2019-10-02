@@ -38,7 +38,7 @@ public class FillerAligner implements PbVnAligner {
     public void align(@NonNull PbVnAlignment alignment) {
 
         // TODO: this seems like a hack
-        boolean noAgentiveA0 = alignment.proposition().predicate().related().stream()
+        boolean noAgentiveA0 = alignment.proposition().predicate().ancestors(true).stream()
                 .allMatch(s -> s.roles().stream()
                         .map(r -> ThematicRoleType.fromString(r.type()).orElse(ThematicRoleType.NONE))
                         .noneMatch(ThematicRoleType::isAgentive));
