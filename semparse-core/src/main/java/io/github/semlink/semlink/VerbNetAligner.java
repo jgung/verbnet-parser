@@ -206,6 +206,12 @@ public class VerbNetAligner {
                 return otherUnaligned - unaligned;
             }
 
+            int rolesetAligned = first.rolesetAlignmentCount();
+            int otherRolesetAligned = second.rolesetAlignmentCount();
+            if (rolesetAligned != otherRolesetAligned) {
+                return rolesetAligned - otherRolesetAligned;
+            }
+
             return second.frame().frame().descriptionNumber().compareTo(first.frame().frame().descriptionNumber());
         }
     }
