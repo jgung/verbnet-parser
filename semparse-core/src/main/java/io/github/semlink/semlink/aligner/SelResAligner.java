@@ -210,8 +210,14 @@ public class SelResAligner implements PbVnAligner {
         }
 
         if (startsWithWhere(phrase)) {
-            themRoles.add(DESTINATION);
-            themRoles.add(INITIAL_LOCATION);
+            if (phrase.getFunctionTag() == FunctionTag.GOL) {
+                themRoles.add(DESTINATION);
+            } else if (phrase.getFunctionTag() == FunctionTag.DIR) {
+                themRoles.add(INITIAL_LOCATION);
+            } else {
+                themRoles.add(DESTINATION);
+                themRoles.add(INITIAL_LOCATION);
+            }
             themRoles.add(LOCATION);
         }
 
