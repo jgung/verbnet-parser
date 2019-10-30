@@ -146,6 +146,15 @@ public class SelResAligner implements PbVnAligner {
         Multiset<ThematicRoleType> themRoles = TreeMultiset.create();
         Optional<PrepType> prep = getPrep(phrase.tokens());
 
+        String text = phrase.tokens().stream()
+                .map(token -> token.feature(FeatureType.Text).toString())
+                .collect(Collectors.joining(" "))
+                .toLowerCase();
+
+        if (text.equalsIgnoreCase("how much") || text.equalsIgnoreCase("how much money")) {
+            themRoles.add(ASSET);
+        }
+
         boolean isClause = AlignmentUtils.isClause(phrase.tokens());
 
         // preposition heuristics
@@ -245,7 +254,7 @@ public class SelResAligner implements PbVnAligner {
 
     public static boolean containsNumber(PropBankPhrase phrase) {
         for (DepNode node : phrase.tokens()) {
-            if ("CD".equalsIgnoreCase(node.feature(FeatureType.Pos))) {
+            if ("CD".equalsIgnoreCase(node.feature(FeatureType.Pos)) || "much".equalsIgnoreCase(node.feature(FeatureType.Text))) {
                 return true;
             }
         }
