@@ -38,7 +38,7 @@ public class FilterReferenceAligner implements PbVnAligner {
                 .filter(arg -> !arg.isReference())
                 .collect(Collectors.toList()), PropBankPhrase::getNumber);
         alignment.propbankPhrases(alignment.propbankPhrases().stream()
-                .filter(phrase -> !phrase.isReference() || !phraseMap.containsKey(phrase.getNumber()))
+                .filter(phrase -> !phrase.isReferenceOrContinuation() || !phraseMap.containsKey(phrase.getNumber()))
                 .collect(Collectors.toList()));
     }
 

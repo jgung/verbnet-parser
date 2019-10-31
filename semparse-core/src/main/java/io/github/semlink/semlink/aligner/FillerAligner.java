@@ -16,6 +16,7 @@
 
 package io.github.semlink.semlink.aligner;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,9 @@ public class FillerAligner implements PbVnAligner {
                     }
                 } else {
                     for (NounPhrase unalignedPhrase : unaligned) {
-                        if (unalignedPhrase.thematicRoleType() == ThematicRoleType.AGENT) {
+                        if (EnumSet.of(ThematicRoleType.AGENT, ThematicRoleType.CAUSER,
+                                ThematicRoleType.STIMULUS, ThematicRoleType.PIVOT)
+                                .contains(unalignedPhrase.thematicRoleType())) {
                             alignment.add(phrase, unalignedPhrase);
                             break;
                         }
