@@ -75,12 +75,7 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
             Session.Runner runner = model.session().runner()
                     .feed(inputName, inputTensor)
                     .fetch(fetchName);
-            TensorList results;
-
-            // TODO: figure out why Session is not thread safe, fix, unsynchronize
-            synchronized (this) {
-                results = TensorList.of(runner.run());
-            }
+            TensorList results = TensorList.of(runner.run());
 
             List<List<String>> result = toStringLists(results.get(0)).stream()
                     .map(labels -> labels.stream().filter(l -> !l.equals(IGNORE_LABEL)).collect(Collectors.toList()))

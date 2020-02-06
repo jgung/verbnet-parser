@@ -24,6 +24,8 @@ import static io.github.semlink.app.ParsingUtils.trimToLength;
 import static io.github.semlink.tensor.Tensors.batchExamples;
 import static io.github.semlink.tensor.Tensors.toStringLists;
 
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import io.github.semlink.app.WordPieceTokenizer;
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.Vocabulary;
@@ -93,11 +95,7 @@ public class DependencyParser implements AutoCloseable {
                     .fetch(arcTensor)
                     .fetch(relTensor);
 
-            TensorList results;
-
-            synchronized (this) {
-                results = TensorList.of(runner.run());
-            }
+            TensorList results = TensorList.of(runner.run());
 
             List<List<String>> posResults = toStringLists(results.get(0));
             List<float[][]> arcProbs = toArcProbs(results.get(1));
@@ -153,6 +151,13 @@ public class DependencyParser implements AutoCloseable {
         }
     }
 
+    public static Fields process(String input) {
+        List<String> words = Arrays.asList(input.split("\\s+"));
+        Fields seq = new Fields();
+        seq.add("word", words);
+        return seq;
+    }
+
     public static void main(String[] args) {
         String path = args[0];
 
@@ -165,12 +170,20 @@ public class DependencyParser implements AutoCloseable {
                 if (line.equals("QUIT")) {
                     break;
                 }
-                List<String> words = Arrays.asList(line.split("\\s+"));
-
-                Fields seq = new Fields();
-                seq.add("word", words);
-
-                ITokenSequence result = model.predictBatch(Collections.singletonList(seq)).get(0);
+                List<HasFields> entries = ImmutableList.of(
+                        line,
+                        "This is a test .",
+                        "Something strange is happening when I use the dataset API",
+                        "Is the dataset API issue fixed yet ?",
+                        "Why are there concurrency problems happening here ?").stream()
+                        .map(DependencyParser::process)
+                        .collect(Collectors.toList());
+                Stopwatch started = Stopwatch.createStarted();
+                ITokenSequence result =
+                        entries.parallelStream()
+                                .map(e -> model.predictBatch(Collections.singletonList(e)).get(0))
+                                .findFirst().orElseThrow(IllegalStateException::new);
+                System.out.println("Elapsed time: " + started);
                 List<String> lines = new ArrayList<>();
                 for (IToken token : result) {
                     lines.add(String.format("%d\t%10s\t%10s\t%10s\t%10s",
