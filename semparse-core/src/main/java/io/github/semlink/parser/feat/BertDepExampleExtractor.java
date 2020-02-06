@@ -14,53 +14,40 @@
  * limitations under the License.
  */
 
-package io.github.semlink.extractor;
-
-import org.tensorflow.example.FeatureLists;
-import org.tensorflow.example.Features;
-import org.tensorflow.example.SequenceExample;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import io.github.semlink.app.WordPieceTokenizer;
-import io.github.semlink.type.HasFields;
-import lombok.NonNull;
-import lombok.Setter;
+package io.github.semlink.parser.feat;
 
 import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Feature;
 import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Features;
 
+import io.github.semlink.app.WordPieceTokenizer;
+import io.github.semlink.type.HasFields;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import lombok.NonNull;
+import lombok.Setter;
+import org.tensorflow.example.FeatureLists;
+import org.tensorflow.example.Features;
+import org.tensorflow.example.SequenceExample;
+
 /**
- * Sequence example extractor that uses a {@link WordPieceTokenizer} to convert the input prior to normal
- * processing/extraction.
+ * Sequence example extractor that uses a {@link WordPieceTokenizer} to convert the input prior to normal processing/extraction.
  *
  * @author jamesgung
  */
-public class BertDepExampleExtractor implements SequenceExampleExtractor {
+public class BertDepExampleExtractor extends BertExampleExtractor {
 
     public static final String BERT_CLS = "[CLS]";
     public static final String BERT_SEP = "[SEP]";
 
-    @Setter
-    private String bertLengthKey = "bert_len";
-    @Setter
-    private String wordsKey = "word";
-    @Setter
-    private String bertIdsKey = "bert";
-    @Setter
-    private String maskKey = "sequence_mask"; // mask use to ignore-subword inputs
-    @Setter
-    private String lengthKey = "len";
+    /**
+     * Placeholder for number used for tracking instance numbers during evaluation.
+     */
     @Setter
     private String sentenceIndexKey = "sentence_idx";
 
-    private WordPieceTokenizer wordPieceTokenizer;
-
-    public BertDepExampleExtractor(@NonNull WordPieceTokenizer tokenizer) {
-        this.wordPieceTokenizer = tokenizer;
+    public BertDepExampleExtractor(@NonNull WordPieceTokenizer wordPieceTokenizer) {
+        super(wordPieceTokenizer);
     }
 
     @Override
@@ -104,11 +91,6 @@ public class BertDepExampleExtractor implements SequenceExampleExtractor {
                 .setContext(features)
                 .setFeatureLists(featureLists)
                 .build();
-    }
-
-    @Override
-    public Optional<Vocabulary> vocabulary(@NonNull String key) {
-        return Optional.empty();
     }
 
 }

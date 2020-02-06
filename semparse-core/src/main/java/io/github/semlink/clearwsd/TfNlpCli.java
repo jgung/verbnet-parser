@@ -1,9 +1,9 @@
 package io.github.semlink.clearwsd;
 
+import com.beust.jcommander.Parameter;
 import io.github.clearwsd.app.WordSenseCLI;
 import io.github.clearwsd.parser.NlpParser;
-import io.github.semlink.app.DependencyParser;
-import lombok.Setter;
+import io.github.semlink.parser.DependencyParser;
 
 /**
  * TF-NLP {@link WordSenseCLI}.
@@ -12,8 +12,8 @@ import lombok.Setter;
  */
 public class TfNlpCli extends WordSenseCLI {
 
-    @Setter
-    private String parserPath = "/home/jamesgung/Downloads/dep-model";
+    @Parameter(names = {"--parser"}, description = "Path to TF-based dependency parser")
+    private String parserPath;
 
     public TfNlpCli(String[] args) {
         super(args);

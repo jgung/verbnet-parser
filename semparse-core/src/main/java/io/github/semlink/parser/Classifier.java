@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.github.semlink.app;
+package io.github.semlink.parser;
 
+import io.github.semlink.app.WordPieceTokenizer;
+import io.github.semlink.parser.feat.BertDepExampleExtractor;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
@@ -34,7 +36,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import io.github.semlink.extractor.BertDepExampleExtractor;
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.Vocabulary;
 import io.github.semlink.tensor.TensorList;
@@ -135,7 +136,7 @@ public class Classifier implements AutoCloseable {
                         .add("word", Arrays.asList(line.split("\\s+")));
                 Map<String, Float> result = model.predictBatch(Collections.singletonList(seq)).get(0);
                 System.out.println(result + "\n" + result.entrySet().stream()
-                        .max(Comparator.comparing(Map.Entry::getValue))
+                        .max(Map.Entry.comparingByValue())
                         .orElseThrow(IllegalArgumentException::new).getKey());
             }
         }

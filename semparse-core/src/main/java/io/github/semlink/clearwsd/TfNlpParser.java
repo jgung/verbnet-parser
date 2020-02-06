@@ -17,7 +17,7 @@ import io.github.clearwsd.type.DefaultDepTree;
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
-import io.github.semlink.app.DependencyParser;
+import io.github.semlink.parser.DependencyParser;
 import io.github.semlink.type.Fields;
 import io.github.semlink.type.HasFields;
 import io.github.semlink.type.IToken;

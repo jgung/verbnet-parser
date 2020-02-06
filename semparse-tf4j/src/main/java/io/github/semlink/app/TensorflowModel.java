@@ -16,29 +16,26 @@
 
 package io.github.semlink.app;
 
-import org.tensorflow.SavedModelBundle;
-import org.tensorflow.Session;
-import org.tensorflow.Tensor;
-import org.tensorflow.example.SequenceExample;
+import static io.github.semlink.tensor.Tensors.batchExamples;
+import static io.github.semlink.tensor.Tensors.toStringLists;
 
+import io.github.semlink.extractor.SequenceExampleExtractor;
+import io.github.semlink.extractor.config.ConfigSpec;
+import io.github.semlink.extractor.config.Extractors;
+import io.github.semlink.tensor.TensorList;
+import io.github.semlink.type.HasFields;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.github.semlink.extractor.BertSrlExampleExtractor;
-import io.github.semlink.extractor.SequenceExampleExtractor;
-import io.github.semlink.extractor.config.ConfigSpec;
-import io.github.semlink.extractor.config.Extractors;
-import io.github.semlink.tensor.TensorList;
-import io.github.semlink.type.HasFields;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-
-import static io.github.semlink.tensor.Tensors.batchExamples;
-import static io.github.semlink.tensor.Tensors.toStringLists;
+import org.tensorflow.SavedModelBundle;
+import org.tensorflow.Session;
+import org.tensorflow.Tensor;
+import org.tensorflow.example.SequenceExample;
 
 /**
  * Tensorflow sequence prediction model.
@@ -114,11 +111,6 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static TensorflowModel bertFromDirectory(@NonNull String modelDir) {
-        return fromDirectory(modelDir, new BertSrlExampleExtractor(
-                new WordPieceTokenizer(Paths.get(modelDir, "model", "assets", "vocab.txt").toString())));
     }
 
 }

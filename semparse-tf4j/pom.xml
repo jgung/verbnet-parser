@@ -13,21 +13,22 @@
     <artifactId>semparse-tf4j</artifactId>
 
     <properties>
-        <tensorflow.version>1.13.1</tensorflow.version>
+        <tensorflow.version>1.15.0</tensorflow.version>
     </properties>
 
     <dependencies>
+        <!-- TF dependencies -->
         <dependency>
-            <groupId>io.github.semlink</groupId>
-            <artifactId>semparse-tf4j-grpc</artifactId>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>proto</artifactId>
+            <version>${tensorflow.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow</artifactId>
             <version>${tensorflow.version}</version>
         </dependency>
-
+        <!-- Deserialization of configs-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>

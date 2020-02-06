@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-package io.github.semlink.app;
+package io.github.semlink.parser;
 
-import org.tensorflow.SavedModelBundle;
-import org.tensorflow.Session;
-import org.tensorflow.Tensor;
-import org.tensorflow.example.SequenceExample;
+import static io.github.semlink.app.ParsingUtils.fixCycles;
+import static io.github.semlink.app.ParsingUtils.getLabels;
+import static io.github.semlink.app.ParsingUtils.toArcProbs;
+import static io.github.semlink.app.ParsingUtils.toRelProbs;
+import static io.github.semlink.app.ParsingUtils.trimToLength;
+import static io.github.semlink.tensor.Tensors.batchExamples;
+import static io.github.semlink.tensor.Tensors.toStringLists;
 
+import io.github.semlink.app.WordPieceTokenizer;
+import io.github.semlink.extractor.SequenceExampleExtractor;
+import io.github.semlink.extractor.Vocabulary;
+import io.github.semlink.parser.feat.BertDepExampleExtractor;
+import io.github.semlink.tensor.TensorList;
+import io.github.semlink.type.Fields;
+import io.github.semlink.type.HasFields;
+import io.github.semlink.type.IToken;
+import io.github.semlink.type.ITokenSequence;
+import io.github.semlink.type.Token;
+import io.github.semlink.type.TokenSequence;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -30,27 +44,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-
-import io.github.semlink.extractor.BertDepExampleExtractor;
-import io.github.semlink.extractor.SequenceExampleExtractor;
-import io.github.semlink.extractor.Vocabulary;
-import io.github.semlink.tensor.TensorList;
-import io.github.semlink.type.Fields;
-import io.github.semlink.type.HasFields;
-import io.github.semlink.type.IToken;
-import io.github.semlink.type.ITokenSequence;
-import io.github.semlink.type.Token;
-import io.github.semlink.type.TokenSequence;
 import lombok.NonNull;
 import lombok.Setter;
-
-import static io.github.semlink.app.ParsingUtils.fixCycles;
-import static io.github.semlink.app.ParsingUtils.getLabels;
-import static io.github.semlink.app.ParsingUtils.toArcProbs;
-import static io.github.semlink.app.ParsingUtils.toRelProbs;
-import static io.github.semlink.app.ParsingUtils.trimToLength;
-import static io.github.semlink.tensor.Tensors.batchExamples;
-import static io.github.semlink.tensor.Tensors.toStringLists;
+import org.tensorflow.SavedModelBundle;
+import org.tensorflow.Session;
+import org.tensorflow.Tensor;
+import org.tensorflow.example.SequenceExample;
 
 /**
  * Tensorflow-based dependency parser.
@@ -138,6 +137,10 @@ public class DependencyParser implements AutoCloseable {
         }
     }
 
+    @Override
+    public void close() {
+        model.close();
+    }
 
     public static DependencyParser fromDirectory(@NonNull String modelDir) {
         SequenceExampleExtractor extractor = new BertDepExampleExtractor(
@@ -150,15 +153,10 @@ public class DependencyParser implements AutoCloseable {
         }
     }
 
-    @Override
-    public void close() {
-        model.close();
-    }
-
     public static void main(String[] args) {
         String path = args[0];
 
-        try (DependencyParser model = DependencyParser.fromDirectory(path)) {
+        try (DependencyParser model = fromDirectory(path)) {
 
             Scanner scanner = new Scanner(System.in);
             while (true) {
@@ -184,6 +182,5 @@ public class DependencyParser implements AutoCloseable {
             }
         }
     }
-
 
 }

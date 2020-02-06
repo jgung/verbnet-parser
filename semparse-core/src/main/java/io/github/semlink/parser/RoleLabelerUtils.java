@@ -16,29 +16,25 @@
 
 package io.github.semlink.parser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import static io.github.semlink.parser.feat.BertSrlExampleExtractor.bertFromDirectory;
 
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
 import io.github.clearwsd.type.FeatureType;
 import io.github.clearwsd.type.NlpFocus;
 import io.github.semlink.app.ShallowParser;
-import io.github.semlink.app.TensorflowModel;
 import io.github.semlink.type.Fields;
 import io.github.semlink.type.HasFields;
 import io.github.semlink.type.IToken;
 import io.github.semlink.type.ITokenSequence;
 import io.github.semlink.type.Token;
 import io.github.semlink.type.TokenSequence;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-
-import static io.github.semlink.app.ShallowParserUtils.Tag.OUT;
 
 /**
  * Semantic role labeling utilities specific to our SRL system's input needs.
@@ -49,9 +45,7 @@ import static io.github.semlink.app.ShallowParserUtils.Tag.OUT;
 public final class RoleLabelerUtils {
 
     private static final String PREDICATE_INDEX_KEY = "predicate_index";
-    private static final String MARKER_KEY = "marker";
     private static final String WORD_KEY = "word";
-    private static final String LABEL_KEY = "gold";
 
     /**
      * Convert an {@link NlpFocus} to an {@link ITokenSequence} for use in feature extraction.
@@ -81,11 +75,7 @@ public final class RoleLabelerUtils {
 
         Fields features = new Fields();
         features.add(WORD_KEY, words);
-        features.add(LABEL_KEY, Collections.nCopies(words.size(), OUT.prefix()));
-        features.add(MARKER_KEY, IntStream.range(0, words.size())
-                .mapToObj(i -> i == predicateIndex ? String.valueOf(1) : String.valueOf(0))
-                .collect(Collectors.toList()));
-        features.add(PREDICATE_INDEX_KEY, Collections.singletonList(String.valueOf(predicateIndex)));
+        features.add(PREDICATE_INDEX_KEY, predicateIndex);
         return features;
     }
 
@@ -96,7 +86,7 @@ public final class RoleLabelerUtils {
      * @return shallow semantic parser
      */
     public static ShallowParser shallowSemanticParser(@NonNull String modelDir) {
-        return new ShallowParser(TensorflowModel.bertFromDirectory(modelDir), RoleLabelerUtils::shallowSemParseFeatures);
+        return new ShallowParser(bertFromDirectory(modelDir), RoleLabelerUtils::shallowSemParseFeatures);
     }
 
 }
