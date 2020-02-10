@@ -1,6 +1,6 @@
 package io.github.semlink.parser.feat;
 
-import io.github.semlink.app.WordPieceTokenizer;
+import io.github.semlink.app.SubwordTokenizer;
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.Vocabulary;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public abstract class BertExampleExtractor implements SequenceExampleExtractor {
     public static final String BERT_CLS = "[CLS]";
     public static final String BERT_SEP = "[SEP]";
 
-    protected WordPieceTokenizer wordPieceTokenizer;
+    protected SubwordTokenizer wordPieceTokenizer;
 
     /**
      * Word inputs key from feature extraction.
@@ -50,7 +50,7 @@ public abstract class BertExampleExtractor implements SequenceExampleExtractor {
     @Setter
     protected String sentenceIndexKey = "sentence_idx";
 
-    public BertExampleExtractor(@NonNull WordPieceTokenizer wordPieceTokenizer) {
+    public BertExampleExtractor(@NonNull SubwordTokenizer wordPieceTokenizer) {
         this.wordPieceTokenizer = wordPieceTokenizer;
     }
 

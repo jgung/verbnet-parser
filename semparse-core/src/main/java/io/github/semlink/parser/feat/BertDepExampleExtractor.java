@@ -19,6 +19,7 @@ package io.github.semlink.parser.feat;
 import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Feature;
 import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Features;
 
+import io.github.semlink.app.SubwordTokenizer;
 import io.github.semlink.app.WordPieceTokenizer;
 import io.github.semlink.type.HasFields;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.tensorflow.example.FeatureLists;
 import org.tensorflow.example.Features;
 import org.tensorflow.example.SequenceExample;
@@ -45,8 +47,11 @@ public class BertDepExampleExtractor extends BertExampleExtractor {
      */
     @Setter
     private String sentenceIndexKey = "sentence_idx";
+    @Setter
+    @Accessors(fluent = true)
+    private boolean maskSubtokens = true;
 
-    public BertDepExampleExtractor(@NonNull WordPieceTokenizer wordPieceTokenizer) {
+    public BertDepExampleExtractor(@NonNull SubwordTokenizer wordPieceTokenizer) {
         super(wordPieceTokenizer);
     }
 
@@ -57,9 +62,11 @@ public class BertDepExampleExtractor extends BertExampleExtractor {
         List<String> splitTokens = new ArrayList<>();
         List<Integer> maskValues = new ArrayList<>();
 
+        final int subtokenMask = maskSubtokens ? 0 : 1;
+
         // [CLS], word_1, word_2, ...
         splitTokens.add(BERT_CLS);
-        maskValues.add(0);
+        maskValues.add(subtokenMask);
 
         for (String token : words) {
             List<String> subtokens = wordPieceTokenizer.tokenize(token);
@@ -67,13 +74,13 @@ public class BertDepExampleExtractor extends BertExampleExtractor {
             splitTokens.addAll(subtokens);
             maskValues.add(1);
             if (subtokens.size() > 0) {
-                maskValues.addAll(Collections.nCopies(subtokens.size() - 1, 0));
+                maskValues.addAll(Collections.nCopies(subtokens.size() - 1, subtokenMask));
             }
         }
 
         // ..., word_n-1, word_n, [SEP]
         splitTokens.add(BERT_SEP);
-        maskValues.add(0);
+        maskValues.add(subtokenMask);
 
         FeatureLists.Builder featureLists = FeatureLists.newBuilder()
                 // IDs for WordPiece tokens
@@ -83,7 +90,7 @@ public class BertDepExampleExtractor extends BertExampleExtractor {
 
         Features.Builder features = Features.newBuilder()
                 // boiler plate
-                .putFeature(lengthKey, int64Feature(words.size()))
+                .putFeature(lengthKey, int64Feature(maskSubtokens ? words.size() : splitTokens.size()))
                 .putFeature(bertLengthKey, int64Feature(splitTokens.size()))
                 .putFeature(sentenceIndexKey, int64Feature(0));
 

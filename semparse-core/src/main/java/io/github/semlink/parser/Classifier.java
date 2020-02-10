@@ -16,7 +16,8 @@
 
 package io.github.semlink.parser;
 
-import io.github.semlink.app.WordPieceTokenizer;
+import com.google.common.base.Stopwatch;
+import io.github.semlink.app.SentencePieceTokenizer;
 import io.github.semlink.parser.feat.BertDepExampleExtractor;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
@@ -29,7 +30,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,32 +82,27 @@ public class Classifier implements AutoCloseable {
                     .feed(OP_NAME, inputTensor)
                     .fetch(labelsTensor);
 
-            TensorList results;
+            try (TensorList results = TensorList.of(runner.run())) {
+                List<float[]> scores = toFloatArrays(results.get(0));
 
-            synchronized (this) {
-                results = TensorList.of(runner.run());
-            }
-
-            List<float[]> scores = toFloatArrays(results.get(0));
-
-            results.close();
-
-            List<Map<String, Float>> result = new ArrayList<>();
-            for (float[] instance : scores) {
-                Map<String, Float> scoreMap = new HashMap<>();
-                for (int i = 0; i < instance.length; ++i) {
-                    scoreMap.put(vocabulary.indexToFeat(i), instance[i]);
+                List<Map<String, Float>> result = new ArrayList<>();
+                for (float[] instance : scores) {
+                    Map<String, Float> scoreMap = new HashMap<>();
+                    for (int i = 0; i < instance.length; ++i) {
+                        scoreMap.put(vocabulary.indexToFeat(i), instance[i]);
+                    }
+                    result.add(scoreMap);
                 }
-                result.add(scoreMap);
+                return result;
             }
-            return result;
         }
     }
 
 
     public static Classifier fromDirectory(@NonNull String modelDir) {
         SequenceExampleExtractor extractor = new BertDepExampleExtractor(
-                new WordPieceTokenizer(Paths.get(modelDir, "model", "assets", "vocab.txt").toString()));
+                new SentencePieceTokenizer(Paths.get(modelDir, "model", "assets", "30k-clean.model").toString()))
+            .maskSubtokens(false);
         SavedModelBundle model = SavedModelBundle.load(Paths.get(modelDir, "model").toString(), "serve");
         try (FileInputStream vocabStream = new FileInputStream(Paths.get(modelDir, "vocab", "gold").toString())) {
             return new Classifier(extractor, model, Vocabulary.read(vocabStream, "2"));
@@ -134,7 +129,9 @@ public class Classifier implements AutoCloseable {
                 }
                 Fields seq = new Fields()
                         .add("word", Arrays.asList(line.split("\\s+")));
+                Stopwatch started = Stopwatch.createStarted();
                 Map<String, Float> result = model.predictBatch(Collections.singletonList(seq)).get(0);
+                System.out.println("Elapsed time: " + started);
                 System.out.println(result + "\n" + result.entrySet().stream()
                         .max(Map.Entry.comparingByValue())
                         .orElseThrow(IllegalArgumentException::new).getKey());
