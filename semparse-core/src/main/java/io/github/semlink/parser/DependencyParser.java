@@ -16,16 +16,24 @@
 
 package io.github.semlink.parser;
 
-import static io.github.semlink.app.ParsingUtils.fixCycles;
-import static io.github.semlink.app.ParsingUtils.getLabels;
-import static io.github.semlink.app.ParsingUtils.toArcProbs;
-import static io.github.semlink.app.ParsingUtils.toRelProbs;
-import static io.github.semlink.app.ParsingUtils.trimToLength;
-import static io.github.semlink.tensor.Tensors.batchExamples;
-import static io.github.semlink.tensor.Tensors.toStringLists;
-
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
+
+import org.tensorflow.SavedModelBundle;
+import org.tensorflow.Session;
+import org.tensorflow.Tensor;
+import org.tensorflow.example.SequenceExample;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import io.github.semlink.app.WordPieceTokenizer;
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.Vocabulary;
@@ -37,21 +45,16 @@ import io.github.semlink.type.IToken;
 import io.github.semlink.type.ITokenSequence;
 import io.github.semlink.type.Token;
 import io.github.semlink.type.TokenSequence;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.Setter;
-import org.tensorflow.SavedModelBundle;
-import org.tensorflow.Session;
-import org.tensorflow.Tensor;
-import org.tensorflow.example.SequenceExample;
+
+import static io.github.semlink.app.ParsingUtils.fixCycles;
+import static io.github.semlink.app.ParsingUtils.getLabels;
+import static io.github.semlink.app.ParsingUtils.toArcProbs;
+import static io.github.semlink.app.ParsingUtils.toRelProbs;
+import static io.github.semlink.app.ParsingUtils.trimToLength;
+import static io.github.semlink.tensor.Tensors.batchExamples;
+import static io.github.semlink.tensor.Tensors.toStringLists;
 
 /**
  * Tensorflow-based dependency parser.
@@ -170,12 +173,7 @@ public class DependencyParser implements AutoCloseable {
                 if (line.equals("QUIT")) {
                     break;
                 }
-                List<HasFields> entries = ImmutableList.of(
-                        line,
-                        "This is a test .",
-                        "Something strange is happening when I use the dataset API",
-                        "Is the dataset API issue fixed yet ?",
-                        "Why are there concurrency problems happening here ?").stream()
+                List<HasFields> entries = ImmutableList.of(line).stream()
                         .map(DependencyParser::process)
                         .collect(Collectors.toList());
                 Stopwatch started = Stopwatch.createStarted();
