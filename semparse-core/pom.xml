@@ -7,7 +7,7 @@
     <parent>
         <artifactId>semparse</artifactId>
         <groupId>io.github.semlink</groupId>
-        <version>0.1.0</version>
+        <version>0.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
