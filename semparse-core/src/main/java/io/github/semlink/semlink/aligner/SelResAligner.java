@@ -223,9 +223,11 @@ public class SelResAligner implements PbVnAligner {
                 themRoles.add(DESTINATION);
             } else if (phrase.getFunctionTag() == FunctionTag.DIR) {
                 themRoles.add(INITIAL_LOCATION);
+                themRoles.add(SOURCE);
             } else {
                 themRoles.add(DESTINATION);
                 themRoles.add(INITIAL_LOCATION);
+                themRoles.add(SOURCE);
             }
             themRoles.add(LOCATION);
         }
@@ -239,6 +241,7 @@ public class SelResAligner implements PbVnAligner {
             themRoles.add(PATH);
             themRoles.add(TRAJECTORY);
             themRoles.add(DIRECTION);
+            themRoles.add(SOURCE);
         }
 
         if (phrase.getNumber() == ArgNumber.A0) {
