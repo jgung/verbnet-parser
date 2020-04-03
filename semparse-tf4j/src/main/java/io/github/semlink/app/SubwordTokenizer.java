@@ -10,8 +10,14 @@ import lombok.NonNull;
  */
 public interface SubwordTokenizer {
 
+    /**
+     * Convert a list of string tokens to IDs.
+     */
     List<Integer> convertTokensToIds(@NonNull List<String> tokens);
 
+    /**
+     * Tokenize a string.
+     */
     List<String> tokenize(@NonNull String text);
 
 }
