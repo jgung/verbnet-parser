@@ -63,6 +63,7 @@ public class PredictionConfiguration {
     private String nounsPath;
     @Value("${verbnet.demo.adjective-mappings-path:mappings/adjectival-mappings.tsv}")
     private String adjectivesPath;
+
     @Bean
     public VnIndex verbNet() {
         return new DefaultVnIndex();

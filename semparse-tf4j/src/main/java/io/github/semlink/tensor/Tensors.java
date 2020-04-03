@@ -21,6 +21,7 @@ import org.tensorflow.example.SequenceExample;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.NonNull;
@@ -31,6 +32,21 @@ import lombok.NonNull;
  * @author jgung
  */
 public final class Tensors {
+
+    public static List<float[]> toFloatArrays(@NonNull Tensor<?> tensor) {
+        long[] shape = tensor.shape();
+
+        float[][] probs;
+        if (shape.length == 2) {
+            int batchSize = (int) shape[0];
+            int numLabels = (int) shape[1];
+            probs = tensor.copyTo(new float[batchSize][numLabels]);
+        } else {
+            throw new IllegalArgumentException("Tensor rank is " + shape.length + ", was expecting 2.");
+        }
+
+        return new ArrayList<>(Arrays.asList(probs));
+    }
 
     public static byte[][] batchExamples(@NonNull List<SequenceExample> examples) {
         byte[][] batch = new byte[examples.size()][];

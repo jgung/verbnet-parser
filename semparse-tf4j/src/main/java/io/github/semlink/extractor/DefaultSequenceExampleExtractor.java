@@ -23,9 +23,12 @@ import org.tensorflow.example.Features;
 import org.tensorflow.example.SequenceExample;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import io.github.semlink.type.HasFields;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 /**
  * Aggregate feature extractor.
@@ -37,6 +40,7 @@ public class DefaultSequenceExampleExtractor implements SequenceExampleExtractor
 
     private List<Extractor<FeatureList>> featureListExtractors;
     private List<Extractor<Feature>> featureExtractors;
+    private Map<String, Vocabulary> vocabularyMap;
 
     @Override
     public SequenceExample extractSequence(HasFields sequence) {
@@ -52,6 +56,11 @@ public class DefaultSequenceExampleExtractor implements SequenceExampleExtractor
                 .setContext(features)
                 .setFeatureLists(featureLists)
                 .build();
+    }
+
+    @Override
+    public Optional<Vocabulary> vocabulary(@NonNull String key) {
+        return Optional.ofNullable(vocabularyMap.get(key));
     }
 
 }

@@ -68,6 +68,7 @@ public class RoleMappingAligner implements PbVnAligner {
         }
 
         alignment.roleset(mapped);
+        alignment.rolesetAlignmentCount(best.size());
         for (Map.Entry<PropBankPhrase, FramePhrase> aligned : best.entrySet()) {
             alignment.add(aligned.getKey(), aligned.getValue());
         }

@@ -120,10 +120,8 @@ public class SelResAligner implements PbVnAligner {
         boolean possibleLocation = !ImmutableSet.of(FunctionTag.PRP, FunctionTag.MNR).contains(phrase.argument().getFunctionTag());
         if (prep.isPresent()) {
             PrepType type = prep.get();
-            if (type.maybeDestination()) {
-                if (possibleLocation) {
-                    themRoles.add(DESTINATION);
-                }
+            if (possibleLocation && type.maybeDestination()) {
+                themRoles.add(DESTINATION);
                 themRoles.add(GOAL);
                 themRoles.add(RECIPIENT);
             }
@@ -147,6 +145,15 @@ public class SelResAligner implements PbVnAligner {
     public static Multiset<ThematicRoleType> getThematicRolesStrict(@NonNull PropBankPhrase phrase) {
         Multiset<ThematicRoleType> themRoles = TreeMultiset.create();
         Optional<PrepType> prep = getPrep(phrase.tokens());
+
+        String text = phrase.tokens().stream()
+                .map(token -> token.feature(FeatureType.Text).toString())
+                .collect(Collectors.joining(" "))
+                .toLowerCase();
+
+        if (text.equalsIgnoreCase("how much") || text.equalsIgnoreCase("how much money")) {
+            themRoles.add(ASSET);
+        }
 
         boolean isClause = AlignmentUtils.isClause(phrase.tokens());
 
@@ -212,8 +219,16 @@ public class SelResAligner implements PbVnAligner {
         }
 
         if (startsWithWhere(phrase)) {
-            themRoles.add(DESTINATION);
-            themRoles.add(INITIAL_LOCATION);
+            if (phrase.getFunctionTag() == FunctionTag.GOL) {
+                themRoles.add(DESTINATION);
+            } else if (phrase.getFunctionTag() == FunctionTag.DIR) {
+                themRoles.add(INITIAL_LOCATION);
+                themRoles.add(SOURCE);
+            } else {
+                themRoles.add(DESTINATION);
+                themRoles.add(INITIAL_LOCATION);
+                themRoles.add(SOURCE);
+            }
             themRoles.add(LOCATION);
         }
 
@@ -226,6 +241,7 @@ public class SelResAligner implements PbVnAligner {
             themRoles.add(PATH);
             themRoles.add(TRAJECTORY);
             themRoles.add(DIRECTION);
+            themRoles.add(SOURCE);
         }
 
         if (phrase.getNumber() == ArgNumber.A0) {
@@ -241,7 +257,7 @@ public class SelResAligner implements PbVnAligner {
 
     public static boolean containsNumber(PropBankPhrase phrase) {
         for (DepNode node : phrase.tokens()) {
-            if ("CD".equalsIgnoreCase(node.feature(FeatureType.Pos))) {
+            if ("CD".equalsIgnoreCase(node.feature(FeatureType.Pos)) || "much".equalsIgnoreCase(node.feature(FeatureType.Text))) {
                 return true;
             }
         }

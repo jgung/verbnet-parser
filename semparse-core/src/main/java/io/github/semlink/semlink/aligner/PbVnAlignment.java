@@ -56,6 +56,7 @@ public class PbVnAlignment {
     private VnFrame syntaxArgDesc;
     private Proposition<VnClass, PropBankArg> proposition;
     private MappedRoleset roleset;
+    private int rolesetAlignmentCount = 0;
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {
         return propbankPhrases.stream()
