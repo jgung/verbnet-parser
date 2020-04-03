@@ -43,6 +43,7 @@ public enum PrepType {
     BETWEEN,
     BY,
     CONCERNING,
+    DOWN,
     FOR,
     FROM,
     IF,
@@ -57,6 +58,7 @@ public enum PrepType {
     OUT,
     OUT_OF,
     OVER,
+    PAST,
     REGARDING,
     RESPECTING,
     THOUGH,
@@ -65,8 +67,10 @@ public enum PrepType {
     TOWARDS,
     UNDER,
     UNTIL,
+    UP,
     UPON,
     WITH,
+    WITHIN,
     UNKNOWN;
 
     public boolean isTrajectory() {
@@ -94,7 +98,6 @@ public enum PrepType {
         try {
             return PrepType.valueOf(string.trim().toUpperCase());
         } catch (Exception ignored) {
-            log.info("Unrecognized preposition type: {}", string);
             return UNKNOWN;
         }
     }
