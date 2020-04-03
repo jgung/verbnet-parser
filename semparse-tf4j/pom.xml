@@ -29,12 +29,6 @@
             <version>${tensorflow.version}</version>
         </dependency>
 
-        <!-- for SentencePiece -->
-        <dependency>
-            <groupId>com.github.levyfan</groupId>
-            <artifactId>sentencepiece</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <!-- Deserialization of configs-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
