@@ -1,6 +1,7 @@
 package io.github.semlink.app;
 
 import java.util.List;
+
 import lombok.NonNull;
 
 /**

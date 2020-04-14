@@ -16,7 +16,9 @@
 
 package io.github.semlink.parser;
 
-import static io.github.semlink.parser.feat.BertSrlExampleExtractor.bertFromDirectory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import io.github.clearwsd.type.DepNode;
 import io.github.clearwsd.type.DepTree;
@@ -29,12 +31,11 @@ import io.github.semlink.type.IToken;
 import io.github.semlink.type.ITokenSequence;
 import io.github.semlink.type.Token;
 import io.github.semlink.type.TokenSequence;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+
+import static io.github.semlink.parser.feat.BertSrlExampleExtractor.bertFromDirectory;
 
 /**
  * Semantic role labeling utilities specific to our SRL system's input needs.

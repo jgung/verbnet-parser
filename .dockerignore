@@ -1,0 +1,7 @@
+Dockerfile
+**/.git
+**/.DS_Store
+.idea
+**/target/
+**/node_modules
+**/frontend/build
