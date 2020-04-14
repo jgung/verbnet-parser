@@ -1,22 +1,25 @@
 package io.github.semlink.parser.feat;
 
-import static io.github.semlink.app.TensorflowModel.fromDirectory;
-import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Feature;
-import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Features;
-
 import com.google.common.base.Preconditions;
-import io.github.semlink.app.TensorflowModel;
-import io.github.semlink.app.WordPieceTokenizer;
-import io.github.semlink.type.HasFields;
+
+import org.tensorflow.example.FeatureLists;
+import org.tensorflow.example.Features;
+import org.tensorflow.example.SequenceExample;
+
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.github.semlink.app.TensorflowModel;
+import io.github.semlink.app.WordPieceTokenizer;
+import io.github.semlink.type.HasFields;
 import lombok.NonNull;
 import lombok.Setter;
-import org.tensorflow.example.FeatureLists;
-import org.tensorflow.example.Features;
-import org.tensorflow.example.SequenceExample;
+
+import static io.github.semlink.app.TensorflowModel.fromDirectory;
+import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Feature;
+import static io.github.semlink.tensor.TensorflowFeatureUtils.int64Features;
 
 /**
  * Sequence example extractor that uses a {@link io.github.semlink.app.WordPieceTokenizer} to convert the input prior to normal

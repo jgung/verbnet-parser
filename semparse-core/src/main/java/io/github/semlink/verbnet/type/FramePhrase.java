@@ -16,11 +16,11 @@
 
 package io.github.semlink.verbnet.type;
 
+import io.github.semlink.semlink.AlignPhrase;
 import io.github.semlink.verbnet.syntax.VnLex;
 import io.github.semlink.verbnet.syntax.VnNounPhrase;
 import io.github.semlink.verbnet.syntax.VnPrep;
 import io.github.semlink.verbnet.syntax.VnSyntax;
-import io.github.semlink.semlink.AlignPhrase;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Accessors;

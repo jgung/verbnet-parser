@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.github.semlink.verbnet.semantics.VnPredicatePolarity;
-import io.github.semlink.verbnet.semantics.VnSemanticArgument;
-import io.github.semlink.verbnet.semantics.VnSemanticPredicate;
 import io.github.semlink.util.StringUtils;
 import io.github.semlink.verbnet.type.SemanticArgumentType;
 import io.github.semlink.verbnet.type.SemanticPredicateType;

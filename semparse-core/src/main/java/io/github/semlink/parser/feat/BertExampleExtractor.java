@@ -1,9 +1,10 @@
 package io.github.semlink.parser.feat;
 
+import java.util.Optional;
+
 import io.github.semlink.app.SubwordTokenizer;
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.Vocabulary;
-import java.util.Optional;
 import lombok.NonNull;
 import lombok.Setter;
 

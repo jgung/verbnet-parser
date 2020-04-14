@@ -16,11 +16,12 @@
 
 package io.github.semlink.app;
 
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
