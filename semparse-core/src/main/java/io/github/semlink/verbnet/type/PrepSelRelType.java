@@ -42,8 +42,8 @@ public enum PrepSelRelType {
         try {
             return valueOf(string.toUpperCase().trim());
         } catch (Exception ignored) {
+            log.warn("Unrecognized preposition selectional restriction: {}", string);
+            return UNKNOWN;
         }
-        log.warn("Unrecognized preposition selectional restriction: {}", string);
-        return UNKNOWN;
     }
 }

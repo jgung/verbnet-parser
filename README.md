@@ -7,15 +7,30 @@ This includes a VerbNet semantic parser, which produces VerbNet thematic roles a
 
 See a demo of the VerbNet parser in action [here](http://verbnet-semantic-parser.appspot.com/)!
 
-### Requirements
+### Quickstart with Docker
+A [Docker](https://www.docker.com/products/docker-desktop) image for running the VerbNet parser demo and API is available here:
+[https://hub.docker.com/r/jgung/verbnet-parser](https://hub.docker.com/r/jgung/verbnet-parser).
+```bash
+docker pull jgung/verbnet-parser:0.1-SNAPSHOT
+docker run -p 8080:8080 jgung/verbnet-parser:0.1-SNAPSHOT
+```
+Then just open [localhost:8080](http://localhost:8080) in your browser, or call the API directly:
+```bash
+curl -s localhost:8080/predict/semantics?utterance=John%20gave%20Mary%20the%20book | python -m json.tool
+```
+NOTE: this API has no stability guarantees and will likely change in later versions.
+
+### Requirements for Development
 * [Java 8](http://www.oracle.com/technetwork/java/javase/overview/index.html) and [Apache Maven](https://maven.apache.org/)
-* [ClearWSD](https://github.com/clearwsd/clearwsd)
+* For development in an IDE such as IntelliJ IDEA or Eclipse, the corresponding [Lombok](https://projectlombok.org/) plugin is required:
+    * [https://projectlombok.org/setup/eclipse](https://projectlombok.org/setup/eclipse)
+    * [https://projectlombok.org/setup/intellij](https://projectlombok.org/setup/intellij)
 
 ## semparse-core
 Provides a VerbNet parser that uses [VerbNet](http://verbs.colorado.edu/~mpalmer/projects/verbnet.html) class predictions and 
 [PropBank](https://propbank.github.io/) semantic roles to align to a VerbNet frame and produce VerbNet semantic representations.
 
-To use the parser, you will need to download and unzip the [pre-trained models and mapping files](https://drive.google.com/open?id=1zI8HiaVS85Z3OPAm0w285z8sRj3VuJfX).
+To use the parser, you will need to download and unzip the [pre-trained models and mapping files](https://drive.google.com/open?id=1qESz4tlviIjsAYzb8qlUg1ps3o37i6l3).
 
 The API is a work in progress (as the project itself is not stable), but an overview of current usage is shown here:
 ```java

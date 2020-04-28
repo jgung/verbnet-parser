@@ -75,6 +75,10 @@ public class PropBankArg {
         return number.isModifier();
     }
 
+    public boolean isReferenceOrContinuation() {
+        return continuation || reference;
+    }
+
     @Override
     public String toString() {
         String result = number.name();

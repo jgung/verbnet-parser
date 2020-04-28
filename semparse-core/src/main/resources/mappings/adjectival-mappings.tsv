@@ -93,6 +93,7 @@ curled	curl	9.6-1 41.2.2	0
 damaged	damage	44	1
 damaging	damage	44	1
 daunting	daunt	31.1	0
+dead	die	42.4-1	0
 decompressed	decompress	45.4	0
 decreased	decrease	45.4	0
 dedicated	dedicate	79	2
@@ -351,6 +352,7 @@ split	split	23.2	0
 stable	stable	45.5	0
 starving	starve	40.7	0
 stifling	stifle	42.3 40.7	0
+stolen	steal	10.5-1	0
 stopped	stop	55.4-1	0
 stricken	strike	18.1-1 18.4-1	0
 stunned	stun	31.1	0

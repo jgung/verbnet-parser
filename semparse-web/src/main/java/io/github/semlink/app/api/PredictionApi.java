@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import io.github.semlink.verbnet.VnIndex;
 import io.github.semlink.app.api.model.SentenceModel;
 import io.github.semlink.parser.DefaultSentenceNormalizer;
 import io.github.semlink.parser.VerbNetParse;
@@ -46,14 +45,12 @@ import lombok.extern.slf4j.Slf4j;
 public class PredictionApi {
 
     private final VerbNetSenseClassifier verbNetSenseClassifier;
-    private final VnIndex verbNet;
 
     private LoadingCache<String, VerbNetParse> parseCache;
 
     @Autowired
-    public PredictionApi(VerbNetParser parser, VerbNetSenseClassifier verbNetSenseClassifier, VnIndex verbNet) {
+    public PredictionApi(VerbNetParser parser, VerbNetSenseClassifier verbNetSenseClassifier) {
         this.verbNetSenseClassifier = verbNetSenseClassifier;
-        this.verbNet = verbNet;
         parseCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
                 .build(CacheLoader.from(parser::parse));

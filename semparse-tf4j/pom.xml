@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>semparse</artifactId>
         <groupId>io.github.semlink</groupId>
-        <version>0.0.6-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,21 +13,23 @@
     <artifactId>semparse-tf4j</artifactId>
 
     <properties>
-        <tensorflow.version>1.13.1</tensorflow.version>
+        <tensorflow.version>1.15.0</tensorflow.version>
     </properties>
 
     <dependencies>
+        <!-- TF dependencies -->
         <dependency>
-            <groupId>io.github.semlink</groupId>
-            <artifactId>semparse-tf4j-grpc</artifactId>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>proto</artifactId>
+            <version>${tensorflow.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow</artifactId>
             <version>${tensorflow.version}</version>
         </dependency>
 
+        <!-- Deserialization of configs-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>

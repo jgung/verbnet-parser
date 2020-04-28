@@ -10,7 +10,7 @@
 
     <groupId>io.github.semlink</groupId>
     <artifactId>semparse</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>SemParse</name>
@@ -57,11 +57,10 @@
         <junit.version>4.12</junit.version>
         <jackson.version>2.9.0</jackson.version>
         <woodstox.version>5.1.0</woodstox.version>
-        <clearwsd.version>0.12-SNAPSHOT</clearwsd.version>
+        <clearwsd.version>0.12.0</clearwsd.version>
     </properties>
 
     <modules>
-        <module>semparse-tf4j-grpc</module>
         <module>semparse-tf4j</module>
         <module>semparse-core</module>
         <module>semparse-web</module>
@@ -123,11 +122,6 @@
             <dependency>
                 <groupId>io.github.semlink</groupId>
                 <artifactId>semparse-web</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.semlink</groupId>
-                <artifactId>semparse-tf4j-grpc</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -43,6 +43,7 @@ import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
 import io.github.semlink.semlink.aligner.AdjustInvalidRoles;
 import io.github.semlink.semlink.aligner.FillerAligner;
+import io.github.semlink.semlink.aligner.FilterReferenceAligner;
 import io.github.semlink.semlink.aligner.PbVnAligner;
 import io.github.semlink.semlink.aligner.PbVnAlignment;
 import io.github.semlink.semlink.aligner.RelAligner;
@@ -72,6 +73,7 @@ public class VerbNetAligner {
     public VerbNetAligner(@NonNull PbVnMappings mappings) {
         this(mappings,
                 ImmutableList.of(
+                        new FilterReferenceAligner(),
                         new RelAligner(),
                         new RoleMappingAligner(),
                         new SynResAligner(),
@@ -183,16 +185,35 @@ public class VerbNetAligner {
         }
 
         if (alignments.size() > 0) {
-            return Optional.of(Collections.max(alignments, alignmentComparator()));
+            return Optional.of(Collections.max(alignments, new AlignmentComparator()));
         }
         return Optional.empty();
     }
 
-    private static Comparator<PbVnAlignment> alignmentComparator() {
-        Comparator<PbVnAlignment> comparing = Comparator.comparing(al
-                -> al.sourcePhrases(true).size());
-        comparing.thenComparing(al -> al.targetPhrases().size() - al.targetPhrases(false).size());
-        return comparing;
+    private static class AlignmentComparator implements Comparator<PbVnAlignment> {
+        @Override
+        public int compare(PbVnAlignment first, PbVnAlignment second) {
+            int aligned = first.sourcePhrases(true).size();
+            int otherAligned = second.sourcePhrases(true).size();
+            if (aligned != otherAligned) {
+                return aligned - otherAligned;
+            }
+
+            int unaligned = first.targetPhrases(false).size();
+            int otherUnaligned = second.targetPhrases(false).size();
+
+            if (otherUnaligned != unaligned) {
+                return otherUnaligned - unaligned;
+            }
+
+            int rolesetAligned = first.rolesetAlignmentCount();
+            int otherRolesetAligned = second.rolesetAlignmentCount();
+            if (rolesetAligned != otherRolesetAligned) {
+                return rolesetAligned - otherRolesetAligned;
+            }
+
+            return second.frame().frame().descriptionNumber().compareTo(first.frame().frame().descriptionNumber());
+        }
     }
 
     public static VerbNetAligner of(@NonNull String mappingsPath, @NonNull String pbIndexPath) {

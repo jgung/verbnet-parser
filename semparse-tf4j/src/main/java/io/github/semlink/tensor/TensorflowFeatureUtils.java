@@ -1,14 +1,17 @@
 package io.github.semlink.tensor;
 
 import com.google.protobuf.ByteString;
-import java.util.List;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+
 import org.tensorflow.example.BytesList;
 import org.tensorflow.example.Feature;
 import org.tensorflow.example.FeatureList;
 import org.tensorflow.example.Int64List;
+
+import java.util.List;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 /**
  * Tensorflow Feature proto utils.

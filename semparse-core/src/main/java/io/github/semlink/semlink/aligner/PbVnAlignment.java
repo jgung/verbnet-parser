@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.github.semlink.verbnet.VnClass;
-import io.github.semlink.verbnet.VnFrame;
 import io.github.semlink.parser.Proposition;
 import io.github.semlink.propbank.type.ArgNumber;
 import io.github.semlink.propbank.type.PropBankArg;
 import io.github.semlink.semlink.Alignment;
 import io.github.semlink.semlink.PbVnMappings.MappedRoleset;
 import io.github.semlink.semlink.PropBankPhrase;
+import io.github.semlink.verbnet.VnClass;
+import io.github.semlink.verbnet.VnFrame;
 import io.github.semlink.verbnet.type.FramePhrase;
 import io.github.semlink.verbnet.type.SyntacticFrame;
 import io.github.semlink.verbnet.type.ThematicRoleType;
@@ -56,6 +56,7 @@ public class PbVnAlignment {
     private VnFrame syntaxArgDesc;
     private Proposition<VnClass, PropBankArg> proposition;
     private MappedRoleset roleset;
+    private int rolesetAlignmentCount = 0;
 
     public List<PropBankPhrase> byNumber(@NonNull ArgNumber number) {
         return propbankPhrases.stream()

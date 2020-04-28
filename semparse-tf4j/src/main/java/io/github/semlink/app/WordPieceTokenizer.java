@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @AllArgsConstructor
-public class WordPieceTokenizer {
+public class WordPieceTokenizer implements SubwordTokenizer {
 
     public static List<String> whitespaceTokenize(@NonNull String text) {
         text = text.trim();
@@ -92,6 +93,7 @@ public class WordPieceTokenizer {
      * @param tokens word piece tokens
      * @return vocabulary indices
      */
+    @Override
     public List<Integer> convertTokensToIds(@NonNull List<String> tokens) {
         return tokens.stream()
             .map(vocabulary::get)
@@ -104,6 +106,7 @@ public class WordPieceTokenizer {
      * @param text input text, a single token or whitespace separated sentence
      * @return list of word pieces
      */
+    @Override
     public List<String> tokenize(@NonNull String text) {
         List<String> outputTokens = new ArrayList<>();
 

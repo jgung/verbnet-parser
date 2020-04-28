@@ -57,14 +57,14 @@ public class ShallowParser implements IShallowParser<IToken, ITokenSequence> {
 
         List<List<String>> labels = predictor.predictBatch(features);
         Preconditions.checkState(labels.size() == sequence.size(),
-                "Predictor produced an unexpected number of batches: %d vs. %d", labels.size(), sequence.size());
+                "Predictor produced an unexpected number of batches: %s vs. %s", labels.size(), sequence.size());
 
         Iterator<ITokenSequence> iterator = sequence.iterator();
         List<Chunking<String>> phrases = new ArrayList<>();
         for (List<String> labeling : labels) {
             int tokens = iterator.next().size();
             Preconditions.checkState(labeling.size() == tokens,
-                    "Predictor produced an unexpected number of labels: %d vs. %d", tokens, labeling.size());
+                    "Predictor produced an unexpected number of labels: %s vs. %s", tokens, labeling.size());
             phrases.add(new DefaultChunking<>(tags2Spans(labeling)));
         }
 

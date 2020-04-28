@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.github.semlink.extractor.BertSrlExampleExtractor;
 import io.github.semlink.extractor.SequenceExampleExtractor;
 import io.github.semlink.extractor.config.ConfigSpec;
 import io.github.semlink.extractor.config.Extractors;
@@ -78,12 +77,7 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
             Session.Runner runner = model.session().runner()
                     .feed(inputName, inputTensor)
                     .fetch(fetchName);
-            TensorList results;
-
-            // TODO: figure out why Session is not thread safe, fix, unsynchronize
-            synchronized (this) {
-                results = TensorList.of(runner.run());
-            }
+            TensorList results = TensorList.of(runner.run());
 
             List<List<String>> result = toStringLists(results.get(0)).stream()
                     .map(labels -> labels.stream().filter(l -> !l.equals(IGNORE_LABEL)).collect(Collectors.toList()))
@@ -114,11 +108,6 @@ public class TensorflowModel implements AutoCloseable, SequencePredictor<HasFiel
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static TensorflowModel bertFromDirectory(@NonNull String modelDir) {
-        return fromDirectory(modelDir, new BertSrlExampleExtractor(
-                new WordPieceTokenizer(Paths.get(modelDir, "model", "assets", "vocab.txt").toString())));
     }
 
 }
