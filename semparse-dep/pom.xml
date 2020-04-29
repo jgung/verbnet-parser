@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>semparse</artifactId>
         <groupId>io.github.semlink</groupId>
@@ -10,16 +10,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>semparse-sense</artifactId>
+    <artifactId>semparse-dep</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>io.github.semlink</groupId>
             <artifactId>semparse-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.semlink</groupId>
-            <artifactId>semparse-dep</artifactId>
         </dependency>
     </dependencies>
 

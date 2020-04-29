@@ -1,12 +1,14 @@
 package io.github.semlink.verbnet;
 
 import com.google.common.collect.ImmutableSet;
-import io.github.clearwsd.type.DepNode;
-import io.github.clearwsd.type.FeatureType;
-import io.github.semlink.verbnet.type.NpSynRes;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import io.github.clearwsd.type.DepNode;
+import io.github.clearwsd.type.FeatureType;
+import io.github.semlink.verbnet.type.NpSynRes;
 
 /**
  * VerbNet syntax analyzer.
@@ -27,10 +29,7 @@ public class VnSyntaxAnalyzer {
         if (isPronoun(depNode)) {
             return true;
         }
-        if (isProperNoun(depNode)) {
-            return true;
-        }
-        return false;
+        return isProperNoun(depNode);
     }
 
     public static boolean isWh(DepNode depNode) {

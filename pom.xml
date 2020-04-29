@@ -65,6 +65,7 @@
         <module>semparse-core</module>
         <module>semparse-web</module>
         <module>semparse-sense</module>
+        <module>semparse-dep</module>
     </modules>
 
     <dependencies>
@@ -122,6 +123,16 @@
             <dependency>
                 <groupId>io.github.semlink</groupId>
                 <artifactId>semparse-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.semlink</groupId>
+                <artifactId>semparse-sense</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.semlink</groupId>
+                <artifactId>semparse-dep</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

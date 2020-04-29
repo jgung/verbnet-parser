@@ -1,19 +1,20 @@
 package io.github.semlink.verbnet;
 
-import io.github.clearwsd.corpus.CoNllDepTreeReader;
-import io.github.clearwsd.parser.NlpParser;
-import io.github.clearwsd.type.DepNode;
-import io.github.clearwsd.type.DepTree;
-import io.github.clearwsd.type.FeatureType;
-import io.github.semlink.app.DependencyParser;
-import io.github.semlink.clearwsd.TfNlpParser;
-import io.github.semlink.verbnet.type.NpSynRes;
-import io.github.semlink.verbnet.type.SyntacticFrame;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import io.github.clearwsd.corpus.CoNllDepTreeReader;
+import io.github.clearwsd.parser.NlpParser;
+import io.github.clearwsd.type.DepNode;
+import io.github.clearwsd.type.DepTree;
+import io.github.clearwsd.type.FeatureType;
+import io.github.semlink.clearwsd.TfNlpParser;
+import io.github.semlink.dep.DependencyParser;
+import io.github.semlink.verbnet.type.NpSynRes;
+import io.github.semlink.verbnet.type.SyntacticFrame;
 
 /**
  * VerbNet syntactic frame matching tool.
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class FrameMatcher {
 
     public static void main(String[] args) {
-        DependencyParser model = DependencyParser.fromDirectory("/home/jamesgung/Downloads/dep-model");
+        DependencyParser model = DependencyParser.fromDirectory(args[0]);
         TfNlpParser parser = new TfNlpParser(model);
 
         VnIndex vnIndex = new DefaultVnIndex();
@@ -61,13 +62,13 @@ public class FrameMatcher {
 
         System.out.println(CoNllDepTreeReader.treeToString(parse));
 
-        for (DepNode child: parse.root().children()) {
+        for (DepNode child : parse.root().children()) {
             Set<Restriction<NpSynRes>> restrictions = analyzer.analyzeNp(child);
             if (!restrictions.isEmpty()) {
                 System.out.println(
-                    child.feature(FeatureType.Text).toString() + "\t"
-                        + analyzer.argumentPosition(child) + "\t"
-                        + restrictions.stream().map(Objects::toString).collect(Collectors.joining(", ")));
+                        child.feature(FeatureType.Text).toString() + "\t"
+                                + analyzer.argumentPosition(child) + "\t"
+                                + restrictions.stream().map(Objects::toString).collect(Collectors.joining(", ")));
             }
         }
 
