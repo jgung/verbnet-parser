@@ -282,7 +282,8 @@ public class ParsingUtils {
         return argmax;
     }
 
-    private class TarjanCycleFinder {
+    @SuppressWarnings("RedundantModifiersUtilityClassLombok")
+    private static class TarjanCycleFinder {
 
         int[] edges;
         List<Integer> vertices;
